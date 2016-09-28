@@ -1,7 +1,10 @@
 ﻿namespace BeerRater
 {
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Text;
 
@@ -42,8 +45,8 @@
             var sb = new StringBuilder();
             sb.AppendLine("<html>");
             var baseFile = Path.Combine(this.BasePath, this.Name);
-
-            using (var html = new StreamWriter(baseFile + ".html", false))
+            var htmlReport = baseFile + ".html";
+            using (var html = new StreamWriter(htmlReport, false))
             {
                 html.WriteLine(@"<html><table><tr>
 <th>IMAGE</th>
@@ -79,6 +82,13 @@
             }
 
             File.WriteAllText(baseFile + ".json", JsonConvert.SerializeObject(infos, Formatting.Indented));
+            Console.WriteLine("======================================================================");
+            Console.WriteLine("Open the report? (press Y / Enter to confirm)");
+            var key = Console.ReadKey(false);
+            if (new[] { ConsoleKey.Enter, ConsoleKey.Y }.Contains(key.Key))
+            {
+                Process.Start(htmlReport);
+            }
         }
     }
 }

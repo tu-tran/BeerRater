@@ -56,7 +56,6 @@ namespace BeerRater.Providers
                 }
             }
 
-            Console.WriteLine($"Query contains {result.Count} rows");
             return new QuerySession(fileName, result.OrderBy(m => m.Name).ThenBy(m => m.Price));
         }
     }

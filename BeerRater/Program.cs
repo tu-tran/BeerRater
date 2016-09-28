@@ -28,6 +28,8 @@
                 }
 
                 var metas = provider.Get(args);
+                Console.WriteLine($"Query contains {metas.Count} beer name(s)");
+
                 var infos = new QueryQueue().Query(metas);
                 if (infos == null)
                 {
