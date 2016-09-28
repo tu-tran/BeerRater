@@ -1,6 +1,7 @@
 ﻿namespace BeerRater
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
 
@@ -17,25 +18,35 @@
         /// <param name="args">The arguments.</param>
         private static void Main(string[] args)
         {
-            var provider = InputProviderResolver.Get(args);
-            if (provider == null)
+            try
             {
-                Console.Error.WriteLine("Invalid arguments");
-                return;
-            }
+                var provider = InputProviderResolver.Get(args);
+                if (provider == null)
+                {
+                    Console.Error.WriteLine("Invalid arguments");
+                    return;
+                }
 
-            var metas = provider.Get(args);
-            var infos = new QueryQueue().Query(metas);
-            if (infos == null)
+                var metas = provider.Get(args);
+                var infos = new QueryQueue().Query(metas);
+                if (infos == null)
+                {
+                    Console.Error.WriteLine("There is no data to process.");
+                    return;
+                }
+
+                infos = infos.OrderByDescending(r => Parse(r.OVERALL)).ThenByDescending(r => Parse(r.WEIGHTED_AVG)).ThenBy(r => Parse(r.PRICE)).ThenBy(r => r.NAME).ToList();
+                var fileName = Path.GetFileNameWithoutExtension(metas.FilePath);
+                var basePath = Path.GetDirectoryName(metas.FilePath);
+                new Reporter(fileName, basePath).Generate(infos);
+
+            }
+            catch (Exception ex)
             {
-                Console.Error.WriteLine("There is no data to process.");
-                return;
+                var error = $"FATAL ERROR: {ex}";
+                Console.Error.WriteLine(error);
+                Trace.TraceError(error);
             }
-
-            infos = infos.OrderByDescending(r => Parse(r.OVERALL)).ThenByDescending(r => Parse(r.WEIGHTED_AVG)).ThenBy(r => Parse(r.PRICE)).ThenBy(r => r.NAME).ToList();
-            var fileName = Path.GetFileNameWithoutExtension(metas.FilePath);
-            var basePath = Path.GetDirectoryName(metas.FilePath);
-            new Reporter(fileName, basePath).Generate(infos);
         }
 
         /// <summary>

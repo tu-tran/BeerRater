@@ -69,6 +69,7 @@
                             Debug.WriteLine(error);
                         }
                     });
+
                 tasks.Add(task);
                 if ((tasks.Count == this.maxThreads) || (c == metas.Count))
                 {

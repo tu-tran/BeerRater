@@ -59,9 +59,9 @@
             result = input.ExtractBeerName();
             Assert.AreEqual("Lindemans Kriek", result);
 
-            input = "";
+            input = "Kyoto Alt Beer 5% 33cl";
             result = input.ExtractBeerName();
-            Assert.AreEqual("", result);
+            Assert.AreEqual("Kyoto Alt", result);
         }
     }
 }
