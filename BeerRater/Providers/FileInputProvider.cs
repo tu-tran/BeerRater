@@ -1,22 +1,34 @@
-﻿namespace BeerRater
+namespace BeerRater.Providers
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
-    internal static class InputResolver
+    /// <summary>
+    /// The file input resolver.
+    /// </summary>
+    internal class FileInputProvider : IInputProvider
     {
+        /// <summary>
+        /// Determines whether the specified arguments is compatible.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified arguments is compatible; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsCompatible(params string[] args)
+        {
+            return args != null && args.Length == 1 && File.Exists(args[0]);
+        }
+
         /// <summary>
         /// Gets the specified arguments.
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns>The beer metas.</returns>
-        public static QuerySession Get(params string[] args)
+        public QuerySession Get(params string[] args)
         {
-            if ((args == null) || (args.Length < 1) || !File.Exists(args[0]))
-                return null;
-
             var fileName = args[0];
             Console.WriteLine($"Processing [{fileName}]...");
             var result = new List<BeerMeta>();
