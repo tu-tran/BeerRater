@@ -45,9 +45,11 @@
             }
             catch (Exception ex)
             {
+                Console.WriteLine("======================================================================");
                 var error = $"FATAL ERROR: {ex}";
                 Console.Error.WriteLine(error);
                 Trace.TraceError(error);
+                Console.ReadKey();
             }
         }
 
