@@ -1,0 +1,155 @@
+﻿Blanche de Namur	2.40
+Blanche de Namur Rosee	2.60
+Chimay Blue	3.20
+Blue Chimay Grande Reserve	56.00
+Blue Chimay Grande Reserve	7.99
+Chimay Gold	2.70
+Chimay Premiere Red	6.50
+Deus Brut Beer	17.99
+Hoegaarden Wit-Blanche	1.75
+Kwak Beer	5.99
+Leffe Blonde	1.99
+Leffe Blonde	3.99
+Leffe Brune	1.99
+Leffe Brune	3.99
+Liefmans Goudenband	6.99
+Liefmans Kriek	6.99
+Lindemans Kriek	3.10
+Rodenbach Caractere Rouge	14.99
+Rodenbach Grand Cru	2.80
+Stella Artois Premium	1.35
+Stella Artois Premium	1.30
+Tripel Karmeliet	2.50
+Duvel	2.40
+A. Le Coq Blond	24.99
+A. Le Coq Imperial	0.90
+A. Le Coq Imperial Gold	0.90
+A. Le Coq Imperial Märzen	0.90
+A. Le Coq IPA	24.99
+A. Le Coq Kriek	24.99
+A. Le Coq Porter	1.15
+A. Le Coq Premium	1.10
+A. Le Coq Premium	11.99
+Alexander Export	11.99
+Double Bock	16.99
+Karl Friedrich	1.15
+Blond Koch, Belgium Eil	1.85
+Koch Confucius Ingver Stout	1.85
+Koch Jaanipäeva Eripruul	1.85
+Joachim Koch Tume Laager	1.85
+Koch Munk Tume Bock	1.85
+Koch Nisu Nisuõlu	1.85
+Koch Ronk Stout	1.85
+Koch, Vol 5	9.99
+Koch Volbriöö Eripruul	1.85
+Koch Vunk Hele Laager	1.85
+Kohviporter	0.99
+Mac Koch in 1872 to	6.99
+Puls Tume Kirss	0.99
+Saaremaa Tume	16.75
+Saaremaa Tuulik	1.15
+Saku 1820 Eripruul	12.99
+Saku 1820 Eripruul	33.00
+Saku Antvärk Dark Lager	12.99
+Saku Antvärk India Pale Ale	14.99
+Saku Kuld	11.99
+Saku Originaal	1.10
+Saku Originaal	11.99
+Saku Porter	1.15
+Saku Rock	2.99
+Saku Rock	1.15
+Saku Rock	14.95
+Caterpillar Saku	16.50
+Saku Tume	1.25
+Tõmmu Hiid	1.05
+Heineken Lager	13.50
+Urthel HOP-IT	2.75
+Urthel Samaranth	2.75
+Belhaven McCallums Stout	1.55
+Belhaven St. Andrews Ale	2.30
+Crafty Dan 13 Guns American IPA	2.25
+Fullers Imperial Stout	8.50
+Fullers Vintage	6.50
+Little Valley Ginger Pale Ale	3.40
+Little Valley Python IPA	3.75
+McEwans Scotch Ale	1.99
+Murphys Irish Stout	1.50
+Newcastle Brown	1.35
+Newcastle Brown Ale	1.50
+Shepherd Neame Bishops Finger	2.35
+Shepherd Neame Brilliant Ale	2.70
+Shepherd Neame Double Stout	2.70
+Shepherd Neame India Pale Ale	2.70
+Shepherd Neame Spitfire Kentish Ale	2.25
+St. Peters Cream Stout	2.60
+Stones Ginger Joe Ginger Beer	1.85
+Thorn Bridge Chiron	3.50
+Thorn Bridge Jaipur	3.50
+Thorn Bridge Tzara	3.50
+Wells Banana Bread Beer	1.95
+Youngs Double Chocolate Stout	2.40
+Youngs London Stout	1.95
+Asahi Super Dry	0.99
+Baltika 0 Non-Alcoholic Beer TIN	0.85
+Corona Beer	1.20
+Estrella Damm Inedit	3.99
+Guinness	1.60
+Guinness Original	0.99
+Kyoto Alt beer	3.50
+Peroni Nastro Azzurro	1.50
+San Mig Light	14.99
+Light of San Mig	0.90
+San Miguel	16.50
+San Miguel Especial	1.50
+Singha Lager	1.15
+sol	0.99
+Starõi Melnik Mjagkoje	0.95
+Starõi Melnik svetlo	0.95
+AC / DC	20.99
+Franziskaner Weissbier	1.85
+Hacker-Pschorr Münchner Gold	2.50
+Hacker-Pschorr Münchner Kelle Brier	2.50
+Krombacher Pils	15.99
+Krombacher Pils	1.20
+Paulaner Hefe-Weissbier Dunkel	1.60
+Paulaner Hefe-Weissbier Naturtrüb	1.65
+Paulaner Original Münchner Hell	16.99
+Paulaner Original Münchner Hell Munich Lager	1.65
+Paulaner Salvator	1.65
+Schöfferhofer Hefeweizen	1.30
+Warsteiner Premium	1.25
+Weihenstephaner Vitus	2.60
+The bear	13.50
+The bear very strong	16.50
+Karelia	107.90
+Karelia	11.99
+Koff Export	12.99
+Lapin Kulta	13.99
+Lapin Kulta	73.96
+Sandels	21.99
+Saxon Beer	1.20
+Beer bear	9.99
+Faxe Premium	10.99
+Polar Monkeys Amber Lager	0.99
+Polar Monkeys Golden Ale	0.99
+Polar Monkeys Strong Ale	0.99
+Tuborg Green	12.99
+Tuborg Green	0.85
+Tuborg Lime Cut	0.85
+Bernard Celebration Lager	2.15
+Bernard Dark Lager	2.15
+Budweiser Budvar TIN	1.25
+Krusovice Dark	0.99
+Pilsner Urquell,	1.30
+Staropramen Premium	1.40
+Velkopopovický Kozel Dark	1.35
+Velkopopovický Kozel Premium	1.50
+Brooklyn Lager	1.99
+Brooklyn American Ale	1.99
+Brooklyn East India Pale Ale	1.99
+Founders Porter	3.30
+Samuel Adams Boston Lager	2.25
+Samuel Adams Cream Stout	1.99
+Samuel Adams Rebel IPA	2.50
+Sierra Nevada Hunter Hop IPA	3.20
+Sierra Nevada Pale Ale	2.99
