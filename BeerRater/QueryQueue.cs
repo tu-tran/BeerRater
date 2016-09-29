@@ -13,77 +13,50 @@
         private readonly int maxThreads;
 
         /// <summary>
+        /// The default threads count.
+        /// </summary>
+        private static readonly int DefaultThreads =
+#if SINGLE_THREAD
+            1
+#else
+            Environment.ProcessorCount
+#endif
+            ;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryQueue"/> class.
+        /// </summary>
+        public QueryQueue() : this(DefaultThreads)
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="QueryQueue"/> class.
         /// </summary>
         /// <param name="maxThreads">The maximum threads.</param>
-        public QueryQueue(int maxThreads = 20)
+        public QueryQueue(int maxThreads)
         {
             this.maxThreads = maxThreads < 1 ? 1 : maxThreads;
         }
 
         /// <summary>
-        /// Queries the specified metas.
+        /// Starts the specified action.
         /// </summary>
-        /// <param name="metas">The metas.</param>
-        /// <returns>The beer infos.</returns>
-        public List<BeerInfo> Query(ICollection<BeerMeta> metas)
+        /// <typeparam name="TParam">The type of the parameter.</typeparam>
+        /// <param name="action">The action.</param>
+        /// <param name="parameters">The parameters.</param>
+        public void Start<TParam>(Action<TParam> action, IList<TParam> parameters)
         {
-            if (metas == null)
+            var tasks = new List<Task>(maxThreads);
+            for (var i = 0; i < parameters.Count; i++)
             {
-                Console.Error.WriteLine("Invalid input arguments. Please specify the file name containing the tab-seperated beer names (and prices)");
-                return null;
-            }
-
-            var result = new List<BeerInfo>();
-            var c = 0;
-            var tasks = new List<Task>();
-            foreach (var meta in metas)
-            {
-                c++;
-                var current = c;
-                var task = Task.Factory.StartNew(
-                    () =>
-                    {
-                        var price = meta.Price.HasValue ? meta.Price.ToString() : "-";
-                        BeerInfo info;
-                        try
-                        {
-                            info = Crawler.Query(meta.Name);
-                            Console.WriteLine($"{current}. {info}");
-                        }
-                        catch (Exception ex)
-                        {
-                            info = new BeerInfo
-                            {
-                                Name = meta.Name,
-                                Calories = "-",
-                                WeightedAverage = "-",
-                                ABV = "-",
-                                Ratings = "-",
-                                Overall = "-",
-                                Price = price
-                            };
-
-                            var error = $"{result.Count}. Failed to resolve {meta.Name}";
-                            Console.Error.WriteLine(error);
-                            Debug.WriteLine(error);
-                        }
-
-                        info.Price = price;
-                        info.ProductUrl = meta.ProductUrl;
-                        result.Add(info);
-                    });
-
-                tasks.Add(task);
-                if ((tasks.Count == this.maxThreads) || (c == metas.Count))
+                var parameter = parameters[i];
+                tasks.Add(Task.Factory.StartNew(() => action(parameter)));
+                if ((tasks.Count == this.maxThreads) || i == parameters.Count - 1)
                 {
                     Task.WaitAll(tasks.ToArray());
-                    tasks.Clear();
                 }
             }
-
-            Task.WaitAll(tasks.ToArray());
-            return result;
         }
     }
 }

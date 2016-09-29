@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -57,11 +57,13 @@
   <ItemGroup>
     <Compile Include="BeerMeta.cs" />
     <Compile Include="Crawler.cs" />
+    <Compile Include="Multitask.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RateQuery.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Providers\SuperAlkoProvider.cs" />
     <Compile Include="Providers\FileInputProvider.cs" />

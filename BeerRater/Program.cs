@@ -30,7 +30,7 @@
                 var metas = provider.Get(args);
                 Console.WriteLine($"Query contains {metas.Count} beer name(s)");
 
-                var infos = new QueryQueue().Query(metas);
+                var infos = new RateQuery().Query(metas);
                 if (infos == null)
                 {
                     Console.Error.WriteLine("There is no data to process.");

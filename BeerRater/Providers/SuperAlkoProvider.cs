@@ -1,14 +1,15 @@
-﻿namespace BeerRater.Providers
+﻿using HtmlAgilityPack;
+
+namespace BeerRater.Providers
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// The SuperAlkolProvider input resolver.
     /// </summary>
-    internal class SuperAlkoProvider : IInputProvider
+    internal class SuperAlkoProvider : Multitask, IInputProvider
     {
         /// <summary>
         /// Determines whether the specified arguments is compatible.
@@ -36,23 +37,23 @@
             var referrer = "http://m.viinarannasta.ee/";
             var countryIndex = url.GetDocument(referrer).DocumentNode;
             var nodes = countryIndex.SelectNodes("//section/div/h4//a");
-            var tasks = new Task[nodes.Count];
-            for (var i = 0; i < nodes.Count; i++)
-            {
-                var node = nodes[i];
-                var countryUrl = "http://m.viinarannasta.ee/" + node.GetAttributeValue("href", "");
-                tasks[i] = Task.Run(
-                    () =>
-                        {
-                            lock (result)
-                            {
-                                result.AddRange(this.GetBeers(countryUrl, url));
-                            }
-                        });
-            }
-
-            Task.WaitAll(tasks);
+            this.Queue.Start(n => GetBeerForCountry(n, result, url), nodes);
             return new QuerySession($"SuperAlko_{date:yyyyMMdd_hhmmss}", result);
+        }
+
+        /// <summary>
+        /// Gets the beers for country.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="result">The result.</param>
+        /// <param name="baseUrl">The URL.</param>
+        private void GetBeerForCountry(HtmlNode node, List<BeerMeta> result, string baseUrl)
+        {
+            var countryUrl = "http://m.viinarannasta.ee/" + node.GetAttributeValue("href", "");
+            lock (result)
+            {
+                result.AddRange(this.GetBeers(countryUrl, baseUrl));
+            }
         }
 
         /// <summary>
@@ -75,9 +76,9 @@
                 }
 
                 var beerNode = dataNodes[0].SelectSingleNode("./a");
-                var name = beerNode.InnerText.Decode();
+                var name = beerNode.InnerText.TrimDecoded();
                 var beerName = name.ExtractBeerName();
-                var priceText = dataNodes[2].ChildNodes[0].InnerText.Decode().Trim().Replace(',', '.');
+                var priceText = dataNodes[2].ChildNodes[0].InnerText.TrimDecoded().Replace(',', '.');
                 double parsedPrice;
                 double? price = null;
                 if (double.TryParse(priceText, out parsedPrice))

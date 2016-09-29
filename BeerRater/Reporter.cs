@@ -1,5 +1,7 @@
 ﻿namespace BeerRater
 {
+    using BeerRater.Properties;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -7,10 +9,6 @@
     using System.Linq;
     using System.Net;
     using System.Text;
-
-    using BeerRater.Properties;
-
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Reporter.
@@ -63,16 +61,17 @@
 <th>CALORIES</th>
 <th>ABV</th>
 <th>RATINGS</th>
-<th>PRICE</th></tr></thead><tbody>");
+<th>PRICE</th>
+<th>STYLE</th></tr></thead><tbody>");
                 using (var fs = new StreamWriter(baseFile + ".csv", false))
                 {
-                    fs.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tURL\tIMAGE");
+                    fs.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tSTYLE\tURL\tIMAGE");
                     foreach (var res in infos)
                     {
                         var productUrl = string.IsNullOrEmpty(res.ProductUrl) ? res.ReviewUrl : res.ProductUrl;
                         fs.WriteLine(
                             res.Name + '\t' + res.Overall + '\t' + res.WeightedAverage + '\t' + res.Calories + '\t' + res.ABV + '\t' + res.Ratings + '\t'
-                            + res.Price + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
+                            + res.Price + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
                         html.WriteLine($@"<tr>
 <td><a href='{WebUtility.HtmlEncode(productUrl)}'><img src='{WebUtility.HtmlEncode(res.ImageUrl)}' /></a></td>
 <td><a href='{WebUtility.HtmlEncode(productUrl)}'>{WebUtility.HtmlEncode(res.Name)}</a></td>
@@ -81,7 +80,8 @@
 <td>{WebUtility.HtmlEncode(res.Calories)}</td>
 <td>{WebUtility.HtmlEncode(res.ABV)}</td>
 <td>{WebUtility.HtmlEncode(res.Ratings)}</td>
-<td><b><i>{WebUtility.HtmlEncode(res.Price)}</b></i></td></tr>");
+<td><b><i>{WebUtility.HtmlEncode(res.Price)}</b></i></td>
+<td>{WebUtility.HtmlEncode(res.Style)}</td></tr>");
                     }
                 }
 

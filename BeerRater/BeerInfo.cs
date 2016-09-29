@@ -36,6 +36,11 @@
         public string Overall;
 
         /// <summary>
+        /// The style.
+        /// </summary>
+        public string Style;
+
+        /// <summary>
         /// The product URL.
         /// </summary>
         public string ProductUrl;
@@ -63,7 +68,7 @@
         /// </returns>
         public override string ToString()
         {
-            return string.Format($"{this.Name}\t{this.Overall}\t{this.Ratings}\t{this.WeightedAverage}\t{this.Calories}\t{this.ABV}");
+            return string.Format($"{this.Name}\t{this.Overall}\t{this.Ratings}\t{this.WeightedAverage}\t{this.Calories}\t{this.ABV}\t{this.Price}");
         }
     }
 }

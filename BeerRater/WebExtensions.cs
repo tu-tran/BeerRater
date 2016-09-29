@@ -2,9 +2,8 @@
 
 namespace BeerRater
 {
-    using System.Net;
-
     using HtmlAgilityPack;
+    using System.Net;
 
     /// <summary>
     /// The web extensions.
@@ -57,6 +56,16 @@ namespace BeerRater
         public static string Decode(this string text)
         {
             return WebUtility.HtmlDecode(text ?? "");
+        }
+
+        /// <summary>
+        /// Decodes and trims the specified text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>The decoded and trimmed text.</returns>
+        public static string TrimDecoded(this string text)
+        {
+            return text.Decode().Trim();
         }
     }
 }
