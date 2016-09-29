@@ -52,7 +52,7 @@ namespace BeerRater.Providers
                     }
 
                     if (!string.IsNullOrEmpty(name))
-                        result.Add(new BeerMeta(name, price));
+                        result.Add(new BeerMeta(name, null, price));
                 }
             }
 

@@ -43,14 +43,14 @@
 
             return new BeerInfo
             {
-                OVERALL = overall,
-                RATINGS = regex.Groups["Ratings"].Value.Decode(),
+                Overall = overall,
+                Ratings = regex.Groups["Ratings"].Value.Decode(),
                 ABV = regex.Groups["Abv"].Value.Decode(),
-                CALORIES = regex.Groups["Calories"].Value.Decode(),
-                NAME = searchRow.InnerText.Decode(),
-                WEIGHTED_AVG = regex.Groups["Avg"].Value.Decode(),
-                URL = url,
-                IMAGE_URL = imageUrl
+                Calories = regex.Groups["Calories"].Value.Decode(),
+                Name = searchRow.InnerText.Decode(),
+                WeightedAverage = regex.Groups["Avg"].Value.Decode(),
+                ReviewUrl = url,
+                ImageUrl = imageUrl
             };
         }
     }

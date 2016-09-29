@@ -44,30 +44,33 @@
                     () =>
                     {
                         var price = meta.Price.HasValue ? meta.Price.ToString() : "-";
+                        BeerInfo info;
                         try
                         {
-                            var r = Crawler.Query(meta.Name);
-                            r.PRICE = price;
-                            result.Add(r);
-                            Console.WriteLine($"{result.Count}. {r}");
+                            info = Crawler.Query(meta.Name);
+                            Console.WriteLine($"{result.Count}. {info}");
                         }
                         catch (Exception ex)
                         {
-                            result.Add(
-                                new BeerInfo
-                                {
-                                    NAME = meta.Name,
-                                    CALORIES = "-",
-                                    WEIGHTED_AVG = "-",
-                                    ABV = "-",
-                                    RATINGS = "-",
-                                    OVERALL = "-",
-                                    PRICE = price
-                                });
+                            info = new BeerInfo
+                            {
+                                Name = meta.Name,
+                                Calories = "-",
+                                WeightedAverage = "-",
+                                ABV = "-",
+                                Ratings = "-",
+                                Overall = "-",
+                                Price = price
+                            };
+
                             var error = $"{result.Count}. Failed to resolve {meta.Name}";
                             Console.Error.WriteLine(error);
                             Debug.WriteLine(error);
                         }
+
+                        info.Price = price;
+                        info.ProductUrl = meta.ProductUrl;
+                        result.Add(info);
                     });
 
                 tasks.Add(task);

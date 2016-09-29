@@ -8,6 +8,8 @@
     using System.Net;
     using System.Text;
 
+    using BeerRater.Properties;
+
     using Newtonsoft.Json;
 
     /// <summary>
@@ -45,10 +47,14 @@
             var sb = new StringBuilder();
             sb.AppendLine("<html>");
             var baseFile = Path.Combine(this.BasePath, this.Name);
+            var jsFileName = "sorttable.js";
+            var jsFile = Path.Combine(this.BasePath, jsFileName);
+            File.WriteAllText(jsFile, Resources.JS_SortTable);
             var htmlReport = baseFile + ".html";
             using (var html = new StreamWriter(htmlReport, false))
             {
-                html.WriteLine(@"<html><table><tr>
+                html.WriteLine($@"<html><head><script type='text/javascript' src='{jsFileName}'></script><link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' crossorigin='anonymous'></head><body><table class='table table-condensed table-striped table-hover sortable'>
+<thead><tr>
 <th>IMAGE</th>
 <th>NAME</th>
 <th>OVERALL</th>
@@ -56,29 +62,30 @@
 <th>CALORIES</th>
 <th>ABV</th>
 <th>RATINGS</th>
-<th>PRICE</th></tr>");
+<th>PRICE</th></tr></thead><tbody>");
                 using (var fs = new StreamWriter(baseFile + ".csv", false))
                 {
                     fs.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tURL\tIMAGE");
                     foreach (var res in infos)
                     {
+                        var productUrl = string.IsNullOrEmpty(res.ProductUrl) ? res.ReviewUrl : res.ProductUrl;
                         fs.WriteLine(
-                            res.NAME + '\t' + res.OVERALL + '\t' + res.WEIGHTED_AVG + '\t' + res.CALORIES + '\t' + res.ABV + '\t' + res.RATINGS + '\t'
-                            + res.PRICE + '\t' + res.URL + '\t' + res.IMAGE_URL);
-                        var imgHeight = string.IsNullOrEmpty(res.IMAGE_URL) ? 0 : 96;
+                            res.Name + '\t' + res.Overall + '\t' + res.WeightedAverage + '\t' + res.Calories + '\t' + res.ABV + '\t' + res.Ratings + '\t'
+                            + res.Price + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
+                        var imgHeight = string.IsNullOrEmpty(res.ImageUrl) ? 0 : 96;
                         html.WriteLine($@"<tr>
-<td><a href='{WebUtility.HtmlEncode(res.URL)}'><img src='{WebUtility.HtmlEncode(res.IMAGE_URL)}' height='{imgHeight}' alt='{WebUtility.HtmlEncode(res.NAME)}'/></a></td>
-<td><a href='{WebUtility.HtmlEncode(res.URL)}'>{WebUtility.HtmlEncode(res.NAME)}</a></td>
-<td><b>{WebUtility.HtmlEncode(res.OVERALL)}</b></td>
-<td>{WebUtility.HtmlEncode(res.WEIGHTED_AVG)}</td>
-<td>{WebUtility.HtmlEncode(res.CALORIES)}</td>
+<td><a href='{WebUtility.HtmlEncode(productUrl)}'><img src='{WebUtility.HtmlEncode(res.ImageUrl)}' height='{imgHeight}' alt='{WebUtility.HtmlEncode(res.Name)}'/></a></td>
+<td><a href='{WebUtility.HtmlEncode(productUrl)}'>{WebUtility.HtmlEncode(res.Name)}</a></td>
+<td><a href='{WebUtility.HtmlEncode(res.ReviewUrl)}'><b>{WebUtility.HtmlEncode(res.Overall)}</b></a></td>
+<td>{WebUtility.HtmlEncode(res.WeightedAverage)}</td>
+<td>{WebUtility.HtmlEncode(res.Calories)}</td>
 <td>{WebUtility.HtmlEncode(res.ABV)}</td>
-<td>{WebUtility.HtmlEncode(res.RATINGS)}</td>
-<td><b><i>{WebUtility.HtmlEncode(res.PRICE)}</b></i></td></tr>");
+<td>{WebUtility.HtmlEncode(res.Ratings)}</td>
+<td><b><i>{WebUtility.HtmlEncode(res.Price)}</b></i></td></tr>");
                     }
                 }
 
-                html.WriteLine(@"</table><html>");
+                html.WriteLine(@"</tbody></table></body></html>");
             }
 
             File.WriteAllText(baseFile + ".json", JsonConvert.SerializeObject(infos, Formatting.Indented));

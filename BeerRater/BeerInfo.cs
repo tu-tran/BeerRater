@@ -8,22 +8,22 @@
         /// <summary>
         /// The name.
         /// </summary>
-        public string NAME;
+        public string Name;
 
         /// <summary>
         /// The ratings.
         /// </summary>
-        public string RATINGS;
+        public string Ratings;
 
         /// <summary>
         /// The weighted average.
         /// </summary>
-        public string WEIGHTED_AVG;
+        public string WeightedAverage;
 
         /// <summary>
         /// The calories.
         /// </summary>
-        public string CALORIES;
+        public string Calories;
 
         /// <summary>
         /// The abv.
@@ -33,23 +33,28 @@
         /// <summary>
         /// The overall rating.
         /// </summary> 
-        public string OVERALL;
+        public string Overall;
+
+        /// <summary>
+        /// The product URL.
+        /// </summary>
+        public string ProductUrl;
 
         /// <summary>
         /// The URL.
         /// </summary>
-        public string URL;
-
-        /// <summary>
-        /// The price.
-        /// </summary>
-        public string PRICE;
+        public string ReviewUrl;
 
         /// <summary>
         /// The image URL.
         /// </summary>
-        public string IMAGE_URL;
+        public string ImageUrl;
 
+
+        /// <summary>
+        /// The price.
+        /// </summary>
+        public string Price;
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
@@ -58,7 +63,7 @@
         /// </returns>
         public override string ToString()
         {
-            return string.Format($"{this.NAME}\t{this.OVERALL}\t{this.RATINGS}\t{this.WEIGHTED_AVG}\t{this.CALORIES}\t{this.ABV}");
+            return string.Format($"{this.Name}\t{this.Overall}\t{this.Ratings}\t{this.WeightedAverage}\t{this.Calories}\t{this.ABV}");
         }
     }
 }

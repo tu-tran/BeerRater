@@ -37,7 +37,7 @@
                     return;
                 }
 
-                infos = infos.OrderByDescending(r => Parse(r.OVERALL)).ThenByDescending(r => Parse(r.WEIGHTED_AVG)).ThenBy(r => Parse(r.PRICE)).ThenBy(r => r.NAME).ToList();
+                infos = infos.OrderByDescending(r => Parse(r.Overall)).ThenByDescending(r => Parse(r.WeightedAverage)).ThenBy(r => Parse(r.Price)).ThenBy(r => r.Name).ToList();
                 var fileName = Path.GetFileNameWithoutExtension(metas.FilePath);
                 var basePath = Path.GetDirectoryName(metas.FilePath);
                 new Reporter(fileName, basePath).Generate(infos);

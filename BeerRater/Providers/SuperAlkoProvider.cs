@@ -77,7 +77,7 @@
                 }
 
                 Trace.WriteLine($"SuperAlko: [{name}] -> [{beerName}]   {price}");
-                result.Add(new BeerMeta(beerName, price));
+                result.Add(new BeerMeta(beerName, url, price));
             }
 
             return result;
