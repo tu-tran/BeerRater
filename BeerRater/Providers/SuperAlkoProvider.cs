@@ -36,14 +36,15 @@
             var referrer = "http://m.viinarannasta.ee/";
             var countryIndex = url.GetDocument(referrer).DocumentNode;
             var nodes = countryIndex.SelectNodes("//section/div/h4//a");
-            var tasks = new List<Task>();
-            foreach (var node in nodes)
+            var tasks = new Task[nodes.Count];
+            for (var i = 0; i < nodes.Count; i++)
             {
+                var node = nodes[i];
                 var countryUrl = "http://m.viinarannasta.ee/" + node.GetAttributeValue("href", "");
-                tasks.Add(Task.Run(() => result.AddRange(this.GetBeers(countryUrl, url))));
+                tasks[i] = Task.Run(() => result.AddRange(this.GetBeers(countryUrl, url)));
             }
 
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll(tasks);
             return new QuerySession($"SuperAlko_{date:yyyyMMdd_hhmmss}", result);
         }
 
@@ -66,7 +67,8 @@
                     continue;
                 }
 
-                var name = dataNodes[0].SelectSingleNode("./a").InnerText.Decode();
+                var beerNode = dataNodes[0].SelectSingleNode("./a");
+                var name = beerNode.InnerText.Decode();
                 var beerName = name.ExtractBeerName();
                 var priceText = dataNodes[2].ChildNodes[0].InnerText.Decode().Trim().Replace(',', '.');
                 double parsedPrice;
@@ -76,8 +78,10 @@
                     price = parsedPrice;
                 }
 
+                var uri = new Uri(url);
+                var beerUrl = uri.Host + "/" + beerNode.GetAttributeValue("href", "");
                 Trace.WriteLine($"SuperAlko: [{name}] -> [{beerName}]   {price}");
-                result.Add(new BeerMeta(beerName, url, price));
+                result.Add(new BeerMeta(beerName, beerUrl, price));
             }
 
             return result;

@@ -53,7 +53,8 @@
             var htmlReport = baseFile + ".html";
             using (var html = new StreamWriter(htmlReport, false))
             {
-                html.WriteLine($@"<html><head><script type='text/javascript' src='{jsFileName}'></script><link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' crossorigin='anonymous'></head><body><table class='table table-condensed table-striped table-hover sortable'>
+                var css = @"<style>img{max-height:60} td{vertical-align:middle}</style>";
+                html.WriteLine($@"<html><head><script type='text/javascript' src='{jsFileName}'></script><link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' crossorigin='anonymous'>{css}</head><body><table class='table-condensed table-striped table-hover sortable'>
 <thead><tr>
 <th>IMAGE</th>
 <th>NAME</th>
@@ -72,9 +73,8 @@
                         fs.WriteLine(
                             res.Name + '\t' + res.Overall + '\t' + res.WeightedAverage + '\t' + res.Calories + '\t' + res.ABV + '\t' + res.Ratings + '\t'
                             + res.Price + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
-                        var imgHeight = string.IsNullOrEmpty(res.ImageUrl) ? 0 : 96;
                         html.WriteLine($@"<tr>
-<td><a href='{WebUtility.HtmlEncode(productUrl)}'><img src='{WebUtility.HtmlEncode(res.ImageUrl)}' height='{imgHeight}' alt='{WebUtility.HtmlEncode(res.Name)}'/></a></td>
+<td><a href='{WebUtility.HtmlEncode(productUrl)}'><img src='{WebUtility.HtmlEncode(res.ImageUrl)}' /></a></td>
 <td><a href='{WebUtility.HtmlEncode(productUrl)}'>{WebUtility.HtmlEncode(res.Name)}</a></td>
 <td><a href='{WebUtility.HtmlEncode(res.ReviewUrl)}'><b>{WebUtility.HtmlEncode(res.Overall)}</b></a></td>
 <td>{WebUtility.HtmlEncode(res.WeightedAverage)}</td>
