@@ -1,6 +1,5 @@
 ﻿namespace BeerRater
 {
-    using System.Net;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
@@ -66,12 +65,20 @@
             var infoNode = resultDoc.DocumentNode.SelectSingleNode("//td[@id='_aggregateRating6']");
             if (infoNode != null)
             {
-                var infoText = infoNode.NextSibling.InnerText.TrimDecoded();
-                var regex = Regex.Match(infoText, "Style: (?<Style>.+?)(  )|$",
-                    RegexOptions.Compiled | RegexOptions.Singleline);
-                result.Style = regex.Success
-                    ? regex.Groups["Style"].Value.Trim()
-                    : Regex.Replace(infoText, "  +", @". ").Trim();
+                var styleNode = infoNode.NextSibling.SelectSingleNode(".//a[contains(@href, '/beerstyles')]");
+                if (styleNode != null)
+                {
+                    result.Style = styleNode.InnerText.TrimDecoded();
+                }
+                else
+                {
+                    var infoText = infoNode.NextSibling.InnerText.TrimDecoded();
+                    var regex = Regex.Match(infoText, "Style: (?<Style>.+?)(  )|$",
+                        RegexOptions.Compiled | RegexOptions.Singleline);
+                    result.Style = (regex.Success
+                        ? regex.Groups["Style"].Value
+                        : Regex.Replace(infoText, "  +", @". ")).Trim();
+                }
             }
 
             return result;

@@ -52,7 +52,8 @@
             using (var html = new StreamWriter(htmlReport, false))
             {
                 var css = @"<style>img{max-height:60} td{vertical-align:middle}</style>";
-                html.WriteLine($@"<html><head><script type='text/javascript' src='{jsFileName}'></script><link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' crossorigin='anonymous'>{css}</head><body><table class='table-condensed table-striped table-hover sortable'>
+                var encoding = @"<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>";
+                html.WriteLine($@"<html><head>{encoding}<script type='text/javascript' src='{jsFileName}'></script><link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' crossorigin='anonymous'>{css}</head><body><table class='table-condensed table-striped table-hover sortable'>
 <thead><tr>
 <th>IMAGE</th>
 <th>NAME</th>
