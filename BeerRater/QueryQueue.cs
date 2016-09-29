@@ -40,6 +40,7 @@
             foreach (var meta in metas)
             {
                 c++;
+                var current = c;
                 var task = Task.Factory.StartNew(
                     () =>
                     {
@@ -48,7 +49,7 @@
                         try
                         {
                             info = Crawler.Query(meta.Name);
-                            Console.WriteLine($"{result.Count}. {info}");
+                            Console.WriteLine($"{current}. {info}");
                         }
                         catch (Exception ex)
                         {

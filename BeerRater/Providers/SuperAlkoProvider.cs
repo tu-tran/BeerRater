@@ -41,7 +41,14 @@
             {
                 var node = nodes[i];
                 var countryUrl = "http://m.viinarannasta.ee/" + node.GetAttributeValue("href", "");
-                tasks[i] = Task.Run(() => result.AddRange(this.GetBeers(countryUrl, url)));
+                tasks[i] = Task.Run(
+                    () =>
+                        {
+                            lock (result)
+                            {
+                                result.AddRange(this.GetBeers(countryUrl, url));
+                            }
+                        });
             }
 
             Task.WaitAll(tasks);
@@ -79,7 +86,7 @@
                 }
 
                 var uri = new Uri(url);
-                var beerUrl = uri.Host + "/" + beerNode.GetAttributeValue("href", "");
+                var beerUrl = $"{uri.Scheme}://{uri.Host}/{beerNode.GetAttributeValue("href", "")}";
                 Trace.WriteLine($"SuperAlko: [{name}] -> [{beerName}]   {price}");
                 result.Add(new BeerMeta(beerName, beerUrl, price));
             }
