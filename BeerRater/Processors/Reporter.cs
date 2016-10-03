@@ -85,7 +85,7 @@
                             }
                             else if (priceDiff < 0.0)
                             {
-                                priceDiffHtml = $"&nbsp;(<font color='green'><a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'>-{priceDiff.ToInvariantString()}</a></font>)";
+                                priceDiffHtml = $"&nbsp;(<font color='green'><a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'>{priceDiff.ToInvariantString()}</a></font>)";
                             }
                         }
 
