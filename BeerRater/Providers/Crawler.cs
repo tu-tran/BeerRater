@@ -1,8 +1,11 @@
-﻿namespace BeerRater
+﻿namespace BeerRater.Providers
 {
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
+
+    using BeerRater.Data;
+    using BeerRater.Utils;
 
     /// <summary>
     /// The web crawler.
@@ -42,7 +45,7 @@
             }
 
             var overallNode = resultDoc.DocumentNode.SelectSingleNode(@"//span[@*='ratingValue']");
-            result.Overall = overallNode == null ? "" : overallNode.InnerText.TrimDecoded();
+            result.Overall = (overallNode == null ? "" : overallNode.InnerText.TrimDecoded()).ToDouble();
 
             var rateNode = resultDoc.DocumentNode.SelectSingleNode("//div/small/abbr");
             if (rateNode != null)
@@ -50,10 +53,10 @@
                 // RATINGS: 1069   WEIGHTED AVG: 3.3/5   EST. CALORIES: 135   ABV: 4.5%
                 var rates = rateNode.ParentNode.InnerText.TrimDecoded();
                 var regex = Regex.Match(rates, @"RATINGS: (?<Ratings>\d*).*?WEIGHTED AVG: (?<Avg>.+?)\/5.*?EST\. CALORIES: (?<Calories>\d+?).*?ABV: (?<Abv>.+?)%");
-                result.Ratings = regex.Groups["Ratings"].Value.Trim();
-                result.ABV = regex.Groups["Abv"].Value.Trim();
-                result.Calories = regex.Groups["Calories"].Value.Trim();
-                result.WeightedAverage = regex.Groups["Avg"].Value.Trim();
+                result.Ratings = regex.Groups["Ratings"].Value.Trim().ToDouble();
+                result.ABV = regex.Groups["Abv"].Value.Trim().ToDouble();
+                result.Calories = regex.Groups["Calories"].Value.Trim().ToDouble();
+                result.WeightedAverage = regex.Groups["Avg"].Value.Trim().ToDouble();
             }
 
             var imageNode = resultDoc.DocumentNode.SelectSingleNode(@"//img[@id='beerImg']");

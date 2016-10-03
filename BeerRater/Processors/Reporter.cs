@@ -1,7 +1,5 @@
-﻿namespace BeerRater
+﻿namespace BeerRater.Processors
 {
-    using BeerRater.Properties;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -9,6 +7,12 @@
     using System.Linq;
     using System.Net;
     using System.Text;
+
+    using BeerRater.Data;
+    using BeerRater.Properties;
+    using BeerRater.Utils;
+
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Reporter.
@@ -66,22 +70,37 @@
 <th>STYLE</th></tr></thead><tbody>");
                 using (var fs = new StreamWriter(baseFile + ".csv", false))
                 {
-                    fs.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tSTYLE\tURL\tIMAGE");
+                    fs.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tREFERENCE PRICE\tREFERENCE URL\tSTYLE\tURL\tIMAGE");
                     foreach (var res in infos)
                     {
                         var productUrl = string.IsNullOrEmpty(res.ProductUrl) ? res.ReviewUrl : res.ProductUrl;
+                        var priceDiff = res.Price - res.ReferencePrice;
+                        string priceDiffHtml = string.Empty;
+
+                        if (res.ReferencePrice > 0.001)
+                        {
+                            if (priceDiff > 0.0)
+                            {
+                                priceDiffHtml = $"&nbsp;(<font color='red'><a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'>+{priceDiff.ToInvariantString()}</a></font>)";
+                            }
+                            else if (priceDiff < 0.0)
+                            {
+                                priceDiffHtml = $"&nbsp;(<font color='green'><a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'>-{priceDiff.ToInvariantString()}</a></font>)";
+                            }
+                        }
+
                         fs.WriteLine(
-                            res.Name + '\t' + res.Overall + '\t' + res.WeightedAverage + '\t' + res.Calories + '\t' + res.ABV + '\t' + res.Ratings + '\t'
-                            + res.Price + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
+                            res.Name + '\t' + res.Overall.ToInvariantString() + '\t' + res.WeightedAverage.ToInvariantString() + '\t' + res.Calories.ToInvariantString() + '\t' + res.ABV.ToInvariantString() + '\t' + res.Ratings.ToInvariantString() + '\t'
+                            + res.Price.ToInvariantString() + '\t' + res.ReferencePrice.ToInvariantString() + '\t' + res.ReferencePriceUrl + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
                         html.WriteLine($@"<tr>
 <td><a href='{WebUtility.HtmlEncode(productUrl)}'><img src='{WebUtility.HtmlEncode(res.ImageUrl)}' /></a></td>
 <td><a href='{WebUtility.HtmlEncode(productUrl)}'>{WebUtility.HtmlEncode(res.Name)}</a></td>
-<td><a href='{WebUtility.HtmlEncode(res.ReviewUrl)}'><b>{WebUtility.HtmlEncode(res.Overall)}</b></a></td>
-<td>{WebUtility.HtmlEncode(res.WeightedAverage)}</td>
-<td>{WebUtility.HtmlEncode(res.Calories)}</td>
-<td>{WebUtility.HtmlEncode(res.ABV)}</td>
-<td>{WebUtility.HtmlEncode(res.Ratings)}</td>
-<td><b><i>{WebUtility.HtmlEncode(res.Price)}</b></i></td>
+<td><a href='{WebUtility.HtmlEncode(res.ReviewUrl)}'><b>{WebUtility.HtmlEncode(res.Overall.ToInvariantString())}</b></a></td>
+<td>{WebUtility.HtmlEncode(res.WeightedAverage.ToInvariantString())}</td>
+<td>{WebUtility.HtmlEncode(res.Calories.ToInvariantString())}</td>
+<td>{WebUtility.HtmlEncode(res.ABV.ToInvariantString())}</td>
+<td>{WebUtility.HtmlEncode(res.Ratings.ToInvariantString())}</td>
+<td><b><i>{WebUtility.HtmlEncode(res.Price.ToInvariantString())}{priceDiffHtml}</b></i></td>
 <td>{WebUtility.HtmlEncode(res.Style)}</td></tr>");
                     }
                 }
@@ -90,8 +109,8 @@
             }
 
             File.WriteAllText(baseFile + ".json", JsonConvert.SerializeObject(infos, Formatting.Indented));
-            Console.WriteLine("======================================================================");
-            Console.WriteLine("Open the report? (press Y / Enter to confirm)");
+            "======================================================================".Output();
+            "Open the report? (press Y / Enter to confirm)".Output();
             var key = Console.ReadKey(false);
             if (new[] { ConsoleKey.Enter, ConsoleKey.Y }.Contains(key.Key))
             {

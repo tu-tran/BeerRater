@@ -29,7 +29,7 @@
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError("Failed to create db {0}: {1}", type, ex);
+                    Trace.TraceError("Failed to create data provider {0}: {1}", type, ex);
                 }
             }
 

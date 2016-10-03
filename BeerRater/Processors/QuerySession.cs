@@ -1,6 +1,8 @@
-﻿namespace BeerRater
+﻿namespace BeerRater.Processors
 {
     using System.Collections.Generic;
+
+    using BeerRater.Data;
 
     internal sealed class QuerySession : List<BeerMeta>
     {

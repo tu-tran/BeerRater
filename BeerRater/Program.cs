@@ -1,11 +1,12 @@
 ﻿namespace BeerRater
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
 
+    using BeerRater.Processors;
     using BeerRater.Providers;
+    using BeerRater.Utils;
 
     /// <summary>
     /// The beer rater.
@@ -23,21 +24,24 @@
                 var provider = InputProviderResolver.Get(args);
                 if (provider == null)
                 {
-                    Console.Error.WriteLine("Invalid arguments");
+                    "Invalid arguments".OutputError();
                     return;
                 }
 
                 var metas = provider.Get(args);
-                Console.WriteLine($"Query contains {metas.Count} beer name(s)");
+                $"Query contains {metas.Count} beer name(s)".Output();
 
                 var infos = new RateQuery().Query(metas);
                 if (infos == null)
                 {
-                    Console.Error.WriteLine("There is no data to process.");
+                    "There is no data to process.".OutputError();
                     return;
                 }
 
-                infos = infos.OrderByDescending(r => Parse(r.Overall)).ThenByDescending(r => Parse(r.WeightedAverage)).ThenBy(r => Parse(r.Price)).ThenBy(r => r.Name).ToList();
+                infos = infos.OrderByDescending(r => r.Overall).ThenByDescending(r => r.WeightedAverage).ThenBy(r => r.Price).ThenBy(r => r.Name).ToList();
+                "Querying the reference prices...".Output();
+                new ReferencePriceQuery().UpdateReferencePrices(infos);
+
                 var fileName = Path.GetFileNameWithoutExtension(metas.FilePath);
                 var basePath = Path.GetDirectoryName(metas.FilePath);
                 new Reporter(fileName, basePath).Generate(infos);
@@ -45,23 +49,10 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine("======================================================================");
-                var error = $"FATAL ERROR: {ex}";
-                Console.Error.WriteLine(error);
-                Trace.TraceError(error);
+                "======================================================================".Output();
+                $"FATAL ERROR: {ex}".OutputError();
                 Console.ReadKey();
             }
-        }
-
-        /// <summary>
-        /// Parses the specified target to double.
-        /// </summary>
-        /// <param name="target">The target.</param>
-        /// <returns>The parsed double.</returns>
-        private static double? Parse(string target)
-        {
-            double result;
-            return double.TryParse(target, out result) ? result : (double?)null;
         }
     }
 }

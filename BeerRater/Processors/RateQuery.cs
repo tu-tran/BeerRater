@@ -1,8 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BeerRater
+﻿namespace BeerRater.Processors
 {
+    using System;
+    using System.Collections.Generic;
+
+    using BeerRater.Data;
+    using BeerRater.Providers;
+    using BeerRater.Utils;
+
     /// <summary>
     /// The query of beer rate.
     /// </summary>
@@ -27,14 +31,15 @@ namespace BeerRater
         /// <param name="result">The output result.</param>
         private static void Query(BeerMeta meta, List<BeerInfo> result)
         {
-            var price = meta.Price.HasValue ? meta.Price.ToString() : "-";
+            var price = (meta.Price.HasValue ? meta.Price.ToString() : "").ToDouble();
             var info = Crawler.Query(meta.Name);
+            info.NameOnStore = meta.Name;
             info.Price = price;
             info.ProductUrl = meta.ProductUrl;
             lock (result)
             {
                 result.Add(info);
-                Console.WriteLine($"{result.Count}. {info}");
+                $"{result.Count}. {info}".Output();
             }
         }
     }

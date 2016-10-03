@@ -1,5 +1,7 @@
 ﻿namespace BeerRater.Providers
 {
+    using BeerRater.Processors;
+
     /// <summary>
     /// The input resolver.
     /// </summary>

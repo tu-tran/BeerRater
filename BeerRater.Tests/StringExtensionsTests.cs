@@ -1,5 +1,7 @@
 ﻿namespace BeerRater.Tests
 {
+    using BeerRater.Utils;
+
     using NUnit.Framework;
 
     [TestFixture]

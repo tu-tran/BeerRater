@@ -5,6 +5,10 @@ namespace BeerRater.Providers
     using System.IO;
     using System.Linq;
 
+    using BeerRater.Data;
+    using BeerRater.Processors;
+    using BeerRater.Utils;
+
     /// <summary>
     /// The file input resolver.
     /// </summary>
@@ -30,7 +34,7 @@ namespace BeerRater.Providers
         public QuerySession Get(params string[] args)
         {
             var fileName = args[0];
-            Console.WriteLine($"Processing [{fileName}]...");
+            $"Processing [{fileName}]...".Output();
             var result = new List<BeerMeta>();
             using (var reader = File.OpenText(fileName))
             {
@@ -42,7 +46,7 @@ namespace BeerRater.Providers
                     var metas = line.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
                     if (metas.Length > 0)
                     {
-                        name = metas[0].Trim();
+                        name = metas[0].ExtractBeerName().Trim();
                         if (metas.Length > 1)
                         {
                             double temp;

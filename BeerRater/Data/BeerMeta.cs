@@ -1,4 +1,4 @@
-﻿namespace BeerRater
+﻿namespace BeerRater.Data
 {
     /// <summary>
     /// The beer meta.

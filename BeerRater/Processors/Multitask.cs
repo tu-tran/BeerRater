@@ -1,7 +1,9 @@
-﻿using System;
-
-namespace BeerRater
+﻿namespace BeerRater.Processors
 {
+    using System;
+
+    using BeerRater.Utils;
+
     /// <summary>
     /// Multitasking.
     /// </summary>
@@ -31,7 +33,7 @@ namespace BeerRater
         /// <param name="maxThreads">The maximum threads.</param>
         public Multitask(int maxThreads)
         {
-            this.Queue = new QueryQueue(maxThreads);
+            this.Queue = new QueryQueue(this.GetType().Name.GetValidThreadName(), maxThreads);
         }
 
         /// <summary>

@@ -1,9 +1,9 @@
-﻿namespace BeerRater
+﻿namespace BeerRater.Data
 {
     /// <summary>
     /// The beer info.
     /// </summary>
-    public struct BeerInfo
+    public class BeerInfo
     {
         /// <summary>
         /// The name.
@@ -11,29 +11,34 @@
         public string Name;
 
         /// <summary>
+        /// The name from the query.
+        /// </summary>
+        public string NameOnStore;
+
+        /// <summary>
         /// The ratings.
         /// </summary>
-        public string Ratings;
+        public double Ratings;
 
         /// <summary>
         /// The weighted average.
         /// </summary>
-        public string WeightedAverage;
+        public double WeightedAverage;
 
         /// <summary>
         /// The calories.
         /// </summary>
-        public string Calories;
+        public double Calories;
 
         /// <summary>
         /// The abv.
         /// </summary>
-        public string ABV;
+        public double ABV;
 
         /// <summary>
         /// The overall rating.
         /// </summary> 
-        public string Overall;
+        public double Overall;
 
         /// <summary>
         /// The style.
@@ -55,11 +60,21 @@
         /// </summary>
         public string ImageUrl;
 
-
         /// <summary>
         /// The price.
         /// </summary>
-        public string Price;
+        public double Price;
+
+        /// <summary>
+        /// The reference price.
+        /// </summary>
+        public double ReferencePrice;
+
+        /// <summary>
+        /// The reference price URL.
+        /// </summary>
+        public string ReferencePriceUrl;
+
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>

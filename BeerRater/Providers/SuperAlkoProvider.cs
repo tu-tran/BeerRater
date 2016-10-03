@@ -6,6 +6,10 @@ namespace BeerRater.Providers
     using System.Collections.Generic;
     using System.Diagnostics;
 
+    using BeerRater.Data;
+    using BeerRater.Processors;
+    using BeerRater.Utils;
+
     /// <summary>
     /// The SuperAlkolProvider input resolver.
     /// </summary>
@@ -30,14 +34,14 @@ namespace BeerRater.Providers
         /// <returns>The beer metas.</returns>
         public QuerySession Get(params string[] args)
         {
-            Console.WriteLine("Retrieving beer lists from SuperAlko...");
+            "Retrieving beer lists from SuperAlko...".Output();
             var date = DateTime.Now;
             var result = new List<BeerMeta>();
             var url = "http://m.viinarannasta.ee/range-of-products/1";
             var referrer = "http://m.viinarannasta.ee/";
             var countryIndex = url.GetDocument(referrer).DocumentNode;
             var nodes = countryIndex.SelectNodes("//section/div/h4//a");
-            this.Queue.Start(n => GetBeerForCountry(n, result, url), nodes);
+            this.Queue.Start(n => this.GetBeerForCountry(n, result, url), nodes);
             return new QuerySession($"SuperAlko_{date:yyyyMMdd_hhmmss}", result);
         }
 
