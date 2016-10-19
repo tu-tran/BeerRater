@@ -81,11 +81,11 @@
                         {
                             if (priceDiff > 0.0)
                             {
-                                priceDiffHtml = $"&nbsp;(<font color='red'><a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'>+{priceDiff.ToInvariantString()}</a></font>)";
+                                priceDiffHtml = $"&nbsp;(<a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'><font color='red'>+{priceDiff.ToInvariantString()}</font></a>)";
                             }
                             else if (priceDiff < 0.0)
                             {
-                                priceDiffHtml = $"&nbsp;(<font color='green'><a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'>{priceDiff.ToInvariantString()}</a></font>)";
+                                priceDiffHtml = $"&nbsp;(<a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'><font color='green'>{priceDiff.ToInvariantString()}</font></a>)";
                             }
                         }
 
