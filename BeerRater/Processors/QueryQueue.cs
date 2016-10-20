@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Utils;
@@ -54,25 +55,25 @@
         /// <typeparam name="TParam">The type of the parameter.</typeparam>
         /// <param name="action">The action.</param>
         /// <param name="parameters">The parameters.</param>
-        public void Start<TParam>(Action<TParam> action, IList<TParam> parameters)
+        public void Start<TParam>(Action<TParam, int> action, IList<TParam> parameters)
         {
             var tasks = new List<Task>(this.maxThreads);
             for (var i = 0; i < parameters.Count; i++)
             {
                 var parameter = parameters[i];
                 var index = i;
+                tasks.RemoveAll(t => t.IsCompleted);
 
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
                     Thread.CurrentThread.Name = $"{this.name}_{index}";
                     Trace.WriteLine($"Spawning thread {Thread.CurrentThread.Name}");
-                    action(parameter);
+                    action(parameter, index);
                 }));
 
                 if (tasks.Count == this.maxThreads)
                 {
-                    var doneIndex = Task.WaitAny(tasks.ToArray());
-                    tasks.RemoveAt(doneIndex);
+                    Task.WaitAny(tasks.ToArray());
                 }
             }
 

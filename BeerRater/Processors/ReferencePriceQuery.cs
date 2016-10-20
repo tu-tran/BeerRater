@@ -25,10 +25,11 @@
         /// Resolves the reference price.
         /// </summary>
         /// <param name="info">The information.</param>
-        private static void ResolveReferencePrice(BeerInfo info)
+        /// <param name="index">The index.</param>
+        private static void ResolveReferencePrice(BeerInfo info, int index)
         {
             ReferencePriceResolver.UpdateReferencePrice(info);
-            $"{info.Name} - [{info.Price}] <-> [{info.ReferencePrice}]".Output();
+            $"{index}. {info.Name} - [{info.Price}] <-> [{info.ReferencePrice}]".Output();
             if (string.IsNullOrEmpty(info.ReferencePriceUrl))
             {
                 Trace.TraceError($"Failed to resolve reference price for [{info.Name}]");

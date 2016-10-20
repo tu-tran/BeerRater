@@ -15,7 +15,7 @@
         [Test]
         public void ResolveTest()
         {
-            var target = new BeerInfo { NameOnStore = "Rodenbach Caractère Rouge" };
+            var target = new BeerInfo { NameOnStore = "Chimay Blue 9% 33cl" };
             ReferencePriceResolver.UpdateReferencePrice(target);
             Assert.IsTrue(target.ReferencePrice > 0.0);
         }

@@ -60,9 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\BeerMeta.cs" />
+    <Compile Include="Data\BeerPrice.cs" />
     <Compile Include="Processors\ReferencePriceQuery.cs" />
     <Compile Include="Providers\Crawler.cs" />
     <Compile Include="Processors\Multitask.cs" />
+    <Compile Include="Providers\IPriceProvider.cs" />
+    <Compile Include="Providers\PriceProviderBase.cs" />
     <Compile Include="Providers\ReferencePriceResolver.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -70,6 +73,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Processors\RateQuery.cs" />
+    <Compile Include="Providers\AlkoPriceProvider.cs" />
+    <Compile Include="Providers\ViinikarttaPriceProvider.cs" />
     <Compile Include="Utils\StringExtensions.cs" />
     <Compile Include="Providers\SuperAlkoProvider.cs" />
     <Compile Include="Providers\FileInputProvider.cs" />

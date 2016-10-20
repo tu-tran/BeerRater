@@ -15,6 +15,7 @@
         /// <returns>The beer name.</returns>
         public static string ExtractBeerName(this string input)
         {
+            input = input ?? string.Empty;
             var regex = Regex.Match(input, @"(?<Name>.+?)( ?\(\w.+\))? \(?(?<Abv>\d+[,\.]?\d? ?%)\)? ?(?<Volume>(\d+x)?\d[,\.]?\d+? ?cl)?");
             var result = regex.Success ? regex.Groups["Name"].Value : input;
             result = result.Replace("A.Le Coq", "A. Le Coq");
@@ -23,7 +24,7 @@
                 result = result.Substring(0, result.Length - " beer".Length);
             }
 
-            return result;
+            return result.Trim();
         }
 
         /// <summary>

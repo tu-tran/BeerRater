@@ -20,7 +20,7 @@
         public List<BeerInfo> Query(IList<BeerMeta> metas)
         {
             var result = new List<BeerInfo>();
-            this.Queue.Start(m => Query(m, result), metas);
+            this.Queue.Start((m,i) => Query(m, result), metas);
             return result;
         }
 

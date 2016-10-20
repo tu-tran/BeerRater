@@ -41,7 +41,7 @@ namespace BeerRater.Providers
             var referrer = "http://m.viinarannasta.ee/";
             var countryIndex = url.GetDocument(referrer).DocumentNode;
             var nodes = countryIndex.SelectNodes("//section/div/h4//a");
-            this.Queue.Start(n => this.GetBeerForCountry(n, result, url), nodes);
+            this.Queue.Start((n,i) => this.GetBeerForCountry(n, result, url), nodes);
             return new QuerySession($"SuperAlko_{date:yyyyMMdd_hhmmss}", result);
         }
 
