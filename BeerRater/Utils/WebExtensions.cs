@@ -44,7 +44,7 @@ namespace BeerRater.Utils
             request.Method = "HEAD";
             try
             {
-                using (var response = request.GetResponse())
+                using (request.GetResponse())
                 {
                     return true;
                 }
