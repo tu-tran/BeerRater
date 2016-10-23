@@ -1,4 +1,6 @@
-﻿namespace BeerRater.Utils
+﻿using System;
+
+namespace BeerRater.Utils
 {
     using System.Net;
     using System.Text;
@@ -28,6 +30,29 @@
             }
 
             return htmlDoc;
+        }
+
+        /// <summary>
+        /// Does URL exist.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="referrer">The referrer.</param>
+        /// <returns>True if exists.</returns>
+        public static bool UrlExists(this string url, string referrer = "")
+        {
+            var request = GetRequest(url, referrer, true);
+            request.Method = "HEAD";
+            try
+            {
+                using (var response = request.GetResponse())
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /// <summary>

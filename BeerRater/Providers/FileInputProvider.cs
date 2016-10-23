@@ -1,13 +1,12 @@
 namespace BeerRater.Providers
 {
+    using BeerRater.Data;
+    using BeerRater.Processors;
+    using BeerRater.Utils;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-
-    using BeerRater.Data;
-    using BeerRater.Processors;
-    using BeerRater.Utils;
 
     /// <summary>
     /// The file input resolver.
@@ -56,7 +55,9 @@ namespace BeerRater.Providers
                     }
 
                     if (!string.IsNullOrEmpty(name))
-                        result.Add(new BeerMeta(name, null, price));
+                    {
+                        result.Add(new BeerMeta(name, null, null, price));
+                    }
                 }
             }
 

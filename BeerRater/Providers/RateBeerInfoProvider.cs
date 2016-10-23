@@ -1,16 +1,15 @@
 ﻿namespace BeerRater.Providers
 {
+    using BeerRater.Data;
+    using BeerRater.Utils;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
 
-    using BeerRater.Data;
-    using BeerRater.Utils;
-
     /// <summary>
     /// The web crawler.
     /// </summary>
-    internal static class Crawler
+    internal static class RateBeerInfoProvider
     {
         /// <summary>
         /// Queries the specified beer release name.
@@ -59,10 +58,13 @@
                 result.WeightedAverage = regex.Groups["Avg"].Value.Trim().ToDouble();
             }
 
-            var imageNode = resultDoc.DocumentNode.SelectSingleNode(@"//img[@id='beerImg']");
-            if (imageNode != null)
+            if (string.IsNullOrEmpty(result.ImageUrl))
             {
-                result.ImageUrl = imageNode.GetAttributeValue("src", "");
+                var imageNode = resultDoc.DocumentNode.SelectSingleNode(@"//img[@id='beerImg']");
+                if (imageNode != null)
+                {
+                    result.ImageUrl = imageNode.GetAttributeValue("src", "");
+                }
             }
 
             var infoNode = resultDoc.DocumentNode.SelectSingleNode("//td[@id='_aggregateRating6']");

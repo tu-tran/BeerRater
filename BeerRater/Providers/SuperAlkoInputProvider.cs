@@ -13,7 +13,7 @@ namespace BeerRater.Providers
     /// <summary>
     /// The SuperAlkolProvider input resolver.
     /// </summary>
-    internal class SuperAlkoProvider : Multitask, IInputProvider
+    internal class SuperAlkoInputProvider : Multitask, IInputProvider
     {
         /// <summary>
         /// Determines whether the specified arguments is compatible.
@@ -90,10 +90,21 @@ namespace BeerRater.Providers
                     price = parsedPrice;
                 }
 
+                string imageUrl = null;
+                var imageNode = node.SelectSingleNode("./div/a/img");
+                if (imageNode != null)
+                {
+                    imageUrl = imageNode.GetAttributeValue("src", String.Empty).Replace("-thumb-", "-");
+                    if (!imageUrl.UrlExists(referrer))
+                    {
+                        imageUrl = null;
+                    }
+                }
+
                 var uri = new Uri(url);
                 var beerUrl = $"{uri.Scheme}://{uri.Host}/{beerNode.GetAttributeValue("href", "")}";
                 Trace.WriteLine($"SuperAlko: [{name}] -> [{beerName}]   {price}");
-                result.Add(new BeerMeta(beerName, beerUrl, price));
+                result.Add(new BeerMeta(beerName, beerUrl, imageUrl, price));
             }
 
             return result;

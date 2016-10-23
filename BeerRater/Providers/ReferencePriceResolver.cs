@@ -22,7 +22,7 @@
         /// </summary>
         static ReferencePriceResolver()
         {
-            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => asm.GetTypes().Where(t => typeof(IPriceProvider).IsAssignableFrom(t)));
+            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => asm.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IPriceProvider).IsAssignableFrom(t)));
             foreach (var type in types)
             {
                 try

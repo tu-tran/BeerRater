@@ -10,13 +10,20 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="productUrl">The product URL.</param>
+        /// <param name="imageUrl">The image URL.</param>
         /// <param name="price">The price.</param>
-        public BeerMeta(string name, string productUrl = null, double? price = null)
+        public BeerMeta(string name, string productUrl = null, string imageUrl = null, double? price = null)
         {
             this.Name = name;
             this.ProductUrl = productUrl;
+            this.ImageUrl = imageUrl;
             this.Price = price;
         }
+
+        /// <summary>
+        /// Gets the image URL.
+        /// </summary>
+        public string ImageUrl { get; private set; }
 
         /// <summary>
         /// Gets the price.

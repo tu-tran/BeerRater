@@ -32,10 +32,11 @@
         private static void Query(BeerMeta meta, List<BeerInfo> result)
         {
             var price = (meta.Price.HasValue ? meta.Price.ToString() : "").ToDouble();
-            var info = Crawler.Query(meta.Name);
+            var info = RateBeerInfoProvider.Query(meta.Name);
             info.NameOnStore = meta.Name;
             info.Price = price;
             info.ProductUrl = meta.ProductUrl;
+            info.ImageUrl = meta.ImageUrl;
             lock (result)
             {
                 result.Add(info);
