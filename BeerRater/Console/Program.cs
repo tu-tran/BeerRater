@@ -34,10 +34,11 @@
 
                 var parserResult = CommandLine.Parser.Default.ParseArguments<AppParameters>(args);
                 var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>)parserResult).Value : new AppParameters();
+                var comparer = new CustomEqualityComparer<BeerMeta>((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase) == 0);
                 foreach (var provider in providers)
                 {
                     var metas = provider.Get(args);
-                    metas = new QuerySession(metas.FilePath, metas.Distinct());
+                    metas = new QuerySession(metas.FilePath, metas.Distinct(comparer));
                     $"Query contains {metas.Count} beer name(s)".Output();
                     List<BeerInfo> infos;
 

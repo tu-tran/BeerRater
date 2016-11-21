@@ -3,7 +3,6 @@
 namespace BeerRater.Utils
 {
     using System.Net;
-    using System.Text;
 
     using HtmlAgilityPack;
 

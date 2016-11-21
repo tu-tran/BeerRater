@@ -81,6 +81,7 @@
     <Compile Include="Providers\AlkoPriceProvider.cs" />
     <Compile Include="Providers\MyDrinkInputProvider.cs" />
     <Compile Include="Providers\ViinikarttaPriceProvider.cs" />
+    <Compile Include="Utils\CustomEqualityComparerT.cs" />
     <Compile Include="Utils\StringExtensions.cs" />
     <Compile Include="Providers\SuperAlkoInputProvider.cs" />
     <Compile Include="Providers\FileInputProvider.cs" />
