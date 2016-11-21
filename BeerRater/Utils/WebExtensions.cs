@@ -26,7 +26,7 @@ namespace BeerRater.Utils
             using (var respStream = request.GetResponse().GetResponseStream())
             {
                 if (respStream != null)
-                    htmlDoc.Load(respStream, Encoding.Default);
+                    htmlDoc.Load(respStream, true);
             }
 
             return htmlDoc;
