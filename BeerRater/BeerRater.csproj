@@ -36,6 +36,10 @@
     <ApplicationIcon>BeerRater.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=2.0.275.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.1.1-beta\lib\net45\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
@@ -59,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Console\AppParameters.cs" />
     <Compile Include="Data\BeerMeta.cs" />
     <Compile Include="Data\BeerPrice.cs" />
     <Compile Include="Processors\ReferencePriceQuery.cs" />
@@ -74,13 +79,14 @@
     </Compile>
     <Compile Include="Processors\RateQuery.cs" />
     <Compile Include="Providers\AlkoPriceProvider.cs" />
+    <Compile Include="Providers\MyDrinkInputProvider.cs" />
     <Compile Include="Providers\ViinikarttaPriceProvider.cs" />
     <Compile Include="Utils\StringExtensions.cs" />
     <Compile Include="Providers\SuperAlkoInputProvider.cs" />
     <Compile Include="Providers\FileInputProvider.cs" />
     <Compile Include="Providers\IInputProvider.cs" />
     <Compile Include="Providers\InputProviderResolver.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Console\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\BeerInfo.cs" />
     <Compile Include="Processors\QueryQueue.cs" />

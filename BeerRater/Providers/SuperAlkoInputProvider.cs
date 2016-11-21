@@ -24,7 +24,7 @@ namespace BeerRater.Providers
         /// </returns>
         public bool IsCompatible(params string[] args)
         {
-            return args == null || args.Length < 1;
+            return true;
         }
 
         /// <summary>

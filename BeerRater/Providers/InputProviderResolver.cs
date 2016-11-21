@@ -1,6 +1,7 @@
 ﻿namespace BeerRater.Providers
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
 
@@ -14,9 +15,12 @@
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns>The input provider.</returns>
-        public static IInputProvider Get(params string[] args)
+        public static IList<IInputProvider> Get(params string[] args)
         {
-            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes().Where(t => typeof(IInputProvider).IsAssignableFrom(t)));
+            var result = new List<IInputProvider>();
+            var types =
+                AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(a => a.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IInputProvider).IsAssignableFrom(t)));
             foreach (var type in types)
             {
                 try
@@ -24,7 +28,7 @@
                     var provider = (IInputProvider)Activator.CreateInstance(type);
                     if (provider.IsCompatible(args))
                     {
-                        return provider;
+                        result.Add(provider);
                     }
                 }
                 catch (Exception ex)
@@ -33,7 +37,7 @@
                 }
             }
 
-            return null;
+            return result;
         }
     }
 }

@@ -39,5 +39,23 @@
         /// Gets the name.
         /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// To information.
+        /// </summary>
+        /// <returns>
+        /// The beer information.
+        /// </returns>
+        public BeerInfo ToInfo()
+        {
+            return new BeerInfo
+                       {
+                           ImageUrl = this.ImageUrl,
+                           Name = this.Name,
+                           NameOnStore = this.Name,
+                           ProductUrl = this.ProductUrl,
+                           Price = this.Price ?? default(double)
+                       };
+        }
     }
 }
