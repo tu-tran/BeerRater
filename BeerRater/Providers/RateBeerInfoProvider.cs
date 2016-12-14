@@ -1,10 +1,10 @@
 ﻿namespace BeerRater.Providers
 {
-    using BeerRater.Data;
-    using BeerRater.Utils;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
+    using BeerRater.Data;
+    using BeerRater.Utils;
 
     /// <summary>
     /// The web crawler.
@@ -19,14 +19,15 @@
         public static BeerInfo Query(string releaseName)
         {
             var result = new BeerInfo();
-            var encodedTitle = HttpUtility.UrlEncode(releaseName, Encoding.Default);
+            var beerName = releaseName.ExtractBeerName();
+            var encodedTitle = HttpUtility.UrlEncode(beerName, Encoding.Default);
             var queryUrl = $"https://www.ratebeer.com/findbeer.asp?beername={encodedTitle}";
             var referrer = "https://www.ratebeer.com";
             var searchBeerDoc = queryUrl.GetDocument(referrer);
             var searchRow = searchBeerDoc.DocumentNode.SelectSingleNode(@"//table[@class='table table-hover table-striped']//a");
             if (searchRow == null)
             {
-                result.Name = releaseName;
+                result.Name = beerName;
                 return result;
             }
 

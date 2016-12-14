@@ -81,7 +81,6 @@ namespace BeerRater.Providers
 
                 var beerNode = dataNodes[0].SelectSingleNode("./a");
                 var name = beerNode.InnerText.TrimDecoded();
-                var beerName = name.ExtractBeerName();
                 var priceText = dataNodes[2].ChildNodes[0].InnerText.TrimDecoded().Replace(',', '.');
                 double parsedPrice;
                 double? price = null;
@@ -103,8 +102,8 @@ namespace BeerRater.Providers
 
                 var uri = new Uri(url);
                 var beerUrl = $"{uri.Scheme}://{uri.Host}/{beerNode.GetAttributeValue("href", "")}";
-                Trace.WriteLine($"SuperAlko: [{name}] -> [{beerName}]   {price}");
-                result.Add(new BeerMeta(beerName, beerUrl, imageUrl, price));
+                Trace.WriteLine($"SuperAlko: [{name}] -> {price}");
+                result.Add(new BeerMeta(name, beerUrl, imageUrl, price));
             }
 
             return result;

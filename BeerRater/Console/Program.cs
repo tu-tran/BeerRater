@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.IO;
     using System.Linq;
 
@@ -34,6 +35,7 @@
 
                 var parserResult = CommandLine.Parser.Default.ParseArguments<AppParameters>(args);
                 var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>)parserResult).Value : new AppParameters();
+                appParams.Initialize(ConfigurationManager.AppSettings);
                 var comparer = new CustomEqualityComparer<BeerMeta>((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase) == 0);
                 foreach (var provider in providers)
                 {
@@ -42,7 +44,7 @@
                     $"Query contains {metas.Count} beer name(s)".Output();
                     List<BeerInfo> infos;
 
-                    if (!appParams.SkipRating)
+                    if (appParams.IsRated ?? false)
                     {
                         infos = new RateQuery().Query(metas);
                         if (infos == null)
@@ -58,7 +60,7 @@
                         infos = metas.Select(m => m.ToInfo()).OrderBy(i => i.Name).ToList();
                     }
 
-                    if (!appParams.SkipPriceCompare)
+                    if (appParams.IsPriceCompared ?? false)
                     {
                         "Querying the reference prices...".Output();
                         new ReferencePriceQuery().UpdateReferencePrices(infos);

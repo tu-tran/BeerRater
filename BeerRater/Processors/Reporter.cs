@@ -53,7 +53,7 @@
             var jsFile = Path.Combine(this.BasePath, jsFileName);
             File.WriteAllText(jsFile, Resources.JS_SortTable);
             var htmlReport = baseFile + ".html";
-            using (var html = new StreamWriter(htmlReport, false))
+            using (var html = new StreamWriter(htmlReport, false, Encoding.Default))
             {
                 var css = @"<style>img{max-height:60} td{vertical-align:middle}</style>";
                 var encoding = @"<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>";
@@ -68,6 +68,7 @@
 <th>RATINGS</th>
 <th>PRICE</th>
 <th>STYLE</th></tr></thead><tbody>");
+
                 using (var fs = new StreamWriter(baseFile + ".csv", false))
                 {
                     fs.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tREFERENCE PRICE\tREFERENCE URL\tSTYLE\tURL\tIMAGE");
@@ -94,7 +95,7 @@
                             + res.Price.ToInvariantString() + '\t' + res.ReferencePrice.ToInvariantString() + '\t' + res.ReferencePriceUrl + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
                         html.WriteLine($@"<tr>
 <td><a href='{WebUtility.HtmlEncode(productUrl)}'><img src='{WebUtility.HtmlEncode(res.ImageUrl)}' /></a></td>
-<td><a href='{WebUtility.HtmlEncode(productUrl)}'>{WebUtility.HtmlEncode(res.Name)}</a></td>
+<td><a href='{WebUtility.HtmlEncode(productUrl)}'>{WebUtility.HtmlEncode(res.NameOnStore)}</a></td>
 <td><a href='{WebUtility.HtmlEncode(res.ReviewUrl)}'><b>{WebUtility.HtmlEncode(res.Overall.ToInvariantString())}</b></a></td>
 <td>{WebUtility.HtmlEncode(res.WeightedAverage.ToInvariantString())}</td>
 <td>{WebUtility.HtmlEncode(res.Calories.ToInvariantString())}</td>
