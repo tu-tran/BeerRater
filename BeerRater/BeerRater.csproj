@@ -79,7 +79,7 @@
     </Compile>
     <Compile Include="Processors\RateQuery.cs" />
     <Compile Include="Providers\AlkoPriceProvider.cs" />
-    <Compile Include="Providers\MyDrinkInputProvider.cs" />
+    <None Include="Providers\MyDrinkInputProvider.cs" />
     <Compile Include="Providers\ViinikarttaPriceProvider.cs" />
     <Compile Include="Utils\CustomEqualityComparerT.cs" />
     <Compile Include="Utils\StringExtensions.cs" />
