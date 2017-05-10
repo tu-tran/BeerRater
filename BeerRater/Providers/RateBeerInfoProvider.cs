@@ -14,12 +14,11 @@
         /// <summary>
         /// Queries the specified beer release name.
         /// </summary>
-        /// <param name="releaseName">Name of the beer release.</param>
+        /// <param name="beerName">Name of the beer release.</param>
         /// <returns>The beer info</returns>
-        public static BeerInfo Query(string releaseName)
+        public static BeerInfo Query(string beerName)
         {
             var result = new BeerInfo();
-            var beerName = releaseName.ExtractBeerName();
             var encodedTitle = HttpUtility.UrlEncode(beerName, Encoding.Default);
             var queryUrl = $"https://www.ratebeer.com/findbeer.asp?beername={encodedTitle}";
             var referrer = "https://www.ratebeer.com";

@@ -91,7 +91,7 @@
                         }
 
                         fs.WriteLine(
-                            res.Name + '\t' + res.Overall.ToInvariantString() + '\t' + res.WeightedAverage.ToInvariantString() + '\t' + res.Calories.ToInvariantString() + '\t' + res.ABV.ToInvariantString() + '\t' + res.Ratings.ToInvariantString() + '\t'
+                            res.NameOnStore + '\t' + res.Overall.ToInvariantString() + '\t' + res.WeightedAverage.ToInvariantString() + '\t' + res.Calories.ToInvariantString() + '\t' + res.ABV.ToInvariantString() + '\t' + res.Ratings.ToInvariantString() + '\t'
                             + res.Price.ToInvariantString() + '\t' + res.ReferencePrice.ToInvariantString() + '\t' + res.ReferencePriceUrl + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
                         html.WriteLine($@"<tr>
 <td><a href='{WebUtility.HtmlEncode(productUrl)}'><img src='{WebUtility.HtmlEncode(res.ImageUrl)}' /></a></td>

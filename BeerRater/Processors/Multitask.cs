@@ -12,18 +12,12 @@
         /// <summary>
         /// The default threads count.
         /// </summary>
-        private static readonly int DefaultThreads =
-#if SINGLE_THREAD
-            1
-#else
-            Environment.ProcessorCount
-#endif
-            ;
+        private static readonly int PoolSize = Environment.ProcessorCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryQueue"/> class.
         /// </summary>
-        public Multitask() : this(DefaultThreads)
+        public Multitask() : this(PoolSize)
         {
         }
 

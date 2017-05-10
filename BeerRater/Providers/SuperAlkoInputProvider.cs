@@ -5,6 +5,7 @@ namespace BeerRater.Providers
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Text.RegularExpressions;
 
     using BeerRater.Data;
     using BeerRater.Processors;
@@ -15,6 +16,30 @@ namespace BeerRater.Providers
     /// </summary>
     internal class SuperAlkoInputProvider : Multitask, IInputProvider
     {
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        public string Name => "SuperAlko";
+
+        /// <summary>
+        /// Extracts the name of the beer.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>The beer name.</returns>
+        public static string ExtractBeerName(string input)
+        {
+            input = input ?? string.Empty;
+            var regex = Regex.Match(input, @"(?<Name>.+?)( ?\(\w.+\))? \(?(?<Abv>\d+[,\.]?\d? ?%)\)? ?(?<Volume>(\d+x)?\d[,\.]?\d+? ?cl)?");
+            var result = regex.Success ? regex.Groups["Name"].Value : input;
+            result = result.Replace("A.Le Coq", "A. Le Coq");
+            if (result.EndsWith(" beer", StringComparison.OrdinalIgnoreCase))
+            {
+                result = result.Substring(0, result.Length - " beer".Length);
+            }
+
+            return result.Trim();
+        }
+
         /// <summary>
         /// Determines whether the specified arguments is compatible.
         /// </summary>
@@ -41,8 +66,8 @@ namespace BeerRater.Providers
             var referrer = "http://m.viinarannasta.ee/";
             var countryIndex = url.GetDocument(referrer).DocumentNode;
             var nodes = countryIndex.SelectNodes("//section/div/h4//a");
-            this.Queue.Start((n,i) => this.GetBeerForCountry(n, result, url), nodes);
-            return new QuerySession($"SuperAlko_{date:yyyyMMdd_hhmmss}", result);
+            this.Queue.Start((n, i) => this.GetBeerForCountry(n, result, url), nodes);
+            return new QuerySession($"{this.Name}_{date:yyyyMMdd_hhmmss}", result);
         }
 
         /// <summary>
@@ -80,7 +105,7 @@ namespace BeerRater.Providers
                 }
 
                 var beerNode = dataNodes[0].SelectSingleNode("./a");
-                var name = beerNode.InnerText.TrimDecoded();
+                var nameOnStore = beerNode.InnerText.TrimDecoded();
                 var priceText = dataNodes[2].ChildNodes[0].InnerText.TrimDecoded().Replace(',', '.');
                 double parsedPrice;
                 double? price = null;
@@ -102,8 +127,9 @@ namespace BeerRater.Providers
 
                 var uri = new Uri(url);
                 var beerUrl = $"{uri.Scheme}://{uri.Host}/{beerNode.GetAttributeValue("href", "")}";
-                Trace.WriteLine($"SuperAlko: [{name}] -> {price}");
-                result.Add(new BeerMeta(name, beerUrl, imageUrl, price));
+                var beerName = ExtractBeerName(nameOnStore);
+                Trace.WriteLine($"{this.Name}: [{beerName}] -> {price}");
+                result.Add(new BeerMeta(beerName, nameOnStore, beerUrl, imageUrl, price));
             }
 
             return result;

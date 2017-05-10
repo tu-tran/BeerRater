@@ -17,11 +17,11 @@
         /// <returns>The beer price.</returns>
         public BeerPrice GetPrice(BeerInfo info)
         {
-            var beerName = info.Name.ExtractBeerName();
+            var beerName = info.Name;
             var price = string.IsNullOrEmpty(beerName) ? null : this.GetPrice(beerName);
             if (price == null)
             {
-                var storeBeerName = info.NameOnStore.ExtractBeerName();
+                var storeBeerName = info.NameOnStore;
                 if (!string.IsNullOrEmpty(storeBeerName) && string.Compare(beerName, storeBeerName, StringComparison.OrdinalIgnoreCase) != 0)
                 {
                     price = this.GetPrice(storeBeerName);

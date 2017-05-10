@@ -37,7 +37,36 @@
                 }
             }
 
-            return result;
+            var index = 1;
+            Console.WriteLine($@"
+/*=====================================================*\
+/*   ____                   _____       _              *\
+/*  |  _ \                 |  __ \     | |             *\
+/*  | |_) | ___  ___ _ __  | |__) |__ _| |_ ___ _ __   *\
+/*  |  _ < / _ \/ _ \ '__| |  _  // _` | __/ _ \ '__|  *\
+/*  | |_) |  __/  __/ |    | | \ \ (_| | ||  __/ |     *\
+/*  |____/ \___|\___|_|    |_|  \_\__,_|\__\___|_|     *\
+/*                                                     *\
+/*=====================================================*\
+
+
+Select the input:
+
+  0. All
+{string.Join(Environment.NewLine, result.Select(s => $"  {index++}. {s.Name}"))}
+");
+            var selection = -1;
+            while (selection < 0 || selection > result.Count)
+            {
+                var input = Console.ReadKey(true).KeyChar.ToString();
+                if (!int.TryParse(input, out selection))
+                {
+                    selection = -1;
+                }
+            }
+
+            Console.WriteLine($"User selection: {selection}");
+            return selection == 0 ? result : new List<IInputProvider> { result[selection - 1] };
         }
     }
 }

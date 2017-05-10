@@ -8,6 +8,11 @@
     internal interface IInputProvider
     {
         /// <summary>
+        /// Gets the name.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Determines whether the specified arguments is compatible.
         /// </summary>
         /// <param name="args">The arguments.</param>

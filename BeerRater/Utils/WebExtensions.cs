@@ -2,9 +2,10 @@
 
 namespace BeerRater.Utils
 {
-    using System.Net;
-
     using HtmlAgilityPack;
+    using RestSharp;
+    using System.Net;
+    using System.Text;
 
     /// <summary>
     /// The web extensions.
@@ -29,6 +30,31 @@ namespace BeerRater.Utils
             }
 
             return htmlDoc;
+        }
+
+        /// <summary>
+        /// Gets the rest response.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="referrerUrl">The referrer URL.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="isMobile">if set to <c>true</c> [is mobile].</param>
+        /// <returns>The response.</returns>
+        public static string GetRestResponse(this string url, string referrerUrl = "", Method method = Method.GET, DataFormat format = DataFormat.Json, bool isMobile = true)
+        {
+            var client = new RestClient(url) { Encoding = Encoding.Default };
+            var request = new RestRequest(".", method) { RequestFormat = format };
+            request.AddHeader("Referer", referrerUrl);
+            request.AddHeader("User-Agent", WebExtensions.GetUserAgent(isMobile));
+
+            var response = client.Execute(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return response.Content;
+            }
+
+            return null;
         }
 
         /// <summary>

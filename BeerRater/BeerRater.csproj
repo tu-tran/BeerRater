@@ -44,9 +44,8 @@
       <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
@@ -78,9 +77,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Processors\RateQuery.cs" />
+    <Compile Include="Processors\BeerRatingQuery.cs" />
     <Compile Include="Providers\AlkoPriceProvider.cs" />
     <None Include="Providers\MyDrinkInputProvider.cs" />
+    <Compile Include="Providers\BelgiumInABoxInputProvider.cs" />
     <Compile Include="Providers\ViinikarttaPriceProvider.cs" />
     <Compile Include="Utils\CustomEqualityComparerT.cs" />
     <Compile Include="Utils\StringExtensions.cs" />

@@ -5,6 +5,7 @@
     using System.Configuration;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
 
     using BeerRater.Data;
     using BeerRater.Processors;
@@ -36,7 +37,13 @@
                 var parserResult = CommandLine.Parser.Default.ParseArguments<AppParameters>(args);
                 var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>)parserResult).Value : new AppParameters();
                 appParams.Initialize(ConfigurationManager.AppSettings);
-                var comparer = new CustomEqualityComparer<BeerMeta>((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase) == 0);
+
+                if (appParams.ThreadsCount.HasValue && appParams.ThreadsCount.Value > 0)
+                {
+                    typeof(Multitask).GetField("PoolSize", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, appParams.ThreadsCount.Value);
+                }
+
+                var comparer = new CustomEqualityComparer<BeerMeta>((a, b) => string.Compare(a.NameOnStore, b.NameOnStore, StringComparison.OrdinalIgnoreCase) == 0);
                 foreach (var provider in providers)
                 {
                     var metas = provider.Get(args);

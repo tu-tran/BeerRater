@@ -76,6 +76,15 @@
         public string ReferencePriceUrl;
 
         /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>The cloned instance.</returns>
+        public BeerInfo Clone()
+        {
+            return (BeerInfo)base.MemberwiseClone();
+        }
+
+        /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <returns>

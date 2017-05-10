@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using BeerRater.Data;
     using BeerRater.Providers;
@@ -20,7 +21,7 @@
         public List<BeerInfo> Query(IList<BeerMeta> metas)
         {
             var result = new List<BeerInfo>();
-            this.Queue.Start((m,i) => Query(m, result), metas);
+            this.Queue.Start((m, i) => Query(m, result), metas);
             return result;
         }
 
@@ -31,10 +32,19 @@
         /// <param name="result">The output result.</param>
         private static void Query(BeerMeta meta, List<BeerInfo> result)
         {
-            var price = (meta.Price.HasValue ? meta.Price.ToString() : "").ToDouble();
-            var info = RateBeerInfoProvider.Query(meta.Name);
-            info.NameOnStore = meta.Name;
-            info.Price = price;
+            var match = result.FirstOrDefault(i => string.Equals(i.Name, meta.Name, StringComparison.OrdinalIgnoreCase));
+            BeerInfo info;
+            if (match != null)
+            {
+                info = match.Clone();
+            }
+            else
+            {
+                info = RateBeerInfoProvider.Query(meta.Name);
+            }
+
+            info.NameOnStore = meta.NameOnStore;
+            info.Price = (meta.Price.HasValue ? meta.Price.ToString() : string.Empty).ToDouble();
             info.ProductUrl = meta.ProductUrl;
             info.ImageUrl = meta.ImageUrl;
             lock (result)

@@ -14,6 +14,11 @@ namespace BeerRater.Providers
     internal class FileInputProvider : IInputProvider
     {
         /// <summary>
+        /// Gets the name.
+        /// </summary>
+        public string Name => "File input";
+
+        /// <summary>
         /// Determines whether the specified arguments is compatible.
         /// </summary>
         /// <param name="args">The arguments.</param>
@@ -45,7 +50,7 @@ namespace BeerRater.Providers
                     var metas = line.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
                     if (metas.Length > 0)
                     {
-                        name = metas[0].ExtractBeerName().Trim();
+                        name = metas[0].Trim();
                         if (metas.Length > 1)
                         {
                             double temp;
@@ -56,7 +61,7 @@ namespace BeerRater.Providers
 
                     if (!string.IsNullOrEmpty(name))
                     {
-                        result.Add(new BeerMeta(name, null, null, price));
+                        result.Add(new BeerMeta(name, name, null, null, price));
                     }
                 }
             }

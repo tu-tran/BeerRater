@@ -1,6 +1,8 @@
 ﻿namespace BeerRater.Console
 {
+    using System;
     using System.Collections.Specialized;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -14,14 +16,20 @@
         /// <summary>
         /// Gets or sets a value indicating whether to gets the price comparison.
         /// </summary>
-        [Option('p', Default = null, HelpText = "Whether to gets the price comparison", Required = false)]
+        [Option('p', Default = false, HelpText = "Whether to gets the price comparison", Required = false)]
         public bool? IsPriceCompared { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to gets the beer review.
         /// </summary>
-        [Option('r', Default = null, HelpText = "Whether to gets the beer review", Required = false)]
+        [Option('r', Default = true, HelpText = "Whether to gets the beer review", Required = false)]
         public bool? IsRated { get; set; }
+
+        /// <summary>
+        /// Gets or sets the thread counts.
+        /// </summary>
+        [Option('t', Default = null, HelpText = "Threads count for multithreading processing", Required = false)]
+        public int? ThreadsCount { get; set; }
 
         /// <summary>
         /// Initializes based on the specified application settings.
@@ -33,13 +41,15 @@
             foreach (var propertyInfo in properties)
             {
                 var appValue = appSettings.Get(propertyInfo.Name);
-                if (propertyInfo.PropertyType == typeof(bool?))
+                var dataType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+                try
                 {
-                    bool boolValue;
-                    if (bool.TryParse(appValue, out boolValue))
-                    {
-                        propertyInfo.SetValue(this, boolValue);
-                    }
+                    var convertedValue = Convert.ChangeType(appValue, dataType);
+                    propertyInfo.SetValue(this, convertedValue);
+                }
+                catch (Exception e)
+                {
+                    Trace.TraceError($"Failed to load app config for {propertyInfo.Name} [{appValue}] of type {dataType}: {e.Message}");
                 }
             }
         }
