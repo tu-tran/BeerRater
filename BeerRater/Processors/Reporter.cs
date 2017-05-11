@@ -53,13 +53,14 @@
             var jsFile = Path.Combine(this.BasePath, jsFileName);
             File.WriteAllText(jsFile, Resources.JS_SortTable);
             var htmlReport = baseFile + ".html";
-            using (var html = new StreamWriter(htmlReport, false, Encoding.Default))
+            using (var htmlStream = new StreamWriter(htmlReport, false, Encoding.Default))
             {
                 var css = @"<style>img{max-height:60} td{vertical-align:middle}</style>";
                 var encoding = @"<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>";
-                html.WriteLine($@"<html><head>{encoding}<script type='text/javascript' src='{jsFileName}'></script><link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' crossorigin='anonymous'>{css}</head><body><table class='table-condensed table-striped table-hover sortable'>
+                htmlStream.WriteLine($@"<html><head>{encoding}<script type='text/javascript' src='{jsFileName}'></script><link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' crossorigin='anonymous'>{css}</head><body><table class='table-condensed table-striped table-hover sortable'>
 <thead><tr>
-<th>IMAGE</th>
+<th>#</th>
+<th></th>
 <th>NAME</th>
 <th>OVERALL</th>
 <th>WEIGHTED AVG</th>
@@ -69,9 +70,10 @@
 <th>PRICE</th>
 <th>STYLE</th></tr></thead><tbody>");
 
-                using (var fs = new StreamWriter(baseFile + ".csv", false))
+                using (var csvStream = new StreamWriter(baseFile + ".csv", false))
                 {
-                    fs.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tREFERENCE PRICE\tREFERENCE URL\tSTYLE\tURL\tIMAGE");
+                    csvStream.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tREFERENCE PRICE\tREFERENCE URL\tSTYLE\tURL\tIMAGE");
+                    var index = 1;
                     foreach (var res in infos)
                     {
                         var productUrl = string.IsNullOrEmpty(res.ProductUrl) ? res.ReviewUrl : res.ProductUrl;
@@ -90,10 +92,12 @@
                             }
                         }
 
-                        fs.WriteLine(
+                        csvStream.WriteLine(
                             res.NameOnStore + '\t' + res.Overall.ToInvariantString() + '\t' + res.WeightedAverage.ToInvariantString() + '\t' + res.Calories.ToInvariantString() + '\t' + res.ABV.ToInvariantString() + '\t' + res.Ratings.ToInvariantString() + '\t'
                             + res.Price.ToInvariantString() + '\t' + res.ReferencePrice.ToInvariantString() + '\t' + res.ReferencePriceUrl + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
-                        html.WriteLine($@"<tr>
+
+                        htmlStream.WriteLine($@"<tr>
+<td>{index++}</td>
 <td><a href='{WebUtility.HtmlEncode(productUrl)}'><img src='{WebUtility.HtmlEncode(res.ImageUrl)}' /></a></td>
 <td><a href='{WebUtility.HtmlEncode(productUrl)}'>{WebUtility.HtmlEncode(res.NameOnStore)}</a></td>
 <td><a href='{WebUtility.HtmlEncode(res.ReviewUrl)}'><b>{WebUtility.HtmlEncode(res.Overall.ToInvariantString())}</b></a></td>
@@ -106,7 +110,7 @@
                     }
                 }
 
-                html.WriteLine(@"</tbody></table></body></html>");
+                htmlStream.WriteLine(@"</tbody></table></body></html>");
             }
 
             File.WriteAllText(baseFile + ".json", JsonConvert.SerializeObject(infos, Formatting.Indented));

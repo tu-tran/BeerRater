@@ -8,7 +8,6 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -20,12 +19,29 @@
         /// <summary>
         /// Gets the name.
         /// </summary>
-        public string Name => "BelgiumInABox";
+        public string Name
+        {
+            get
+            {
+                return "BelgiumInABox";
+            }
+        }
 
         /// <summary>
         /// The query size.
         /// </summary>
         private const int QuerySize = 200;
+
+        /// <summary>
+        /// Filters the name of the beer.
+        /// </summary>
+        /// <param name="nameOnStore">The name on store.</param>
+        /// <returns>The beer name.</returns>
+        public static string ExtractBeerName(string nameOnStore)
+        {
+            var regex = Regex.Match(nameOnStore, @"(?<Name>.+?)(( \d\d\d\d)|( full crate)|( mixed crate)|( \d+-Pack)|( Volume Pack)|(( \(? ?\d+ x)? \d+((\.|,)\d+)? ?c?l)|( ?\(.+?\))|( Gift ?box)|( \+ ))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            return regex.Success ? regex.Groups["Name"].Value : nameOnStore;
+        }
 
         /// <summary>
         /// Determines whether the specified arguments is compatible.
@@ -43,7 +59,7 @@
         /// Gets the specified arguments.
         /// </summary>
         /// <param name="args">The arguments.</param>
-        /// <returns>The beer metas.</returns>
+        /// <returns>The beer meta.</returns>
         public QuerySession Get(params string[] args)
         {
             $"Retrieving beer lists from {this.Name}...".Output();
@@ -78,7 +94,7 @@
             var referrer = "https://belgiuminabox.com/shop/470-beer";
             var documentText = url.GetRestResponse(referrer);
 
-            JObject documentObject = JObject.Parse(documentText);
+            var documentObject = JObject.Parse(documentText);
             var productList = documentObject.Children().FirstOrDefault(j => j.Path == "productList");
             if (productList == null)
             {
@@ -95,7 +111,7 @@
             document.LoadHtml(products.Value.ToString());
             var pageResult = new List<BeerMeta>();
             var nodes = document.DocumentNode.SelectNodes("//div[@class='product-container']");
-            if(nodes == null)
+            if (nodes == null)
             {
                 return;
             }
@@ -125,7 +141,6 @@
                     imageUrl = imageNode.GetAttributeValue("src", String.Empty).TrimDecoded();
                 }
 
-                var uri = new Uri(url);
                 var urlNode = beerNode.SelectSingleNode(".//a[@class='product_img_link']");
                 string beerUrl = null;
                 if (urlNode != null)
@@ -134,7 +149,7 @@
                 }
 
                 var nameOnStore = nameNode.InnerText.TrimDecoded();
-                var name = FilterBeerName(nameOnStore);
+                var name = ExtractBeerName(nameOnStore);
                 Trace.WriteLine($"{this.Name}: [{name}] -> {price}");
                 pageResult.Add(new BeerMeta(name, nameOnStore, beerUrl, imageUrl, price));
             }
@@ -143,17 +158,6 @@
             {
                 result.AddRange(pageResult);
             }
-        }
-
-        /// <summary>
-        /// Filters the name of the beer.
-        /// </summary>
-        /// <param name="nameOnStore">The name on store.</param>
-        /// <returns>The beer name.</returns>
-        private static string FilterBeerName(string nameOnStore)
-        {
-            var regex = Regex.Match(nameOnStore, @"(?<Name>.+?)(( full crate)|( \d+-Pack)|( \d+(\.|,\d+)? cl))");
-            return regex.Success ? regex.Groups["Name"].Value : nameOnStore;
         }
     }
 }

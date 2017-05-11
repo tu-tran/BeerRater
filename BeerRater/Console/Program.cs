@@ -5,7 +5,6 @@
     using System.Configuration;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
 
     using BeerRater.Data;
     using BeerRater.Processors;
@@ -40,7 +39,7 @@
 
                 if (appParams.ThreadsCount.HasValue && appParams.ThreadsCount.Value > 0)
                 {
-                    typeof(Multitask).GetField("PoolSize", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, appParams.ThreadsCount.Value);
+                    Multitask.PoolSize = appParams.ThreadsCount.Value;
                 }
 
                 var comparer = new CustomEqualityComparer<BeerMeta>((a, b) => string.Compare(a.NameOnStore, b.NameOnStore, StringComparison.OrdinalIgnoreCase) == 0);

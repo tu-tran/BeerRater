@@ -10,9 +10,34 @@
     internal class Multitask
     {
         /// <summary>
+        /// The pool size
+        /// </summary>
+        private static int poolSize;
+
+        /// <summary>
         /// The default threads count.
         /// </summary>
-        private static readonly int PoolSize = Environment.ProcessorCount;
+        internal static int PoolSize
+        {
+            get
+            {
+                return poolSize;
+            }
+
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentException("value");
+                };
+                poolSize = value;
+            }
+        }
+
+        static Multitask()
+        {
+            PoolSize = Environment.ProcessorCount;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryQueue"/> class.
