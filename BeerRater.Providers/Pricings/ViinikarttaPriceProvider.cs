@@ -44,7 +44,7 @@
         /// </summary>
         /// <param name="beerName">Name of the beer.</param>
         /// <returns>The beer price.</returns>
-        public override BeerPrice GetPrice(string beerName)
+        public override ReferencePrice GetPrice(string beerName)
         {
             var url = $"http://www.viinikartta.fi/db/search_by_name_fragment.php?term={WebUtility.UrlEncode(beerName.Trim())}&searchtype=";
             var client = new RestClient(url);
@@ -68,7 +68,7 @@
                     var priceNode = infoDoc.DocumentNode.SelectSingleNode("//span[@itemprop='price']");
                     if (priceNode != null)
                     {
-                        return new BeerPrice(priceNode.InnerText.TrimDecoded().ToDouble(), priceUrl);
+                        return new ReferencePrice(priceNode.InnerText.TrimDecoded().ToDouble(), priceUrl);
                     }
                 }
             }

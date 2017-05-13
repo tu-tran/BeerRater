@@ -18,14 +18,13 @@
             var target = Path.Combine(basePath, reportName) + ".csv";
             using (var csvStream = new StreamWriter(target, false))
             {
-                csvStream.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tREFERENCE PRICE\tREFERENCE URL\tSTYLE\tURL\tIMAGE");
+                csvStream.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tSTYLE\tURL\tIMAGE");
                 foreach (var res in infos)
                 {
                     csvStream.WriteLine(
                         res.NameOnStore + '\t' + res.Overall.ToInvariantString() + '\t' + res.WeightedAverage.ToInvariantString() + '\t' +
                         res.Calories.ToInvariantString() + '\t' + res.ABV.ToInvariantString() + '\t' + res.Ratings.ToInvariantString() + '\t'
-                        + res.Price.ToInvariantString() + '\t' + res.ReferencePrice.ToInvariantString() + '\t' + res.ReferencePriceUrl + '\t' + res.Style +
-                        '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
+                        + res.Price.ToInvariantString() + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
                 }
             }
         }

@@ -30,7 +30,7 @@
             var target = Path.Combine(basePath, reportName) + ".html";
             using (var htmlStream = new StreamWriter(target, false, Encoding.Default))
             {
-                var css = @"<style>img{max-height:60} td{vertical-align:middle}</style>";
+                var css = @"<style>a{text-decoration:none} img{max-height:60} td{vertical-align:middle} .r{color:red} .g{color:green}</style>";
                 var encoding = @"<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>";
                 htmlStream.WriteLine(
                     $@"<html><head>{encoding}<script type='text/javascript' src='{jsFileName}'></script>
@@ -52,19 +52,16 @@
                 foreach (var res in infos)
                 {
                     var productUrl = string.IsNullOrEmpty(res.ProductUrl) ? res.ReviewUrl : res.ProductUrl;
-                    var priceDiff = res.Price - res.ReferencePrice;
-                    string priceDiffHtml = string.Empty;
-
-                    if (res.ReferencePrice > 0.001)
+                    var priceDiffHtml = string.Empty;
+                    var diffCount = 0;
+                    foreach (var price in res.ReferencePrices)
                     {
-                        if (priceDiff > 0.0)
-                        {
-                            priceDiffHtml = $"&nbsp;(<a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'><font color='red'>+{priceDiff.ToInvariantString()}</font></a>)";
-                        }
-                        else if (priceDiff < 0.0)
-                        {
-                            priceDiffHtml = $"&nbsp;(<a href='{WebUtility.HtmlEncode(res.ReferencePriceUrl)}'><font color='green'>{priceDiff.ToInvariantString()}</font></a>)";
-                        }
+                        priceDiffHtml += (++diffCount > 1 ? "&nbsp;" : "&nbsp;(") + GetPriceDiffHtml(res.Price, price);
+                    }
+
+                    if (diffCount > 0)
+                    {
+                        priceDiffHtml += ")";
                     }
 
                     htmlStream.WriteLine($@"<tr>
@@ -82,6 +79,31 @@
 
                 htmlStream.WriteLine(@"</tbody></table></body></html>");
             }
+        }
+
+        /// <summary>
+        /// Gets price difference HTML.
+        /// </summary>
+        /// <param name="price">The price.</param>
+        /// <param name="referencePrice">The reference price.</param>
+        /// <returns>The HTML for price difference.</returns>
+        private static string GetPriceDiffHtml(double price, ReferencePrice referencePrice)
+        {            
+            var priceDiffHtml = string.Empty;
+            if (referencePrice.Price > 0.001)
+            {
+                var priceDiff = price - referencePrice.Price;
+                if (priceDiff > 0.0)
+                {
+                    priceDiffHtml = $"<a class='r' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>+{priceDiff.ToInvariantString()}</a>";
+                }
+                else if (priceDiff < 0.0)
+                {
+                    priceDiffHtml = $"<a class='g' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>-{priceDiff.ToInvariantString()}</a>";
+                }
+            }
+
+            return priceDiffHtml;
         }
     }
 }

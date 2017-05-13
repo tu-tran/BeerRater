@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="info">The information.</param>
         /// <returns>The beer price.</returns>
-        public BeerPrice GetPrice(BeerInfo info)
+        public ReferencePrice GetPrice(BeerInfo info)
         {
             var beerName = info.Name;
             var price = string.IsNullOrEmpty(beerName) ? null : this.GetPrice(beerName);
@@ -35,6 +35,6 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>The beer price.</returns>
-        public abstract BeerPrice GetPrice(string name);
+        public abstract ReferencePrice GetPrice(string name);
     }
 }

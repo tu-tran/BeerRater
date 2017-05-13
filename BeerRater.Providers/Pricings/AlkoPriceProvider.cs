@@ -65,7 +65,7 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>The beer price.</returns>
-        public override BeerPrice GetPrice(string name)
+        public override ReferencePrice GetPrice(string name)
         {
             var url = $"http://www.alko.fi/api/find/summary?language=en&products=6&query={WebUtility.UrlEncode(name)}&stores=3";
             var referrerUrl = "http://www.alko.fi/en/";
@@ -79,7 +79,7 @@
                 var priceNode = infoDoc.DocumentNode.SelectSingleNode("//span[@itemprop='price']");
                 if (priceNode != null)
                 {
-                    return new BeerPrice(priceNode.InnerText.TrimDecoded().ToDouble(), priceUrl);
+                    return new ReferencePrice(priceNode.InnerText.TrimDecoded().ToDouble(), priceUrl);
                 }
             }
 

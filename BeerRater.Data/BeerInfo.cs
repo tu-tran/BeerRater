@@ -1,5 +1,9 @@
 ﻿namespace BeerRater.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// The beer info.
     /// </summary>
@@ -61,19 +65,22 @@
         public string ImageUrl;
 
         /// <summary>
-        /// The price.
+        /// The referencePrice.
         /// </summary>
         public double Price;
 
         /// <summary>
-        /// The reference price.
+        /// The reference prices.
         /// </summary>
-        public double ReferencePrice;
+        private readonly List<ReferencePrice> prices = new List<ReferencePrice>();
 
         /// <summary>
-        /// The reference price URL.
+        /// The reference prices.
         /// </summary>
-        public string ReferencePriceUrl;
+        public IEnumerable<ReferencePrice> ReferencePrices
+        {
+            get { return this.prices; }
+        }
 
         /// <summary>
         /// Clones this instance.
@@ -93,6 +100,19 @@
         public override string ToString()
         {
             return string.Format($"{this.Name}\t{this.Overall}\t{this.Ratings}\t{this.WeightedAverage}\t{this.Calories}\t{this.ABV}\t{this.Price}");
+        }
+
+        /// <summary>
+        /// Adds referencePrice.
+        /// </summary>
+        /// <param name="referencePrice">The referencePrice.</param>
+        public void AddPrice(ReferencePrice referencePrice)
+        {
+            var matching = this.prices.FirstOrDefault(p => string.Equals(p.Url, referencePrice.Url, StringComparison.OrdinalIgnoreCase));
+            if (matching != null)
+            {
+                matching.Price = referencePrice.Price;
+            }
         }
     }
 }

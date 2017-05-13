@@ -10,49 +10,40 @@
 
     using Data;
 
+    using Utils;
+
     /// <summary>
     /// The price reference comparer.
     /// </summary>
     internal sealed class ReferencePriceResolver
     {
+        public static readonly ReferencePriceResolver Instance = new ReferencePriceResolver();
+
         /// <summary>
         /// The providers.
         /// </summary>
-        private static readonly List<IPriceProvider> Providers = new List<IPriceProvider>();
+        private readonly List<IPriceProvider> providers = new List<IPriceProvider>();
 
         /// <summary>
         /// Initializes the <see cref="ReferencePriceResolver"/> class.
         /// </summary>
-        static ReferencePriceResolver()
+        private ReferencePriceResolver()
         {
-            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => asm.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IPriceProvider).IsAssignableFrom(t)));
-            foreach (var type in types)
-            {
-                try
-                {
-                    var instance = (IPriceProvider)Activator.CreateInstance(type);
-                    Providers.Add(instance);
-                }
-                catch (Exception ex)
-                {
-                    Trace.TraceError($"Failed to instantiate {type}: {ex.Message}");
-                }
-            }
+            this.providers.AddRange(TypeExtensions.GetLoadedTypes<IPriceProvider>());
         }
 
         /// <summary>
         /// Updates reference price.
         /// </summary>
         /// <param name="info">The information.</param>
-        public static void UpdateReferencePrice(BeerInfo info)
+        public void UpdateReferencePrice(BeerInfo info)
         {
-            foreach (var priceProvider in Providers)
+            foreach (var priceProvider in this.providers)
             {
                 var price = priceProvider.GetPrice(info);
                 if (price != null)
                 {
-                    info.ReferencePrice = price.Price;
-                    info.ReferencePriceUrl = price.Reference;
+                    info.AddPrice(price);
                     return;
                 }
             }

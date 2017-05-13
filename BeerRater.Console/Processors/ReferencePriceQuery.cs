@@ -10,7 +10,7 @@
     using Utils;
 
     /// <summary>
-    /// The reference price query.
+    /// The reference referencePrice query.
     /// </summary>
     internal sealed class ReferencePriceQuery : Multitask
     {
@@ -24,18 +24,13 @@
         }
 
         /// <summary>
-        /// Resolves the reference price.
+        /// Resolves the reference referencePrice.
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="index">The index.</param>
         private static void ResolveReferencePrice(BeerInfo info, int index)
         {
-            ReferencePriceResolver.UpdateReferencePrice(info);
-            $"{index}. {info.Name} - [{info.Price}] <-> [{info.ReferencePrice}]".Output();
-            if (string.IsNullOrEmpty(info.ReferencePriceUrl))
-            {
-                Trace.TraceError($"Failed to resolve reference price for [{info.Name}]");
-            }
+            ReferencePriceResolver.Instance.UpdateReferencePrice(info);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿namespace BeerRater.Tests
 {
+    using System.Linq;
+
     using Console.Providers;
 
     using Data;
@@ -21,8 +23,8 @@
         public void ReferencePriceResolveTest()
         {
             var target = new BeerInfo { NameOnStore = "Chimay Blue 9% 33cl" };
-            ReferencePriceResolver.UpdateReferencePrice(target);
-            Assert.IsTrue(target.ReferencePrice > 0.0);
+            ReferencePriceResolver.Instance.UpdateReferencePrice(target);
+            Assert.IsTrue(target.ReferencePrices.Any());
         }
 
         /// <summary>

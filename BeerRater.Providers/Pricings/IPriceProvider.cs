@@ -12,6 +12,6 @@
         /// </summary>
         /// <param name="info">The information.</param>
         /// <returns>The beer price.</returns>
-        BeerPrice GetPrice(BeerInfo info);
+        ReferencePrice GetPrice(BeerInfo info);
     }
 }
