@@ -1,7 +1,7 @@
-﻿using BeerRater.Data;
-
-namespace BeerRater.Providers
+﻿namespace BeerRater.Providers.Pricings
 {
+    using Data;
+
     /// <summary>
     /// The <see cref="IPriceProvider"/> interfaces the beer price provider.
     /// </summary>

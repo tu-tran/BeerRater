@@ -44,11 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IInputProvider.cs" />
+    <Compile Include="Inputs\IInputProvider.cs" />
     <Compile Include="Inputs\BelgiumInABoxInputProvider.cs" />
     <Compile Include="Inputs\FileInputProvider.cs" />
-    <Compile Include="IPriceProvider.cs" />
-    <Compile Include="PriceProviderBase.cs" />
+    <Compile Include="Pricings\IPriceProvider.cs" />
+    <Compile Include="Pricings\PriceProviderBase.cs" />
     <Compile Include="Pricings\AlkoPriceProvider.cs" />
     <Compile Include="Pricings\ViinikarttaPriceProvider.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -56,7 +56,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Ratings\RateBeerInfoProvider.cs" />
+    <Compile Include="Ratings\BeerAdvocateProvider.cs" />
+    <Compile Include="Ratings\IRatingProvider.cs" />
+    <Compile Include="Ratings\RateBeerProvider.cs" />
+    <Compile Include="Reporters\StatReporter.cs" />
     <Compile Include="Reporters\JsonReporter.cs" />
     <Compile Include="Reporters\IReporter.cs" />
     <Compile Include="Reporters\HtmlReporter.cs" />

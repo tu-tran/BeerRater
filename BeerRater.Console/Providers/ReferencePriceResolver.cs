@@ -6,6 +6,7 @@
     using System.Linq;
 
     using BeerRater.Providers;
+    using BeerRater.Providers.Pricings;
 
     using Data;
 

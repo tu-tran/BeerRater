@@ -1,4 +1,4 @@
-﻿namespace BeerRater.Providers
+﻿namespace BeerRater.Providers.Inputs
 {
     using System.Collections.Generic;
 

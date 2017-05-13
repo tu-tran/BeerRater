@@ -8,6 +8,8 @@
 
     using Data;
 
+    using Providers;
+
     using Utils;
 
     /// <summary>
@@ -42,7 +44,7 @@
             }
             else
             {
-                info = RateBeerInfoProvider.Query(meta.Name);
+                info = RatingsResolver.Instance.Query(meta.Name) ?? meta.ToInfo();
             }
 
             info.NameOnStore = meta.NameOnStore;

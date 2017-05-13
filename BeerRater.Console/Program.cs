@@ -29,13 +29,6 @@
         {
             try
             {
-                var providers = InputProviderResolver.Get(args);
-                if (providers == null || providers.Count < 1)
-                {
-                    "Invalid arguments".OutputError();
-                    return;
-                }
-
                 var parserResult = CommandLine.Parser.Default.ParseArguments<AppParameters>(args);
                 var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>)parserResult).Value : new AppParameters();
                 appParams.Initialize(ConfigurationManager.AppSettings);
@@ -43,6 +36,13 @@
                 if (appParams.ThreadsCount.HasValue && appParams.ThreadsCount.Value > 0)
                 {
                     Multitask.PoolSize = appParams.ThreadsCount.Value;
+                }
+
+                var providers = InputProviderResolver.Get(args);
+                if (providers == null || providers.Count < 1)
+                {
+                    "Invalid arguments".OutputError();
+                    return;
                 }
 
                 var comparer = new CustomEqualityComparer<BeerMeta>((a, b) => string.Compare(a.NameOnStore, b.NameOnStore, StringComparison.OrdinalIgnoreCase) == 0);

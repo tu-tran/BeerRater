@@ -1,9 +1,8 @@
-﻿namespace BeerRater.Providers
+﻿namespace BeerRater.Providers.Pricings
 {
     using System;
 
-    using BeerRater.Data;
-    using BeerRater.Utils;
+    using Data;
 
     /// <summary>
     /// The <see cref="PriceProviderBase"/> class.
