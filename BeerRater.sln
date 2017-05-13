@@ -1,11 +1,17 @@
-﻿
+﻿            
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerRater", "BeerRater\BeerRater.csproj", "{44DCDA41-85C5-4408-8108-466184F7C6A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerRater.Console", "BeerRater.Console\BeerRater.Console.csproj", "{44DCDA41-85C5-4408-8108-466184F7C6A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerRater.Tests", "BeerRater.Tests\BeerRater.Tests.csproj", "{6FC65F63-7A0E-4CE6-A5ED-A8781E08978C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerRater.Providers", "BeerRater.Providers\BeerRater.Providers.csproj", "{A8F4E2B0-064C-4A21-81C2-E902A8004CE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerRater.Data", "BeerRater.Data\BeerRater.Data.csproj", "{4108A62C-7FE1-4759-9983-FEDCE60485BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerRater.Utils", "BeerRater.Utils\BeerRater.Utils.csproj", "{FF156953-77FF-4143-8CEC-04FE0B299CB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{6FC65F63-7A0E-4CE6-A5ED-A8781E08978C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FC65F63-7A0E-4CE6-A5ED-A8781E08978C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FC65F63-7A0E-4CE6-A5ED-A8781E08978C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8F4E2B0-064C-4A21-81C2-E902A8004CE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8F4E2B0-064C-4A21-81C2-E902A8004CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8F4E2B0-064C-4A21-81C2-E902A8004CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8F4E2B0-064C-4A21-81C2-E902A8004CE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4108A62C-7FE1-4759-9983-FEDCE60485BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4108A62C-7FE1-4759-9983-FEDCE60485BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4108A62C-7FE1-4759-9983-FEDCE60485BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4108A62C-7FE1-4759-9983-FEDCE60485BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF156953-77FF-4143-8CEC-04FE0B299CB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF156953-77FF-4143-8CEC-04FE0B299CB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF156953-77FF-4143-8CEC-04FE0B299CB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF156953-77FF-4143-8CEC-04FE0B299CB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

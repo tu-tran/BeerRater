@@ -1,10 +1,10 @@
 ﻿namespace BeerRater.Tests
 {
-    using BeerRater.Data;
-    using BeerRater.Providers;
+    using Console.Providers;
+
+    using Data;
 
     using NUnit.Framework;
-    using NUnit.Framework.Internal;
 
     /// <summary>
     /// Tests the <see cref="ReferencePriceResolver"/>.

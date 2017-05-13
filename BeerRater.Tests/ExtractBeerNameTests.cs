@@ -2,7 +2,7 @@
 {
     using NUnit.Framework;
 
-    using Providers;
+    using Providers.Inputs;
 
     [TestFixture]
     public class ExtractBeerNameTests

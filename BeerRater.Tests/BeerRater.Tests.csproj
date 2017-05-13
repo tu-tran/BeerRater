@@ -47,11 +47,7 @@
         <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-      </ItemGroup>
-    </Otherwise>
+    <Otherwise />
   </Choose>
   <ItemGroup>
     <Compile Include="ReferencePriceResolverTests.cs" />
@@ -62,9 +58,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BeerRater\BeerRater.csproj">
+    <ProjectReference Include="..\BeerRater.Data\BeerRater.Data.csproj">
+      <Project>{4108A62C-7FE1-4759-9983-FEDCE60485BB}</Project>
+      <Name>BeerRater.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BeerRater.Providers\BeerRater.Providers.csproj">
+      <Project>{A8F4E2B0-064C-4A21-81C2-E902A8004CE8}</Project>
+      <Name>BeerRater.Providers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BeerRater.Utils\BeerRater.Utils.csproj">
+      <Project>{FF156953-77FF-4143-8CEC-04FE0B299CB1}</Project>
+      <Name>BeerRater.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BeerRater.Console\BeerRater.Console.csproj">
       <Project>{44dcda41-85c5-4408-8108-466184f7c6a0}</Project>
-      <Name>BeerRater</Name>
+      <Name>BeerRater.Console</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
