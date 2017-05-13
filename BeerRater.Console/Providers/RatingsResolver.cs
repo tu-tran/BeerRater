@@ -1,6 +1,8 @@
 ﻿namespace BeerRater.Console.Providers
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
 
     using BeerRater.Providers.Ratings;
 
@@ -21,14 +23,18 @@
         /// <summary>
         /// The resolvers
         /// </summary>
-        private readonly IList<IRatingProvider> resolvers;
+        private readonly Dictionary<IRatingProvider, int> resolvers = new Dictionary<IRatingProvider, int>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RatingsResolver" /> class.
         /// </summary>
         private RatingsResolver()
         {
-            this.resolvers = TypeExtensions.GetLoadedTypes<IRatingProvider>();
+            var providers = TypeExtensions.GetLoadedTypes<IRatingProvider>();
+            foreach (var provider in providers)
+            {
+                this.resolvers.Add(provider, 0);
+            }
         }
 
         /// <summary>
@@ -38,10 +44,28 @@
         /// <returns></returns>
         public BeerInfo Query(string beerName)
         {
-            BeerInfo candidate = null;
-            foreach (var provider in this.resolvers)
+            IRatingProvider[] providers;
+            lock (this)
             {
+                providers = this.resolvers.OrderBy(r => r.Value).Select(p => p.Key).ToArray();
+            }
+
+            BeerInfo candidate = null;
+            foreach (var provider in providers)
+            {
+                Trace.WriteLine($"Getting ratings from {provider}");
+                lock (this)
+                {
+                    this.resolvers[provider]++;
+                }
+
                 var info = provider.Query(beerName);
+
+                lock (this)
+                {
+                    this.resolvers[provider]--;
+                }
+
                 if (info != null)
                 {
                     candidate = info;
