@@ -59,10 +59,10 @@
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public IList<BeerMeta> GetBeerMeta(params string[] args)
+        public IList<BeerInfo> GetBeerMeta(params string[] args)
         {
             "Retrieving beer lists from SuperAlko...".Output();
-            var result = new List<BeerMeta>();
+            var result = new List<BeerInfo>();
             var url = "http://m.viinarannasta.ee/range-of-products/1";
             var referrer = "http://m.viinarannasta.ee/";
             var countryIndex = url.GetDocument(referrer).DocumentNode;
@@ -77,7 +77,7 @@
         /// <param name="node">The node.</param>
         /// <param name="result">The result.</param>
         /// <param name="baseUrl">The URL.</param>
-        private void GetBeerForCountry(HtmlNode node, List<BeerMeta> result, string baseUrl)
+        private void GetBeerForCountry(HtmlNode node, List<BeerInfo> result, string baseUrl)
         {
             var countryUrl = "http://m.viinarannasta.ee/" + node.GetAttributeValue("href", "");
             lock (result)
@@ -92,11 +92,11 @@
         /// <param name="url">A value indicating whether to.</param>
         /// <param name="referrer">The referrer.</param>
         /// <returns>The beer metas.</returns>
-        private List<BeerMeta> GetBeers(string url, string referrer)
+        private List<BeerInfo> GetBeers(string url, string referrer)
         {
             var document = url.GetDocument(referrer).DocumentNode;
             var nodes = document.SelectNodes("//section/div[@class='table']/div");
-            var result = new List<BeerMeta>();
+            var result = new List<BeerInfo>();
             foreach (var node in nodes)
             {
                 var dataNodes = node.SelectNodes("./div/span");
@@ -130,7 +130,7 @@
                 var beerUrl = $"{uri.Scheme}://{uri.Host}/{beerNode.GetAttributeValue("href", "")}";
                 var beerName = ExtractBeerName(nameOnStore);
                 Trace.WriteLine($"{this.Name}: [{beerName}] -> {price}");
-                result.Add(new BeerMeta(beerName, nameOnStore, beerUrl, imageUrl, price));
+                result.Add(new BeerInfo(beerName, nameOnStore, beerUrl, imageUrl, price));
             }
 
             return result;

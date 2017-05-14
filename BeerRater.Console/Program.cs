@@ -45,40 +45,35 @@
                     return;
                 }
 
-                var comparer = new CustomEqualityComparer<BeerMeta>((a, b) => string.Compare(a.NameOnStore, b.NameOnStore, StringComparison.OrdinalIgnoreCase) == 0);
+                var comparer = new CustomEqualityComparer<BeerInfo>((a, b) => string.Compare(a.NameOnStore, b.NameOnStore, StringComparison.OrdinalIgnoreCase) == 0);
                 var date = DateTime.UtcNow;
                 foreach (var provider in providers)
                 {
-                    var metas = provider.GetBeerMeta(args);
-                    var session = new QuerySession($"{provider.Name}_{date:yyyyMMdd_hhmmss}", metas.Distinct(comparer));
-                    $"Query contains {metas.Count} beer name(s)".Output();
-                    List<BeerInfo> infos;
+                    var beerInfos = provider.GetBeerMeta(args);
+                    var session = new QuerySession($"{provider.Name}_{date:yyyyMMdd_hhmmss}", beerInfos.Distinct(comparer));
+                    $"Query contains {beerInfos.Count} beer name(s)".Output();
 
                     if (appParams.IsRated ?? false)
                     {
-                        infos = new RateQuery().Query(metas);
-                        if (infos == null)
+                        beerInfos = new RateQuery().Query(beerInfos);
+                        if (beerInfos == null)
                         {
                             "There is no data to process.".OutputError();
                             return;
                         }
 
-                        infos = infos.OrderByDescending(r => r.Overall).ThenByDescending(r => r.WeightedAverage).ThenBy(r => r.Price).ThenBy(r => r.Name).ToList();
-                    }
-                    else
-                    {
-                        infos = metas.Select(m => m.ToInfo()).OrderBy(i => i.Name).ToList();
+                        beerInfos = beerInfos.OrderByDescending(r => r.Overall).ThenByDescending(r => r.WeightedAverage).ThenBy(r => r.Price).ThenBy(r => r.Name).ToList();
                     }
 
                     if (appParams.IsPriceCompared ?? false)
                     {
                         "Querying the reference prices...".Output();
-                        new ReferencePriceQuery().UpdateReferencePrices(infos);
+                        new ReferencePriceQuery().UpdateReferencePrices(beerInfos);
                     }
 
                     var fileName = Path.GetFileNameWithoutExtension(session.FilePath);
                     var basePath = Path.GetDirectoryName(session.FilePath);
-                    Reporter.Instance.Generate(infos, basePath, fileName);
+                    Reporter.Instance.Generate(beerInfos, basePath, fileName);
                 }
 
             }

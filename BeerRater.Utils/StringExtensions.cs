@@ -27,6 +27,18 @@
         /// <returns>
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
+        public static string ToInvariantString(this double? value)
+        {
+            return value?.ToString("0.00", CultureInfo.InvariantCulture) ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public static string ToInvariantString(this double value)
         {
             return value.ToString("0.00", CultureInfo.InvariantCulture);

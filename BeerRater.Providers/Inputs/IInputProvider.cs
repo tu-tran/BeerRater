@@ -28,6 +28,6 @@
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        IList<BeerMeta> GetBeerMeta(params string[] args);
+        IList<BeerInfo> GetBeerMeta(params string[] args);
     }
 }

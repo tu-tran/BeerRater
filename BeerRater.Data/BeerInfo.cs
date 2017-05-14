@@ -2,13 +2,35 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
     /// The beer info.
     /// </summary>
+    [DebuggerDisplay("{Name} - {Price}")]
     public class BeerInfo
     {
+        /// <summary>
+        /// The reference prices.
+        /// </summary>
+        private readonly List<ReferencePrice> prices = new List<ReferencePrice>();
+
+        /// <summary>
+        /// The abv.
+        /// </summary>
+        public double? ABV;
+
+        /// <summary>
+        /// The calories.
+        /// </summary>
+        public double? Calories;
+
+        /// <summary>
+        /// The image URL.
+        /// </summary>
+        public string ImageUrl;
+
         /// <summary>
         /// The name.
         /// </summary>
@@ -20,34 +42,14 @@
         public string NameOnStore;
 
         /// <summary>
-        /// The ratings.
-        /// </summary>
-        public double Ratings;
-
-        /// <summary>
-        /// The weighted average.
-        /// </summary>
-        public double WeightedAverage;
-
-        /// <summary>
-        /// The calories.
-        /// </summary>
-        public double Calories;
-
-        /// <summary>
-        /// The abv.
-        /// </summary>
-        public double ABV;
-
-        /// <summary>
         /// The overall rating.
-        /// </summary> 
-        public double Overall;
+        /// </summary>
+        public double? Overall;
 
         /// <summary>
-        /// The style.
+        /// The referencePrice.
         /// </summary>
-        public string Style;
+        public double? Price;
 
         /// <summary>
         /// The product URL.
@@ -55,24 +57,24 @@
         public string ProductUrl;
 
         /// <summary>
+        /// The ratings.
+        /// </summary>
+        public double? Ratings;
+
+        /// <summary>
         /// The URL.
         /// </summary>
         public string ReviewUrl;
 
         /// <summary>
-        /// The image URL.
+        /// The style.
         /// </summary>
-        public string ImageUrl;
+        public string Style;
 
         /// <summary>
-        /// The referencePrice.
+        /// The weighted average.
         /// </summary>
-        public double Price;
-
-        /// <summary>
-        /// The reference prices.
-        /// </summary>
-        private readonly List<ReferencePrice> prices = new List<ReferencePrice>();
+        public double? WeightedAverage;
 
         /// <summary>
         /// The reference prices.
@@ -83,12 +85,29 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BeerInfo" /> struct.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="nameOnStore">The name on store.</param>
+        /// <param name="productUrl">The product URL.</param>
+        /// <param name="imageUrl">The image URL.</param>
+        /// <param name="price">The price.</param>
+        public BeerInfo(string name, string nameOnStore = null, string productUrl = null, string imageUrl = null, double? price = null)
+        {
+            this.Name = name;
+            this.NameOnStore = string.IsNullOrEmpty(nameOnStore) ? name : nameOnStore;
+            this.ProductUrl = productUrl;
+            this.ImageUrl = imageUrl;
+            this.Price = price;
+        }
+
+        /// <summary>
         /// Clones this instance.
         /// </summary>
         /// <returns>The cloned instance.</returns>
         public BeerInfo Clone()
         {
-            return (BeerInfo)base.MemberwiseClone();
+            return (BeerInfo) this.MemberwiseClone();
         }
 
         /// <summary>

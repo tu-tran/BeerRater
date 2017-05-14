@@ -34,7 +34,7 @@
         /// <param name="infos">The infos.</param>
         /// <param name="basePath">The base path.</param>
         /// <param name="name">The name.</param>
-        public void Generate(List<BeerInfo> infos, string basePath, string name)
+        public void Generate(IList<BeerInfo> infos, string basePath, string name)
         {
             foreach (var reporter in this.reporters)
             {

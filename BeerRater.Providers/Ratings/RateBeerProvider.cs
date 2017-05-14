@@ -24,7 +24,7 @@
         /// <returns>The beer info</returns>
         public BeerInfo Query(string beerName)
         {
-            var result = new BeerInfo();
+            var result = new BeerInfo(beerName);
             var encodedTitle = WebUtility.UrlEncode(beerName);
             var queryUrl = $"https://www.ratebeer.com/findbeer.asp?beername={encodedTitle}";
             var referrer = "https://www.ratebeer.com";

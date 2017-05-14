@@ -35,7 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeerInfo.cs" />
-    <Compile Include="BeerMeta.cs" />
     <Compile Include="ReferencePrice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

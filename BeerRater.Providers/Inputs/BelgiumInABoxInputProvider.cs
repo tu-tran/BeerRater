@@ -65,7 +65,7 @@
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public IList<BeerMeta> GetBeerMeta(params string[] args)
+        public IList<BeerInfo> GetBeerMeta(params string[] args)
         {
             $"Retrieving beer lists from {this.Name}...".Output();
             var date = DateTime.Now;
@@ -81,7 +81,7 @@
 
             var pagination = (int)Math.Ceiling(totalCount / QuerySize);
             var pages = Enumerable.Range(1, pagination);
-            var result = new List<BeerMeta>();
+            var result = new List<BeerInfo>();
             this.Queue.Start<int>((n, i) => this.GetBeerOnPage(result, n), pages.ToList());
             return result;
         }
@@ -91,7 +91,7 @@
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="pageIndex">Index of the page.</param>
-        private void GetBeerOnPage(List<BeerMeta> result, int pageIndex)
+        private void GetBeerOnPage(List<BeerInfo> result, int pageIndex)
         {
             var epochTime = DateTime.UtcNow - new DateTime(1970, 1, 1);
             var url = "https://belgiuminabox.com/shop/modules/blocklayered/blocklayered-ajax.php?id_category_layered=470&layered_weight_slider=0.29_29&layered_price_slider=0_330&orderby=name&orderway=asc" +
@@ -114,7 +114,7 @@
 
             var document = new HtmlDocument();
             document.LoadHtml(products.Value.ToString());
-            var pageResult = new List<BeerMeta>();
+            var pageResult = new List<BeerInfo>();
             var nodes = document.DocumentNode.SelectNodes("//div[@class='product-container']");
             if (nodes == null)
             {
@@ -156,7 +156,7 @@
                 var nameOnStore = nameNode.InnerText.TrimDecoded();
                 var name = ExtractBeerName(nameOnStore);
                 Trace.WriteLine($"{this.Name}: [{name}] -> {price}");
-                pageResult.Add(new BeerMeta(name, nameOnStore, beerUrl, imageUrl, price));
+                pageResult.Add(new BeerInfo(name, nameOnStore, beerUrl, imageUrl, price));
             }
 
             lock (result)

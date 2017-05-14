@@ -36,11 +36,11 @@ namespace BeerRater.Providers.Inputs
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public IList<BeerMeta> GetBeerMeta(params string[] args)
+        public IList<BeerInfo> GetBeerMeta(params string[] args)
         {
             var fileName = args[0];
             $"Processing [{fileName}]...".Output();
-            var result = new List<BeerMeta>();
+            var result = new List<BeerInfo>();
             using (var reader = File.OpenText(fileName))
             {
                 string line = null;
@@ -62,7 +62,7 @@ namespace BeerRater.Providers.Inputs
 
                     if (!string.IsNullOrEmpty(name))
                     {
-                        result.Add(new BeerMeta(name, name, null, null, price));
+                        result.Add(new BeerInfo(name, name, null, null, price));
                     }
                 }
             }

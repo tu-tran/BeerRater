@@ -53,7 +53,6 @@
             BeerInfo candidate = null;
             foreach (var provider in providers)
             {
-                Trace.WriteLine($"Getting ratings from {provider}");
                 lock (this)
                 {
                     this.resolvers[provider]++;

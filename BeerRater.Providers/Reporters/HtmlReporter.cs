@@ -1,15 +1,12 @@
 ﻿namespace BeerRater.Providers.Reporters
 {
     using BeerRater.Utils;
-
     using Data;
-
+    using Properties;
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
     using System.Text;
-
-    using Properties;
 
     /// <summary>
     /// The <see cref="HtmlReporter"/> generates the HTML report.
@@ -87,8 +84,13 @@
         /// <param name="price">The price.</param>
         /// <param name="referencePrice">The reference price.</param>
         /// <returns>The HTML for price difference.</returns>
-        private static string GetPriceDiffHtml(double price, ReferencePrice referencePrice)
-        {            
+        private static string GetPriceDiffHtml(double? price, ReferencePrice referencePrice)
+        {
+            if (!price.HasValue)
+            {
+                return string.Empty;
+            }
+
             var priceDiffHtml = string.Empty;
             if (referencePrice.Price > 0.001)
             {

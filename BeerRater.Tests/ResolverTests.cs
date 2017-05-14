@@ -22,7 +22,7 @@
         [Test]
         public void ReferencePriceResolveTest()
         {
-            var target = new BeerInfo { NameOnStore = "Chimay Blue 9% 33cl" };
+            var target = new BeerInfo("Chimay Blue 9% 33cl");
             ReferencePriceResolver.Instance.UpdateReferencePrice(target);
             Assert.IsTrue(target.ReferencePrices.Any());
         }

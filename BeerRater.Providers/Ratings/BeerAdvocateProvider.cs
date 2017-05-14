@@ -20,7 +20,7 @@
         /// <returns>The beer info</returns>
         public BeerInfo Query(string beerName)
         {
-            var result = new BeerInfo();
+            var result = new BeerInfo(beerName);
             var encodedTitle = WebUtility.UrlEncode(beerName);
             var queryUrl = $"https://www.beeradvocate.com/search/?q={encodedTitle}&qt=beer";
             var referrer = "https://www.beeradvocate.com";
