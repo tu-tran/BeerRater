@@ -43,12 +43,20 @@
                 var parameter = parameters[i];
                 var index = i;
                 tasks.RemoveAll(t => t.IsCompleted);
+                var threadCount = tasks.Count;
 
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
-                    Thread.CurrentThread.Name = $"{this.name}_{index}";
-                    Trace.WriteLine($"Spawning thread {Thread.CurrentThread.Name}");
-                    action(parameter, index);
+                    try
+                    {
+                        Thread.CurrentThread.Name = $"{this.name}_{threadCount + 1}/{this.maxThreads}";
+                        Trace.WriteLine($"Spawning thread {Thread.CurrentThread.Name}");
+                        action(parameter, index);
+                    }
+                    catch (Exception e)
+                    {
+                        $"[{Thread.CurrentThread.Name}] ERROR: {e.Message}".OutputError();
+                    }
                 }));
 
                 if (tasks.Count == this.maxThreads)

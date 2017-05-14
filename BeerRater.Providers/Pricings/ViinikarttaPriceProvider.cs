@@ -18,6 +18,11 @@
     internal sealed class ViinikarttaPriceProvider : PriceProviderBase
     {
         /// <summary>
+        /// Gets the name.
+        /// </summary>
+        public override string Name { get { return "Viinikartta Price Provider"; } }
+
+        /// <summary>
         /// The query result.
         /// </summary>
         public class QueryResult
@@ -44,7 +49,7 @@
         /// </summary>
         /// <param name="beerName">Name of the beer.</param>
         /// <returns>The beer price.</returns>
-        public override ReferencePrice GetPrice(string beerName)
+        protected override ReferencePrice GetPrice(string beerName)
         {
             var url = $"http://www.viinikartta.fi/db/search_by_name_fragment.php?term={WebUtility.UrlEncode(beerName.Trim())}&searchtype=";
             var client = new RestClient(url);
@@ -60,6 +65,12 @@
             var response = client.Execute(request);
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                if (string.IsNullOrEmpty(response.Content))
+                {
+                    this.ApiChanged = true;
+                    return null;
+                }
+
                 var data = JsonConvert.DeserializeObject<QueryResult>(response.Content);
                 if (data != null && data.results != null && data.results.Length > 0)
                 {

@@ -1,15 +1,10 @@
 ﻿namespace BeerRater.Providers.Pricings
 {
-    using System.Net;
-
     using BeerRater.Utils;
-
     using Data;
-
     using Newtonsoft.Json;
-
     using RestSharp;
-
+    using System.Net;
     using Utils;
 
     /// <summary>
@@ -17,6 +12,11 @@
     /// </summary>
     internal sealed class AlkoPriceProvider : PriceProviderBase
     {
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        public override string Name { get { return "Alko Price Provider"; } }
+
         /// <summary>
         /// The <see cref="QueryResult"/> class .
         /// </summary>
@@ -65,11 +65,17 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>The beer price.</returns>
-        public override ReferencePrice GetPrice(string name)
+        protected override ReferencePrice GetPrice(string name)
         {
             var url = $"http://www.alko.fi/api/find/summary?language=en&products=6&query={WebUtility.UrlEncode(name)}&stores=3";
             var referrerUrl = "http://www.alko.fi/en/";
             var response = url.GetRestResponse(referrerUrl, Method.GET, DataFormat.Json, false);
+            if (string.IsNullOrEmpty(response))
+            {
+                this.ApiChanged = true;
+                return null;
+            }
+
             var data = JsonConvert.DeserializeObject<QueryResult>(response);
             if (data != null && data.Products != null && data.Products.Results != null && data.Products.Results.Length > 0 && !string.IsNullOrEmpty(data.Products.Results[0].Url))
             {

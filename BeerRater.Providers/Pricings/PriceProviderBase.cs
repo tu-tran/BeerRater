@@ -7,14 +7,13 @@
     /// <summary>
     /// The <see cref="PriceProviderBase"/> class.
     /// </summary>
-    public abstract class PriceProviderBase : IPriceProvider
+    public abstract class PriceProviderBase : ProviderBase, IPriceProvider
     {
         /// <summary>
-        /// Gets price.
+        /// Updates the specified information.
         /// </summary>
         /// <param name="info">The information.</param>
-        /// <returns>The beer price.</returns>
-        public ReferencePrice GetPrice(BeerInfo info)
+        protected override void DoUpdate(BeerInfo info)
         {
             var beerName = info.Name;
             var price = string.IsNullOrEmpty(beerName) ? null : this.GetPrice(beerName);
@@ -27,7 +26,10 @@
                 }
             }
 
-            return price;
+            if (price != null)
+            {
+                info.AddPrice(price);
+            }
         }
 
         /// <summary>
@@ -35,6 +37,6 @@
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>The beer price.</returns>
-        public abstract ReferencePrice GetPrice(string name);
+        protected abstract ReferencePrice GetPrice(string name);
     }
 }

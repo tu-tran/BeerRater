@@ -1,15 +1,8 @@
 ﻿namespace BeerRater.Console.Providers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-
-    using BeerRater.Providers;
     using BeerRater.Providers.Pricings;
-
     using Data;
-
+    using System.Collections.Generic;
     using Utils;
 
     /// <summary>
@@ -17,6 +10,9 @@
     /// </summary>
     internal sealed class ReferencePriceResolver
     {
+        /// <summary>
+        /// The instance.
+        /// </summary>
         public static readonly ReferencePriceResolver Instance = new ReferencePriceResolver();
 
         /// <summary>
@@ -40,12 +36,7 @@
         {
             foreach (var priceProvider in this.providers)
             {
-                var price = priceProvider.GetPrice(info);
-                if (price != null)
-                {
-                    info.AddPrice(price);
-                    return;
-                }
+                priceProvider.Update(info);
             }
         }
     }

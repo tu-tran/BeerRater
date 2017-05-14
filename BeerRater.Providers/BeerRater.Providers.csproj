@@ -48,8 +48,10 @@
     <Compile Include="Inputs\BelgiumInABoxInputProvider.cs" />
     <Compile Include="Inputs\FileInputProvider.cs" />
     <Compile Include="Pricings\IPriceProvider.cs" />
+    <Compile Include="IProvider.cs" />
     <Compile Include="Pricings\PriceProviderBase.cs" />
     <Compile Include="Pricings\AlkoPriceProvider.cs" />
+    <Compile Include="Pricings\ProviderBase.cs" />
     <Compile Include="Pricings\ViinikarttaPriceProvider.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
