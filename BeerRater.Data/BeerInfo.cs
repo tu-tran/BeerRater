@@ -128,7 +128,11 @@
         public void AddPrice(ReferencePrice referencePrice)
         {
             var matching = this.prices.FirstOrDefault(p => string.Equals(p.Url, referencePrice.Url, StringComparison.OrdinalIgnoreCase));
-            if (matching != null)
+            if (matching == null)
+            {
+                this.prices.Add(referencePrice);
+            }
+            else
             {
                 matching.Price = referencePrice.Price;
             }

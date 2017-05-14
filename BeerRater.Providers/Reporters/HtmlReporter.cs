@@ -94,14 +94,14 @@
             var priceDiffHtml = string.Empty;
             if (referencePrice.Price > 0.001)
             {
-                var priceDiff = price - referencePrice.Price;
+                var priceDiff = referencePrice.Price - price;
                 if (priceDiff > 0.0)
                 {
                     priceDiffHtml = $"<a class='r' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>+{priceDiff.ToInvariantString()}</a>";
                 }
                 else if (priceDiff < 0.0)
                 {
-                    priceDiffHtml = $"<a class='g' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>-{priceDiff.ToInvariantString()}</a>";
+                    priceDiffHtml = $"<a class='g' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>{priceDiff.ToInvariantString()}</a>";
                 }
             }
 
