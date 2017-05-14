@@ -1,12 +1,8 @@
 ﻿namespace BeerRater.Console.Processors
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
-
     using Data;
-
     using Providers;
-
+    using System.Collections.Generic;
     using Utils;
 
     /// <summary>
@@ -30,6 +26,7 @@
         /// <param name="index">The index.</param>
         private static void ResolveReferencePrice(BeerInfo info, int index)
         {
+            $"{index}. Resolve reference price for {info.Name}".Output();
             ReferencePriceResolver.Instance.UpdateReferencePrice(info);
         }
     }

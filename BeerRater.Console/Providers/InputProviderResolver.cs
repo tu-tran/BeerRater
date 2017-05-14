@@ -50,7 +50,7 @@ Select the input:
                 }
             }
 
-            Console.WriteLine($"User selection: {selection}");
+            $"User selection: {selection}".Output();
             return selection == 0 ? providers : new List<IInputProvider> { providers[selection - 1] };
         }
     }

@@ -1,5 +1,7 @@
 ﻿namespace BeerRater.Providers.Ratings
 {
+    using System;
+    using System.Linq;
     using System.Net;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -25,7 +27,7 @@
         public BeerInfo Query(string beerName)
         {
             var result = new BeerInfo(beerName);
-            var encodedTitle = WebUtility.UrlEncode(beerName);
+            var encodedTitle = beerName.UrlParamEncode();
             var queryUrl = $"https://www.ratebeer.com/findbeer.asp?beername={encodedTitle}";
             var referrer = "https://www.ratebeer.com";
             var searchBeerDoc = queryUrl.GetDocument(referrer);

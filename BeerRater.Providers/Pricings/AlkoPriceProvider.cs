@@ -2,9 +2,10 @@
 {
     using BeerRater.Utils;
     using Data;
-    using Newtonsoft.Json;
-    using RestSharp;
+    using HtmlAgilityPack;
+    using System.Collections.Specialized;
     using System.Net;
+    using System.Text;
     using Utils;
 
     /// <summary>
@@ -67,25 +68,36 @@
         /// <returns>The beer price.</returns>
         protected override ReferencePrice GetPrice(string name)
         {
-            var url = $"http://www.alko.fi/api/find/summary?language=en&products=6&query={WebUtility.UrlEncode(name)}&stores=3";
-            var referrerUrl = "http://www.alko.fi/en/";
-            var response = url.GetRestResponse(referrerUrl, Method.GET, DataFormat.Json, false);
-            if (string.IsNullOrEmpty(response))
+            var url = "https://www.alko.fi/INTERSHOP/web/WFS/Alko-OnlineShop-Site/en_US/-/EUR/ViewSuggestSearch-Suggest?AjaxRequestMarker=true";
+            using (var client = new WebClient())
             {
-                this.ApiChanged = true;
-                return null;
-            }
+                var responseBytes = client.UploadValues(url,
+                    new NameValueCollection { { "SynchronizerToken", "a818cc584565ec34136bfb8d7c5516bf097f77649eb5c2049d42454a6a0be951" }, { "SearchTerm", name } });
 
-            var data = JsonConvert.DeserializeObject<QueryResult>(response);
-            if (data != null && data.Products != null && data.Products.Results != null && data.Products.Results.Length > 0 && !string.IsNullOrEmpty(data.Products.Results[0].Url))
-            {
-                var baseUrl = "http://www.alko.fi";
-                var priceUrl = $"{baseUrl}{data.Products.Results[0].Url}";
-                var infoDoc = priceUrl.GetDocument(referrerUrl);
-                var priceNode = infoDoc.DocumentNode.SelectSingleNode("//span[@itemprop='price']");
-                if (priceNode != null)
+                var response = WebUtility.HtmlDecode(Encoding.Default.GetString(responseBytes));
+                if (string.IsNullOrEmpty(response))
                 {
-                    return new ReferencePrice(priceNode.InnerText.TrimDecoded().ToDouble(), priceUrl);
+                    this.ApiChanged = true;
+                    return null;
+                }
+                var document = new HtmlDocument();
+                document.LoadHtml(response);
+                var matchNode = document.DocumentNode.SelectSingleNode("//a[@data-item-type='product']");
+                if (matchNode != null)
+                {
+                    var productUrl = matchNode.GetAttributeValue("href", string.Empty);
+                    var referrerUrl = "http://www.alko.fi/en/";
+                    var productDoc = productUrl.GetDocument(referrerUrl);
+                    var priceNode = productDoc.DocumentNode.SelectSingleNode("//span[@itemprop='price']");
+                    if (priceNode != null)
+                    {
+                        var price = priceNode.GetAttributeValue("content", string.Empty);
+                        if (!string.IsNullOrEmpty(price))
+                        {
+                            return new ReferencePrice(price.ToDouble(), productUrl);
+                        }
+                    }
+
                 }
             }
 

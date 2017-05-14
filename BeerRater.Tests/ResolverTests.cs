@@ -41,5 +41,20 @@
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
         }
+
+        /// <summary>
+        /// RateBeer rating resolve test.
+        /// </summary>
+        [Test]
+        public void RateBeerResolveTest()
+        {
+            var target = new RateBeerProvider().Query(" Chimay Première (Red)");
+            Assert.NotNull(target);
+            Assert.IsTrue(target.Overall > 0.0);
+
+            target = RatingsResolver.Instance.Query("Gruut Blond");
+            Assert.NotNull(target);
+            Assert.IsTrue(target.Overall > 0.0);
+        }
     }
 }

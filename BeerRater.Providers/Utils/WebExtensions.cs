@@ -1,12 +1,11 @@
 ﻿namespace BeerRater.Providers.Utils
 {
+    using HtmlAgilityPack;
+    using RestSharp;
     using System;
+    using System.Linq;
     using System.Net;
     using System.Text;
-
-    using HtmlAgilityPack;
-
-    using RestSharp;
 
     /// <summary>
     /// The web extensions.
@@ -41,13 +40,20 @@
         /// <param name="method">The method.</param>
         /// <param name="format">The format.</param>
         /// <param name="isMobile">if set to <c>true</c> [is mobile].</param>
-        /// <returns>The response.</returns>
-        public static string GetRestResponse(this string url, string referrerUrl = "", Method method = Method.GET, DataFormat format = DataFormat.Json, bool isMobile = true)
+        /// <param name="body">The body.</param>
+        /// <returns>
+        /// The response.
+        /// </returns>
+        public static string GetRestResponse(this string url, string referrerUrl = "", Method method = Method.GET, DataFormat format = DataFormat.Json, bool isMobile = true, object body = null)
         {
             var client = new RestClient(url) { Encoding = Encoding.Default };
             var request = new RestRequest(".", method) { RequestFormat = format };
             request.AddHeader("Referer", referrerUrl);
             request.AddHeader("User-Agent", WebExtensions.GetUserAgent(isMobile));
+            if (body != null)
+            {
+                request.AddBody(body);
+            }
 
             var response = client.Execute(request);
             if (response.StatusCode == HttpStatusCode.OK)
@@ -115,6 +121,16 @@
         public static string TrimDecoded(this string text)
         {
             return text.Decode().Trim();
+        }
+
+        /// <summary>
+        /// URLs parameter encode.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The string.</returns>
+        public static string UrlParamEncode(this string value)
+        {
+            return value.Any(c => !Uri.IsHexDigit(c)) ? WebUtility.UrlEncode(value) : string.Join(string.Empty, value.Select(c => Uri.HexEscape(c)).ToArray());
         }
 
         /// <summary>

@@ -51,11 +51,10 @@
         /// <returns>The beer price.</returns>
         protected override ReferencePrice GetPrice(string beerName)
         {
-            var url = $"http://www.viinikartta.fi/db/search_by_name_fragment.php?term={WebUtility.UrlEncode(beerName.Trim())}&searchtype=";
+            var url = $"http://www.viinikartta.fi/db/search_by_name_fragment.php?term={beerName.Trim().UrlParamEncode()}&searchtype=";
             var client = new RestClient(url);
             var request = new RestRequest(".", Method.GET) { RequestFormat = DataFormat.Json };
 
-            // easily add HTTP Headers
             var baseUrl = "http://www.viinikartta.fi/";
             request.AddHeader("Referer", baseUrl);
             request.AddHeader("User-Agent", WebExtensions.GetUserAgent(false));
