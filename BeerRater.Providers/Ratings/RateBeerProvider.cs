@@ -76,19 +76,22 @@
                 }
             }
 
-            var descriptionNode = resultDoc.DocumentNode.SelectSingleNode("//div[contains(@class, 'description-container') or contains(@class, 'aggregate-rating-container')]");
-            if (descriptionNode != null)
+            var infoNode = resultDoc.DocumentNode.SelectSingleNode("//*[@id='_aggregateRating6' or contains(@class, 'aggregate-rating-container') or contains(@class, 'description-container')]");
+            if (infoNode != null)
             {
-                var styleNode = descriptionNode.SelectSingleNode(".//a[contains(@href, '/beerstyles')]");
-                if (styleNode != null)
-                {
-                    result.Style = styleNode.InnerText.TrimDecoded();
-                }
+                infoNode = infoNode.ParentNode;
+            }
+
+            infoNode = infoNode ?? resultDoc.DocumentNode;
+            var styleNode = infoNode.SelectSingleNode(".//a[contains(@href, '/beerstyles/') and string-length(@href) > 12]");
+            if (styleNode != null)
+            {
+                result.Style = styleNode.InnerText.TrimDecoded();
             }
             else
             {
-                var infoText = resultDoc.DocumentNode.InnerText.TrimDecoded();
-                var regex = Regex.Match(infoText, "Style: (?<Style>.+?)(  )|$", RegexOptions.Compiled | RegexOptions.Singleline);
+                var infoText = infoNode.InnerText.TrimDecoded();
+                var regex = Regex.Match(infoText, "Style: (?<Style>.+?)(  )|$", RegexOptions.Compiled);
                 result.Style = (regex.Success
                     ? regex.Groups["Style"].Value
                     : Regex.Replace(infoText, "  +", @". ")).Trim();
