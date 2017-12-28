@@ -7,10 +7,24 @@
 @GOTO %PROCESSOR_ARCHITECTURE%
 
 :AMD64
-@SET NET_FRAMEWORK="%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe"
-@GOTO END
+@SET PROGRAM_FILES=%ProgramFiles(x86)%
+@GOTO SET_MSBUILD
 
 :X86
-@SET NET_FRAMEWORK="%ProgramFiles%\MSBuild\14.0\Bin\MSBuild.exe"
+@SET PROGRAM_FILES=%ProgramFiles%
+@GOTO SET_MSBUILD
+
+:SET_MSBUILD
+@SET NET_FRAMEWORK="%PROGRAM_FILES%\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
+@IF EXIST %NET_FRAMEWORK% @GOTO END
+
+@SET NET_FRAMEWORK="%PROGRAM_FILES%\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"
+@IF EXIST %NET_FRAMEWORK% @GOTO END
+
+@SET NET_FRAMEWORK="%PROGRAM_FILES%\MSBuild\14.0\Bin\MSBuild.exe"
+@IF EXIST %NET_FRAMEWORK% @GOTO END
+
+@ECHO Could not locate MSBuild. Process Halted!
+@EXIT /B -1
 
 :END
