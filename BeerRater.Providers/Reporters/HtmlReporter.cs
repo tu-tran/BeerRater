@@ -25,7 +25,10 @@
         {
             var jsFileName = "sorttable.js";
             var jsFile = Path.Combine(basePath, jsFileName);
-            Directory.CreateDirectory(basePath);
+            if (!string.IsNullOrEmpty(basePath))
+            {
+                Directory.CreateDirectory(basePath);
+            }
 
             try
             {
