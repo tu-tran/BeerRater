@@ -53,25 +53,5 @@
         {
             return new string(input.Where(c => char.IsLetter(c) || char.IsDigit(c)).ToArray());
         }
-
-        /// <summary>
-        /// Writes the specified input to output.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        public static void Output(this string input)
-        {
-            Console.WriteLine(input);
-            Trace.WriteLine(input);
-        }
-
-        /// <summary>
-        /// Writes the specified input to error output.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        public static void OutputError(this string input)
-        {
-            Console.Error.WriteLine(input);
-            Trace.TraceError(input);
-        }
     }
 }
