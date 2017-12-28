@@ -1,6 +1,7 @@
 ﻿namespace BeerRater.Utils
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading;
@@ -19,6 +20,11 @@
         private readonly string name;
 
         /// <summary>
+        /// The tasks.
+        /// </summary>
+        private readonly List<Task> tasks;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="QueryQueue" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -27,6 +33,7 @@
         {
             this.name = name;
             this.maxThreads = maxThreads < 1 ? 1 : maxThreads;
+            this.tasks = new List<Task>();
         }
 
         /// <summary>
@@ -37,35 +44,33 @@
         /// <param name="parameters">The parameters.</param>
         public void Start<TParam>(Action<TParam, int> action, IList<TParam> parameters)
         {
-            var tasks = new List<Task>(this.maxThreads);
             for (var i = 0; i < parameters.Count; i++)
             {
                 var parameter = parameters[i];
                 var index = i;
-                tasks.RemoveAll(t => t.IsCompleted);
-                var threadCount = tasks.Count;
 
-                tasks.Add(Task.Factory.StartNew(() =>
+                if (this.tasks.Count == this.maxThreads)
+                {
+                    Task.WaitAny(this.tasks.ToArray());
+                }
+
+                this.tasks.RemoveAll(t => t.IsCompleted);
+                this.tasks.Add(Task.Factory.StartNew(() =>
                 {
                     try
                     {
-                        Thread.CurrentThread.Name = $"{this.name}_{threadCount + 1}/{this.maxThreads}";
-                        Trace.WriteLine($"Spawning thread {Thread.CurrentThread.Name}");
+                        Trace.WriteLine($"Spawning thread {this.name}_{this.tasks.Count}/{this.maxThreads}");
                         action(parameter, index);
                     }
                     catch (Exception e)
                     {
-                        $"[{Thread.CurrentThread.Name}] ERROR: {e.Message}".OutputError();
+                        $"ERROR: {e.Message}".OutputError();
                     }
                 }));
-
-                if (tasks.Count == this.maxThreads)
-                {
-                    Task.WaitAny(tasks.ToArray());
-                }
             }
 
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll(this.tasks.ToArray());
+            this.tasks.RemoveAll(t => t.IsCompleted);
         }
     }
 }

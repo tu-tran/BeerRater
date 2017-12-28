@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppParameters.cs" />
+    <Compile Include="AppProcessor.cs" />
     <Compile Include="Processors\ReferencePriceQuery.cs" />
     <Compile Include="Providers\RatingsResolver.cs" />
     <Compile Include="Providers\ReferencePriceResolver.cs" />

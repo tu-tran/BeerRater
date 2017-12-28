@@ -1,15 +1,10 @@
 ﻿namespace BeerRater.Console.Processors
 {
+    using Data;
+    using Providers;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using BeerRater.Providers.Ratings;
-
-    using Data;
-
-    using Providers;
-
     using Utils;
 
     /// <summary>
@@ -22,39 +17,30 @@
         /// </summary>
         /// <param name="metas">The metas.</param>
         /// <returns>The beer infos.</returns>
-        public List<BeerInfo> Query(IList<BeerInfo> metas)
+        public void Query(IList<BeerInfo> metas)
         {
-            var result = new List<BeerInfo>();
-            this.Queue.Start((m, i) => Query(m, result), metas);
-            return result;
+            this.Queue.Start((m, i) => ResolveRating(m, metas), metas);
         }
 
         /// <summary>
-        /// Queries the specified info.
+        /// Resolves rating.
         /// </summary>
-        /// <param name="info">The info.</param>
-        /// <param name="result">The output result.</param>
-        private static void Query(BeerInfo info, List<BeerInfo> result)
+        /// <param name="info">The beer information.</param>
+        /// <param name="references">The references.</param>
+        private static void ResolveRating(BeerInfo info, IList<BeerInfo> references)
         {
-            var match = result.FirstOrDefault(i => string.Equals(i.Name, info.Name, StringComparison.OrdinalIgnoreCase));
-            BeerInfo resultInfo;
-            if (match != null)
+            var match = references.FirstOrDefault(i => string.Equals(i.Name, info.Name, StringComparison.OrdinalIgnoreCase));
+            if (match != null && !string.IsNullOrEmpty(match.ReviewUrl))
             {
-                resultInfo = match.Clone();
+                info.Overall = match.Overall;
+                info.ABV = match.ABV;
+                info.Calories = match.Calories;
+                info.Ratings = match.Ratings;
+                info.ReviewUrl = match.ReviewUrl;
             }
             else
             {
-                resultInfo = RatingsResolver.Instance.Query(info.Name) ?? info;
-            }
-
-            resultInfo.NameOnStore = info.NameOnStore;
-            resultInfo.Price = (info.Price.HasValue ? info.Price.ToString() : string.Empty).ToDouble();
-            resultInfo.ProductUrl = info.ProductUrl;
-            resultInfo.ImageUrl = info.ImageUrl;
-            lock (result)
-            {
-                result.Add(resultInfo);
-                $"{result.Count}. {resultInfo}".Output();
+                RatingsResolver.Instance.Query(info);
             }
         }
     }

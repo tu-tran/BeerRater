@@ -14,7 +14,7 @@
         /// <summary>
         /// The reference prices.
         /// </summary>
-        private readonly List<ReferencePrice> prices = new List<ReferencePrice>();
+        private List<ReferencePrice> prices;
 
         /// <summary>
         /// The abv.
@@ -77,9 +77,14 @@
         public double? WeightedAverage;
 
         /// <summary>
+        /// The data source.
+        /// </summary>
+        public string DataSource;
+
+        /// <summary>
         /// The reference prices.
         /// </summary>
-        public IEnumerable<ReferencePrice> ReferencePrices
+        public IReadOnlyList<ReferencePrice> ReferencePrices
         {
             get { return this.prices; }
         }
@@ -92,13 +97,14 @@
         /// <param name="productUrl">The product URL.</param>
         /// <param name="imageUrl">The image URL.</param>
         /// <param name="price">The price.</param>
-        public BeerInfo(string name, string nameOnStore = null, string productUrl = null, string imageUrl = null, double? price = null)
+        public BeerInfo(string name, string nameOnStore = null, string productUrl = null, string imageUrl = null, double? price = null, string dataSource = null)
         {
             this.Name = name;
             this.NameOnStore = string.IsNullOrEmpty(nameOnStore) ? name : nameOnStore;
             this.ProductUrl = productUrl;
             this.ImageUrl = imageUrl;
             this.Price = price;
+            this.DataSource = dataSource;
         }
 
         /// <summary>
@@ -127,6 +133,11 @@
         /// <param name="referencePrice">The referencePrice.</param>
         public void AddPrice(ReferencePrice referencePrice)
         {
+            if (this.prices == null)
+            {
+                this.prices = new List<ReferencePrice>(1);
+            }
+
             var matching = this.prices.FirstOrDefault(p => string.Equals(p.Url, referencePrice.Url, StringComparison.OrdinalIgnoreCase));
             if (matching == null)
             {

@@ -15,7 +15,8 @@
         /// <param name="reportName">Name of the report.</param>
         public void Generate(IList<BeerInfo> infos, string basePath, string reportName)
         {
-            var target = Path.Combine(basePath, reportName) + ".csv";
+            var target = Path.Combine(basePath, "CSV", reportName + ".csv");
+            Directory.CreateDirectory(Path.GetDirectoryName(target) ?? string.Empty);
             using (var csvStream = new StreamWriter(target, false))
             {
                 csvStream.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tSTYLE\tURL\tIMAGE");

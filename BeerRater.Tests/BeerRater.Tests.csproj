@@ -50,6 +50,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="AppProcessorTests.cs" />
+    <Compile Include="Inputs\TestInputProvider.cs" />
     <Compile Include="ResolverTests.cs" />
     <Compile Include="ExtractBeerNameTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

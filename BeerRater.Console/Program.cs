@@ -1,20 +1,13 @@
 ﻿namespace BeerRater.Console
 {
     using System;
-    using System.Collections.Generic;
     using System.Configuration;
-    using System.IO;
-    using System.Linq;
-
-    using BeerRater.Data;
-    using BeerRater.Providers;
-    using BeerRater.Utils;
 
     using CommandLine;
 
-    using Processors;
-
     using Providers;
+
+    using Utils;
 
     /// <summary>
     /// The beer rater.
@@ -45,43 +38,13 @@
                     return;
                 }
 
-                var comparer = new CustomEqualityComparer<BeerInfo>((a, b) => string.Compare(a.NameOnStore, b.NameOnStore, StringComparison.OrdinalIgnoreCase) == 0);
-                var date = DateTime.UtcNow;
-                foreach (var provider in providers)
-                {
-                    var beerInfos = provider.GetBeerMeta(args);
-                    var session = new QuerySession($"{provider.Name}_{date:yyyyMMdd_hhmmss}", beerInfos.Distinct(comparer));
-                    $"Query contains {beerInfos.Count} beer name(s)".Output();
-
-                    if (appParams.IsRated ?? false)
-                    {
-                        beerInfos = new RateQuery().Query(beerInfos);
-                        if (beerInfos == null)
-                        {
-                            "There is no data to process.".OutputError();
-                            return;
-                        }
-
-                        beerInfos = beerInfos.OrderByDescending(r => r.Overall).ThenByDescending(r => r.WeightedAverage).ThenBy(r => r.Price).ThenBy(r => r.Name).ToList();
-                    }
-
-                    if (appParams.IsPriceCompared ?? false)
-                    {
-                        "Querying the reference prices...".Output();
-                        new ReferencePriceQuery().UpdateReferencePrices(beerInfos);
-                    }
-
-                    var fileName = Path.GetFileNameWithoutExtension(session.FilePath);
-                    var basePath = Path.GetDirectoryName(session.FilePath);
-                    Reporter.Instance.Generate(beerInfos, basePath, fileName);
-                }
-
+                new AppProcessor(providers, appParams, args).Execute();
             }
             catch (Exception ex)
             {
                 "======================================================================".Output();
                 $"FATAL ERROR: {ex}".OutputError();
-                Console.ReadKey();
+                System.Console.ReadKey();
             }
         }
     }

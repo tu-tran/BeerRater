@@ -33,11 +33,13 @@
         [Test]
         public void BeerAdvocateRatingResolveTest()
         {
-            var target = new BeerAdvocateProvider().Query("De Troch Chapeau Pêche");
+            var target = new BeerInfo("De Troch Chapeau Pêche");
+            new BeerAdvocateProvider().Query(target);
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
 
-            target = RatingsResolver.Instance.Query("Gruut Blond");
+            target = new BeerInfo("Gruut Blond");
+            RatingsResolver.Instance.Query(target);
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
         }
@@ -48,11 +50,13 @@
         [Test]
         public void RateBeerResolveTest()
         {
-            var target = new RateBeerProvider().Query(" Chimay Première (Red)");
+            var target = new BeerInfo("Chimay Première (Red)");
+            new RateBeerProvider().Query(target);
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
 
-            target = RatingsResolver.Instance.Query("Gruut Blond");
+            target = new BeerInfo("Gruut Blond");
+            RatingsResolver.Instance.Query(target);
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
         }

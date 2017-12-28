@@ -3,6 +3,8 @@
     using BeerRater.Providers.Reporters;
     using Data;
     using System.Collections.Generic;
+    using System.Linq;
+
     using Utils;
 
     /// <summary>
@@ -36,6 +38,7 @@
         /// <param name="name">The name.</param>
         public void Generate(IList<BeerInfo> infos, string basePath, string name)
         {
+            infos = infos.OrderByDescending(r => r.Overall).ThenByDescending(r => r.WeightedAverage).ThenBy(r => r.Price).ThenBy(r => r.Name).ToList();
             foreach (var reporter in this.reporters)
             {
                 reporter.Generate(infos, basePath, name);

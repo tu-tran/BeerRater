@@ -38,11 +38,10 @@
         }
 
         /// <summary>
-        /// Queries the specified beer name.
+        /// Queries the specified beer information.
         /// </summary>
-        /// <param name="beerName">Name of the beer.</param>
-        /// <returns></returns>
-        public BeerInfo Query(string beerName)
+        /// <param name="beerInfo">The beer information.</param>
+        public void Query(BeerInfo beerInfo)
         {
             IRatingProvider[] providers;
             lock (this)
@@ -50,7 +49,6 @@
                 providers = this.resolvers.OrderBy(r => r.Value).Select(p => p.Key).ToArray();
             }
 
-            BeerInfo candidate = null;
             foreach (var provider in providers)
             {
                 lock (this)
@@ -58,24 +56,20 @@
                     this.resolvers[provider]++;
                 }
 
-                var info = provider.Query(beerName);
+                provider.Query(beerInfo);
 
                 lock (this)
                 {
                     this.resolvers[provider]--;
                 }
 
-                if (info != null)
+                if (beerInfo.Overall > 0.0)
                 {
-                    candidate = info;
-                    if (info.Overall > 0.0)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
 
-            return candidate;
+            $"[{beerInfo.DataSource}] {beerInfo.Name} - {beerInfo.Overall}".Output();
         }
     }
 }

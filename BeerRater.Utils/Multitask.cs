@@ -33,6 +33,14 @@
             }
         }
 
+        /// <summary>
+        /// Gets the queue.
+        /// </summary>
+        protected QueryQueue Queue { get; }
+
+        /// <summary>
+        /// Initializes static members of the <see cref="Multitask"/> class.
+        /// </summary>
         static Multitask()
         {
             PoolSize = Environment.ProcessorCount;
@@ -53,10 +61,5 @@
         {
             this.Queue = new QueryQueue(this.GetType().Name.GetValidThreadName(), maxThreads);
         }
-
-        /// <summary>
-        /// Gets the queue.
-        /// </summary>
-        protected QueryQueue Queue { get; private set; }
     }
 }

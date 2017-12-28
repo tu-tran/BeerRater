@@ -61,7 +61,7 @@
     <Compile Include="Ratings\BeerAdvocateProvider.cs" />
     <Compile Include="Ratings\IRatingProvider.cs" />
     <Compile Include="Ratings\RateBeerProvider.cs" />
-    <Compile Include="Reporters\StatReporter.cs" />
+    <Compile Include="Reporters\StatsReporter.cs" />
     <Compile Include="Reporters\JsonReporter.cs" />
     <Compile Include="Reporters\IReporter.cs" />
     <Compile Include="Reporters\HtmlReporter.cs" />

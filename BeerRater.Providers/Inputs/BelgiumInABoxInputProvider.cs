@@ -156,7 +156,7 @@
                 var nameOnStore = nameNode.InnerText.TrimDecoded();
                 var name = ExtractBeerName(nameOnStore);
                 Trace.WriteLine($"{this.Name}: [{name}] -> {price}");
-                pageResult.Add(new BeerInfo(name, nameOnStore, beerUrl, imageUrl, price));
+                pageResult.Add(new BeerInfo(name, nameOnStore, beerUrl, imageUrl, price, this.Name));
             }
 
             lock (result)

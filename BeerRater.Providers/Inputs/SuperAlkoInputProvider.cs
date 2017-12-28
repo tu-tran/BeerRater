@@ -130,7 +130,7 @@
                 var beerUrl = $"{uri.Scheme}://{uri.Host}/{beerNode.GetAttributeValue("href", "")}";
                 var beerName = ExtractBeerName(nameOnStore);
                 Trace.WriteLine($"{this.Name}: [{beerName}] -> {price}");
-                result.Add(new BeerInfo(beerName, nameOnStore, beerUrl, imageUrl, price));
+                result.Add(new BeerInfo(beerName, nameOnStore, beerUrl, imageUrl, price, this.Name));
             }
 
             return result;

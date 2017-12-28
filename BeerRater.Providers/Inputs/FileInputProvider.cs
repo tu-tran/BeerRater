@@ -62,7 +62,7 @@ namespace BeerRater.Providers.Inputs
 
                     if (!string.IsNullOrEmpty(name))
                     {
-                        result.Add(new BeerInfo(name, name, null, null, price));
+                        result.Add(new BeerInfo(name, name, null, null, price, this.Name));
                     }
                 }
             }

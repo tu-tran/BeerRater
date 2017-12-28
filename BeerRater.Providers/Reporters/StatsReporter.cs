@@ -6,9 +6,9 @@
     using System.Linq;
 
     /// <summary>
-    /// The <see cref="StatReporter"/> generates the statistics report.
+    /// The <see cref="StatsReporter"/> generates the statistics report.
     /// </summary>
-    public class StatReporter : IReporter
+    public class StatsReporter : IReporter
     {
         /// <summary>
         /// Generates the reports based on the specified infos.
@@ -18,7 +18,8 @@
         /// <param name="reportName">Name of the report.</param>
         public void Generate(IList<BeerInfo> infos, string basePath, string reportName)
         {
-            var target = Path.Combine(basePath, reportName) + ".stats";
+            var target = Path.Combine(basePath, "Stats", reportName + ".stats");
+            Directory.CreateDirectory(Path.GetDirectoryName(target) ?? string.Empty);
             var rated = infos.Count(i => i.Ratings > 0.0);
             var unrated = infos.Count - rated;
             using (var writer = new StreamWriter(target))

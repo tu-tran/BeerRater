@@ -3,6 +3,7 @@
     using HtmlAgilityPack;
     using RestSharp;
     using System;
+    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Text;
@@ -23,10 +24,26 @@
         {
             var htmlDoc = new HtmlDocument();
             var request = GetRequest(url, referrer, isMobile);
-            using (var respStream = request.GetResponse().GetResponseStream())
+            Stream respStream = null;
+            var attempts = 0;
+
+            while (attempts++ < 3 && respStream == null)
             {
-                if (respStream != null)
-                    htmlDoc.Load(respStream, true);
+                try
+                {
+                    using (respStream = request.GetResponse().GetResponseStream())
+                    {
+                        if (respStream != null)
+                        {
+                            htmlDoc.Load(respStream, true);
+                            break;
+                        }
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
             }
 
             return htmlDoc;

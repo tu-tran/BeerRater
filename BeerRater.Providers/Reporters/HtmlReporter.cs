@@ -1,5 +1,7 @@
 ﻿namespace BeerRater.Providers.Reporters
 {
+    using System;
+
     using BeerRater.Utils;
     using Data;
     using Properties;
@@ -23,7 +25,20 @@
         {
             var jsFileName = "sorttable.js";
             var jsFile = Path.Combine(basePath, jsFileName);
-            File.WriteAllText(jsFile, Resources.JS_Sorttable);
+            Directory.CreateDirectory(basePath);
+
+            try
+            {
+                if (!File.Exists(jsFile) || File.ReadAllText(jsFile) != Resources.JS_Sorttable)
+                {
+                    File.WriteAllText(jsFile, Resources.JS_Sorttable);
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+
             var target = Path.Combine(basePath, reportName) + ".html";
             using (var htmlStream = new StreamWriter(target, false, Encoding.Default))
             {
@@ -51,9 +66,13 @@
                     var productUrl = string.IsNullOrEmpty(res.ProductUrl) ? res.ReviewUrl : res.ProductUrl;
                     var priceDiffHtml = string.Empty;
                     var diffCount = 0;
-                    foreach (var price in res.ReferencePrices)
+
+                    if (res.ReferencePrices != null)
                     {
-                        priceDiffHtml += (++diffCount > 1 ? "&nbsp;" : "&nbsp;(") + GetPriceDiffHtml(res.Price, price);
+                        foreach (var price in res.ReferencePrices)
+                        {
+                            priceDiffHtml += (++diffCount > 1 ? "&nbsp;" : "&nbsp;(") + GetPriceDiffHtml(res.Price, price);
+                        }
                     }
 
                     if (diffCount > 0)
@@ -97,11 +116,11 @@
                 var priceDiff = referencePrice.Price - price;
                 if (priceDiff > 0.0)
                 {
-                    priceDiffHtml = $"<a class='r' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>+{priceDiff.ToInvariantString()}</a>";
+                    priceDiffHtml = $"<a class='g' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>+{priceDiff.ToInvariantString()}</a>";
                 }
                 else if (priceDiff < 0.0)
                 {
-                    priceDiffHtml = $"<a class='g' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>{priceDiff.ToInvariantString()}</a>";
+                    priceDiffHtml = $"<a class='r' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>{priceDiff.ToInvariantString()}</a>";
                 }
             }
 

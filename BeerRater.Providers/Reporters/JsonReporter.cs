@@ -18,7 +18,8 @@
         /// <param name="reportName">Name of the report.</param>
         public void Generate(IList<BeerInfo> infos, string basePath, string reportName)
         {
-            var target = Path.Combine(basePath, reportName) + ".json";
+            var target = Path.Combine(basePath, "JSON", reportName + ".json");
+            Directory.CreateDirectory(Path.GetDirectoryName(target) ?? string.Empty);
             File.WriteAllText(target, JsonConvert.SerializeObject(infos, Formatting.Indented));
         }
     }

@@ -11,7 +11,6 @@ namespace BeerRater.Providers.Ratings
         /// Queries the specified beer name.
         /// </summary>
         /// <param name="beerName">Name of the beer.</param>
-        /// <returns></returns>
-        BeerInfo Query(string beerName);
+        void Query(BeerInfo beerName);
     }
 }
