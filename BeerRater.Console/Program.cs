@@ -22,6 +22,7 @@
         {
             try
             {
+                System.AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
                 var parserResult = CommandLine.Parser.Default.ParseArguments<AppParameters>(args);
                 var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>)parserResult).Value : new AppParameters();
                 appParams.Initialize(ConfigurationManager.AppSettings);
@@ -34,7 +35,7 @@
                 var providers = InputProviderResolver.Get(args);
                 if (providers == null || providers.Count < 1)
                 {
-                    "Invalid arguments".OutputError();
+                    "Invalid command line arguments".OutputError();
                     return;
                 }
 
@@ -43,8 +44,27 @@
             catch (Exception ex)
             {
                 "======================================================================".Output();
-                $"FATAL ERROR: {ex}".OutputError();
-                System.Console.ReadKey();
+                ex.OutputError();
+                Console.ReadKey();
+            }
+        }
+
+        /// <summary>
+        /// Currents domain on unhandled exception.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs eventArgs)
+        {
+            var message = sender?.ToString() ?? "Error: ";
+            var exception = eventArgs.ExceptionObject as Exception;
+            if (exception == null)
+            {
+                "FATAL ERROR: Application crashing".OutputError();
+            }
+            else
+            {
+                exception.OutputError(message);
             }
         }
     }

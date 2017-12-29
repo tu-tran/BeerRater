@@ -64,7 +64,7 @@
                     }
                     catch (Exception e)
                     {
-                        $"ERROR: {e.Message}".OutputError();
+                        e.OutputError();
                     }
                 }));
             }

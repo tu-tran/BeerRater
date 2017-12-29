@@ -29,8 +29,10 @@
         /// <param name="references">The references.</param>
         private static void ResolveRating(BeerInfo info, IList<BeerInfo> references)
         {
-            var match = references.FirstOrDefault(i => string.Equals(i.Name, info.Name, StringComparison.OrdinalIgnoreCase));
-            if (match != null && !string.IsNullOrEmpty(match.ReviewUrl))
+            var match = references.FirstOrDefault(i =>
+                string.Equals(i.Name, info.Name, StringComparison.OrdinalIgnoreCase) || string.Equals(i.NameOnStore, info.NameOnStore, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrEmpty(match?.ReviewUrl))
             {
                 info.Overall = match.Overall;
                 info.ABV = match.ABV;

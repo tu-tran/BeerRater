@@ -63,7 +63,7 @@
                     this.resolvers[provider]--;
                 }
 
-                if (beerInfo.Overall > 0.0)
+                if (beerInfo.Overall.HasValue && beerInfo.Overall.Value > double.Epsilon)
                 {
                     break;
                 }

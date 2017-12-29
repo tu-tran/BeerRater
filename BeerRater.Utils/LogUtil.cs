@@ -158,7 +158,7 @@ namespace BeerRater.Utils
             }
 
             string targetFile = actualLogFileName + LOG_EXT;
-            Console.WriteLine("Initializing log file: " + targetFile);
+            Console.WriteLine("Log: " + targetFile);
             var fileAppender = new RollingFileAppender
             {
                 Layout = layout,
