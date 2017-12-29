@@ -71,8 +71,18 @@
             var url = "https://www.alko.fi/INTERSHOP/web/WFS/Alko-OnlineShop-Site/en_US/-/EUR/ViewSuggestSearch-Suggest?AjaxRequestMarker=true";
             using (var client = new WebClient())
             {
-                var responseBytes = client.UploadValues(url,
-                    new NameValueCollection { { "SynchronizerToken", "a818cc584565ec34136bfb8d7c5516bf097f77649eb5c2049d42454a6a0be951" }, { "SearchTerm", name } });
+                byte[] responseBytes = null;
+                var attempts = 0;
+                while (attempts++ < 5 && responseBytes == null)
+                {
+                    responseBytes = client.UploadValues(url,
+                        new NameValueCollection { { "SynchronizerToken", "a818cc584565ec34136bfb8d7c5516bf097f77649eb5c2049d42454a6a0be951" }, { "SearchTerm", name } });
+                }
+
+                if (responseBytes == null)
+                {
+                    return null;
+                }
 
                 var response = WebUtility.HtmlDecode(Encoding.Default.GetString(responseBytes));
                 if (string.IsNullOrEmpty(response))

@@ -55,18 +55,24 @@
                 }
 
                 this.tasks.RemoveAll(t => t.IsCompleted);
-                this.tasks.Add(Task.Factory.StartNew(() =>
+                Task newTask = null;
+                while (newTask == null)
                 {
-                    try
+                    newTask = Task.Run(() =>
                     {
-                        Trace.WriteLine($"Spawning thread {this.name}_{this.tasks.Count}/{this.maxThreads}");
-                        action(parameter, index);
-                    }
-                    catch (Exception e)
-                    {
-                        e.OutputError();
-                    }
-                }));
+                        try
+                        {
+                            Trace.WriteLine($"Spawning thread {this.name}_{this.tasks.Count}/{this.maxThreads}");
+                            action(parameter, index);
+                        }
+                        catch (Exception e)
+                        {
+                            e.OutputError();
+                        }
+                    });
+                }
+
+                this.tasks.Add(newTask);
             }
 
             Task.WaitAll(this.tasks.ToArray());

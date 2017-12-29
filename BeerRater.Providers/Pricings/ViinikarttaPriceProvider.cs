@@ -60,9 +60,14 @@
             request.AddHeader("User-Agent", WebExtensions.GetUserAgent(false));
             request.AddHeader("X-Requested-With", "XMLHttpRequest");
 
-            // execute the request
-            var response = client.Execute(request);
-            if (response.StatusCode == HttpStatusCode.OK)
+            IRestResponse response = null;
+            var attempts = 0;
+            while (attempts++ < 10 && (response == null || response.StatusCode != HttpStatusCode.OK))
+            {
+                response = client.Execute(request);
+            }
+
+            if (response != null && response.StatusCode == HttpStatusCode.OK)
             {
                 if (string.IsNullOrEmpty(response.Content))
                 {

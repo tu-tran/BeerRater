@@ -23,14 +23,14 @@
         public static HtmlDocument GetDocument(this string url, string referrer = "", bool isMobile = true)
         {
             var htmlDoc = new HtmlDocument();
-            var request = GetRequest(url, referrer, isMobile);
             Stream respStream = null;
             var attempts = 0;
 
-            while (attempts++ < 3 && respStream == null)
+            while (attempts++ < 5 && respStream == null)
             {
                 try
                 {
+                    var request = GetRequest(url, referrer, isMobile);
                     using (respStream = request.GetResponse().GetResponseStream())
                     {
                         if (respStream != null)
