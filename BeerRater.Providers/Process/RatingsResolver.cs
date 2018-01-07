@@ -1,36 +1,31 @@
-﻿namespace BeerRater.Console.Providers
+﻿namespace BeerRater.Providers.Process
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
 
-    using BeerRater.Providers.Ratings;
+    using BeerRater.Utils;
 
     using Data;
 
-    using Utils;
+    using Ratings;
+
+    using BaseObject = Providers.BaseObject;
 
     /// <summary>
     /// Reporter.
     /// </summary>
-    internal class RatingsResolver
+    public class RatingsResolver : BaseObject
     {
         /// <summary>
-        /// The instance
-        /// </summary>
-        public static readonly RatingsResolver Instance = new RatingsResolver();
-
-        /// <summary>
-        /// The resolvers
+        /// The resolvers.
         /// </summary>
         private readonly Dictionary<IRatingProvider, int> resolvers = new Dictionary<IRatingProvider, int>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RatingsResolver" /> class.
         /// </summary>
-        private RatingsResolver()
+        public RatingsResolver(IEnumerable<IRatingProvider> providers)
         {
-            var providers = TypeExtensions.GetLoadedTypes<IRatingProvider>();
             foreach (var provider in providers)
             {
                 this.resolvers.Add(provider, 0);
@@ -69,7 +64,7 @@
                 }
             }
 
-            $"[{beerInfo.DataSource}] {beerInfo.Name} - {beerInfo.Overall}".Output();
+            this.Output($"[{beerInfo.DataSource}] {beerInfo.Name} - {beerInfo.Overall}");
         }
     }
 }

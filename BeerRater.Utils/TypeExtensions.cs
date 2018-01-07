@@ -15,7 +15,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>The instances of type <typeparamref name="T"/>.</returns>
-        public static IList<T> GetLoadedTypes<T>()
+        public static IReadOnlyList<T> GetLoadedTypes<T>()
         {
             var result = new List<T>();
             var types = AppDomain.CurrentDomain.GetAssemblies()

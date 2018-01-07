@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseObject.cs" />
+    <Compile Include="Multitask.cs" />
+    <Compile Include="Process\AppProcessor.cs" />
     <Compile Include="Inputs\IInputProvider.cs" />
     <Compile Include="Inputs\BelgiumInABoxInputProvider.cs" />
     <Compile Include="Inputs\FileInputProvider.cs" />
@@ -53,14 +56,25 @@
     <Compile Include="Pricings\AlkoPriceProvider.cs" />
     <Compile Include="Pricings\ProviderBase.cs" />
     <Compile Include="Pricings\ViinikarttaPriceProvider.cs" />
+    <Compile Include="Process\BeerRatingQuery.cs" />
+    <Compile Include="Process\IAppParameters.cs" />
+    <Compile Include="ReflectionResolver - Copy.cs" />
+    <Compile Include="ReflectionResolver.cs" />
+    <Compile Include="IResolver.cs" />
+    <Compile Include="Process\QuerySession.cs" />
+    <Compile Include="Process\RatingsResolver.cs" />
+    <Compile Include="Process\ReferencePriceQuery.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="QueryQueue.cs" />
     <Compile Include="Ratings\BeerAdvocateProvider.cs" />
     <Compile Include="Ratings\IRatingProvider.cs" />
     <Compile Include="Ratings\RateBeerProvider.cs" />
+    <Compile Include="Reporters\AggregateReporter.cs" />
+    <Compile Include="Reporters\IFileReporter.cs" />
     <Compile Include="Reporters\StatsReporter.cs" />
     <Compile Include="Reporters\JsonReporter.cs" />
     <Compile Include="Reporters\IReporter.cs" />

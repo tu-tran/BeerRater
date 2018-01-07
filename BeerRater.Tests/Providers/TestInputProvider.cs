@@ -1,13 +1,21 @@
-﻿namespace BeerRater.Tests.Inputs
+﻿namespace BeerRater.Tests.Providers
 {
     using System.Collections.Generic;
 
-    using Data;
+    using BeerRater.Providers.Inputs;
 
-    using Providers.Inputs;
+    using Data;
 
     internal class TestInputProvider : IInputProvider
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestInputProvider"/> class.
+        /// </summary>
+        public TestInputProvider()
+        {
+            this.Beers = new List<BeerInfo> { new BeerInfo("Chimay Red Premiere", "Chimay Red Premiere 7% 75cl", null, null, 7.5, "UnitTest") };
+        }
+
         /// <summary>
         /// Gets the name.
         /// </summary>
@@ -15,6 +23,11 @@
         {
             get { return "UnitTest"; }
         }
+
+        /// <summary>
+        /// Gets or sets the beers.
+        /// </summary>
+        public List<BeerInfo> Beers { get; set; }
 
         /// <summary>
         /// Determines whether the specified arguments is compatible.
@@ -33,9 +46,9 @@
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public IList<BeerInfo> GetBeerMeta(params string[] args)
+        public IReadOnlyList<BeerInfo> GetBeerMeta(params string[] args)
         {
-            return new List<BeerInfo> { new BeerInfo("Lindemans Kriek 3,5% 37,5cl", "Lindemans Kriek 3,5% 37,5cl", "http://localhost", null, 5.0, "UnitTest") };
+            return this.Beers;
         }
     }
 }

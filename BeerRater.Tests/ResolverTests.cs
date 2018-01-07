@@ -1,14 +1,13 @@
 ﻿namespace BeerRater.Tests
 {
+    using Data;
+    using NUnit.Framework;
     using System.Linq;
 
-    using Console.Providers;
-
-    using Data;
-
-    using NUnit.Framework;
-
-    using Providers.Ratings;
+    using BeerRater.Providers;
+    using BeerRater.Providers.Pricings;
+    using BeerRater.Providers.Process;
+    using BeerRater.Providers.Ratings;
 
     /// <summary>
     /// Tests the <see cref="ReferencePriceResolver"/>.
@@ -22,8 +21,13 @@
         [Test]
         public void ReferencePriceResolveTest()
         {
-            var target = new BeerInfo("Chimay Blue 9% 33cl");
-            ReferencePriceResolver.Instance.UpdateReferencePrice(target);
+            var target = new BeerInfo("Chimay Blue");
+            var priceProviders = new ReflectionResolver<IPriceProvider>().Resolve(null);
+            foreach (var pricer in priceProviders)
+            {
+                pricer.Update(target);
+            }
+
             Assert.IsTrue(target.ReferencePrices.Any());
         }
 
@@ -39,7 +43,7 @@
             Assert.IsTrue(target.Overall > 0.0);
 
             target = new BeerInfo("Gruut Blond");
-            RatingsResolver.Instance.Query(target);
+            new RatingsResolver(new ReflectionResolver<IRatingProvider>().Resolve(null)).Query(target);
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
         }
@@ -56,7 +60,7 @@
             Assert.IsTrue(target.Overall > 0.0);
 
             target = new BeerInfo("Gruut Blond");
-            RatingsResolver.Instance.Query(target);
+            new RatingsResolver(new ReflectionResolver<IRatingProvider>().Resolve(null)).Query(target);
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
         }

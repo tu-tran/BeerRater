@@ -12,7 +12,7 @@ namespace BeerRater.Providers.Inputs
     /// <summary>
     /// The file input resolver.
     /// </summary>
-    internal class FileInputProvider : IInputProvider
+    internal class FileInputProvider : BaseObject, IInputProvider
     {
         /// <summary>
         /// Gets the name.
@@ -36,10 +36,10 @@ namespace BeerRater.Providers.Inputs
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public IList<BeerInfo> GetBeerMeta(params string[] args)
+        public IReadOnlyList<BeerInfo> GetBeerMeta(params string[] args)
         {
             var fileName = args[0];
-            $"Processing [{fileName}]...".Output();
+            this.Output($"Processing [{fileName}]...");
             var result = new List<BeerInfo>();
             using (var reader = File.OpenText(fileName))
             {

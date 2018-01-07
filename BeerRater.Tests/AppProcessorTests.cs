@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BeerRater.Tests
+﻿namespace BeerRater.Tests
 {
+    using BeerRater.Providers;
+    using BeerRater.Providers.Inputs;
+    using BeerRater.Providers.Process;
+    using BeerRater.Providers.Reporters;
+
     using Console;
 
-    using Inputs;
+    using NFluent;
 
     using NUnit.Framework;
 
-    using Providers.Inputs;
+    using Providers;
 
     /// <summary>
     /// The <see cref="AppProcessorTests"/> class tests the <see cref="AppProcessor"/>.
@@ -21,16 +20,50 @@ namespace BeerRater.Tests
     public class AppProcessorTests
     {
         /// <summary>
+        /// The target.
+        /// </summary>
+        private AppProcessor target;
+
+        /// <summary>
+        /// The input provider.
+        /// </summary>
+        private readonly TestInputProvider inputProvider = new TestInputProvider();
+
+        /// <summary>
+        /// The reporter.
+        /// </summary>
+        private TestReporter reporter;
+
+        /// <summary>
+        /// Setups this instance.
+        /// </summary>
+        [SetUp]
+        public void Setup()
+        {
+            this.reporter = new TestReporter();
+            this.target = Program.GetApp(new AppParameters { IsPriceCompared = false, IsRated = true, ThreadsCount = 1 });
+            this.target.InputerResolver = new ResolverList<IInputProvider>(this.inputProvider);
+            this.target.ReporterResolver = new ResolverList<IReporter>(this.reporter);
+        }
+
+        /// <summary>
         /// Executes test.
         /// </summary>
         [Test]
         public void ExecuteTest()
         {
-            var target = new AppProcessor(
-                new List<IInputProvider> { new TestInputProvider() },
-                new AppParameters { IsPriceCompared = false, IsRated = true, ThreadsCount = 1 },
-                new string[0]);
-            target.Execute();
+            this.target.Execute();
+            Check.That(this.reporter.LastSession.Count).IsEqualTo(1);
+            var actual = this.reporter.LastSession[0];
+            Check.That(actual.Name).IsEqualTo("Chimay Première (Red)");
+            Check.That(actual.NameOnStore).IsEqualTo("Chimay Red Premiere 7% 75cl");
+            Check.That(actual.Overall).HasAValue();
+            Check.That(actual.Overall.Value).IsGreaterThan(1.5);
+            Check.That(actual.Ratings).HasAValue();
+            Check.That(actual.Ratings.Value).IsGreaterThan(1.5);
+            Check.That(actual.Style).IsEqualTo("Dubbel");
+            Check.That(actual.ImageUrl).IsNotNull();
+            Check.That(actual.ReviewUrl).IsNotNull();
         }
     }
 }

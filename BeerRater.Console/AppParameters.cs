@@ -6,12 +6,14 @@
     using System.Linq;
     using System.Reflection;
 
+    using BeerRater.Providers.Process;
+
     using CommandLine;
 
     /// <summary>
     /// The <see cref="AppParameters"/> class.
     /// </summary>
-    public class AppParameters
+    public class AppParameters : IAppParameters
     {
         /// <summary>
         /// Gets or sets a value indicating whether to gets the price comparison.

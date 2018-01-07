@@ -5,22 +5,20 @@
     using System.Collections.Generic;
     using System.IO;
 
+    using Process;
+
     /// <summary>
     /// The <see cref="JsonReporter"/> generates the JSON report.
     /// </summary>
     public class JsonReporter : IReporter
     {
-        /// <summary>
-        /// Generates the reports based on the specified infos.
-        /// </summary>
-        /// <param name="infos">The infos.</param>
-        /// <param name="basePath">The base path.</param>
-        /// <param name="reportName">Name of the report.</param>
-        public void Generate(IList<BeerInfo> infos, string basePath, string reportName)
+        /// <inheritdoc />
+        public void Generate(QuerySession session)
         {
-            var target = Path.Combine(basePath, "JSON", reportName + ".json");
+            var basePath = Path.GetDirectoryName(session.Name);
+            var target = Path.Combine(basePath, "JSON", session.Name + ".json");
             Directory.CreateDirectory(Path.GetDirectoryName(target) ?? string.Empty);
-            File.WriteAllText(target, JsonConvert.SerializeObject(infos, Formatting.Indented));
+            File.WriteAllText(target, JsonConvert.SerializeObject(session, Formatting.Indented));
         }
     }
 }

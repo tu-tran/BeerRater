@@ -1,47 +1,52 @@
-﻿namespace BeerRater.Utils
+﻿namespace BeerRater.Providers
 {
+    using BeerRater.Utils;
+
     using System;
 
     /// <summary>
-    /// The <see cref="LogExtensions"/> class provides extension methods for logging.
+    /// The base object.
     /// </summary>
-    public static class LogExtensions
+    public abstract class BaseObject
     {
         /// <summary>
-        /// The logger.
+        /// The this.logger.
         /// </summary>
-        private static readonly ILogger Logger;
+        protected readonly ILogger logger;
 
-        static LogExtensions()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseObject"/> class.
+        /// </summary>
+        protected BaseObject()
         {
-            Logger = LogUtil.GetLogger();
+            this.logger = LogUtil.GetLogger(this.GetType().Name);
         }
 
         /// <summary>
         /// Writes the specified input to output.
         /// </summary>
         /// <param name="input">The input.</param>
-        public static void Output(this string input)
+        protected void Output(string input)
         {
-            Logger.Info(input);
+            this.logger.Info(input);
         }
 
         /// <summary>
         /// Writes the specified input to error output.
         /// </summary>
         /// <param name="input">The input.</param>
-        public static void OutputError(this string input)
+        protected void OutputError(string input)
         {
-            Logger.Error(input);
+            this.logger.Error(input);
         }
 
         /// <summary>
         /// Writes the specified input to error output.
         /// </summary>
         /// <param name="exception">The input.</param>
-        public static void OutputError(this Exception exception)
+        protected void OutputError(Exception exception)
         {
-            Logger.Error("Error: ", exception);
+            this.logger.Error("Error: ", exception);
         }
 
         /// <summary>
@@ -49,9 +54,9 @@
         /// </summary>
         /// <param name="exception">The input.</param>
         /// <param name="message">The message.</param>
-        public static void OutputError(this Exception exception, string message)
+        protected void OutputError(Exception exception, string message)
         {
-            Logger.Error(message, exception);
+            this.logger.Error(message, exception);
         }
     }
 }

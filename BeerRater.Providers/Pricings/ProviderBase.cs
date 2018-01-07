@@ -7,7 +7,7 @@
     /// <summary>
     /// The <see cref="ProviderBase"/> abstracts the providers.
     /// </summary>
-    public abstract class ProviderBase : IProvider
+    public abstract class ProviderBase : BaseObject, IProvider
     {
         /// <summary>
         /// The API changed.
@@ -31,7 +31,7 @@
                 this.apiChanged = value;
                 if (!value)
                 {
-                    $"The API for {this.Name} has been changed!".OutputError();
+                    this.OutputError($"The API for {this.Name} has been changed!");
                 }
             }
         }

@@ -12,8 +12,6 @@
 @echo =========================================================
 @echo COMPILATION
 @echo =========================================================
-@echo Cleaning up Release...
-@del /F /S /Q "%OUTPUT_DIR%\*" > nul 2>&1
 
 @echo Building Release...
 @%NET_FRAMEWORK% %SOLUTION_FILE% /t:Rebuild /p:Configuration=Release > "%LOG_FILE%" 2>&1

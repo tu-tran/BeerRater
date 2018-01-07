@@ -5,22 +5,20 @@
     using System.Collections.Generic;
     using System.IO;
 
+    using Process;
+
     public class CsvReporter : IReporter
     {
-        /// <summary>
-        /// Generates the reports based on the specified infos.
-        /// </summary>
-        /// <param name="infos">The infos.</param>
-        /// <param name="basePath">The base path.</param>
-        /// <param name="reportName">Name of the report.</param>
-        public void Generate(IList<BeerInfo> infos, string basePath, string reportName)
+        /// <inheritdoc />
+        public void Generate(QuerySession session)
         {
-            var target = Path.Combine(basePath, "CSV", reportName + ".csv");
+            var basePath = Path.GetDirectoryName(session.Name);
+            var target = Path.Combine(basePath, "CSV", session.Name + ".csv");
             Directory.CreateDirectory(Path.GetDirectoryName(target) ?? string.Empty);
             using (var csvStream = new StreamWriter(target, false))
             {
                 csvStream.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tSTYLE\tURL\tIMAGE");
-                foreach (var res in infos)
+                foreach (var res in session)
                 {
                     csvStream.WriteLine(
                         res.NameOnStore + '\t' + res.Overall.ToInvariantString() + '\t' + res.WeightedAverage.ToInvariantString() + '\t' +

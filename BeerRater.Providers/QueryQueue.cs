@@ -1,13 +1,11 @@
-﻿namespace BeerRater.Utils
+﻿namespace BeerRater.Providers
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Threading;
     using System.Threading.Tasks;
 
-    public sealed class QueryQueue
+    public sealed class QueryQueue : BaseObject
     {
         /// <summary>
         /// The maximum threads.
@@ -42,7 +40,7 @@
         /// <typeparam name="TParam">The type of the parameter.</typeparam>
         /// <param name="action">The action.</param>
         /// <param name="parameters">The parameters.</param>
-        public void Start<TParam>(Action<TParam, int> action, IList<TParam> parameters)
+        public void Start<TParam>(Action<TParam, int> action, IReadOnlyList<TParam> parameters)
         {
             for (var i = 0; i < parameters.Count; i++)
             {
@@ -67,8 +65,8 @@
                         }
                         catch (Exception e)
                         {
-                            e.OutputError();
-                        }
+                            this.OutputError(e);
+    }
                     });
                 }
 

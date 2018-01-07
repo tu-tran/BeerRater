@@ -38,6 +38,11 @@
     <Compile Include="ReferencePrice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BeerRater.Utils\BeerRater.Utils.csproj">
+      <Project>{FF156953-77FF-4143-8CEC-04FE0B299CB1}</Project>
+      <Name>BeerRater.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

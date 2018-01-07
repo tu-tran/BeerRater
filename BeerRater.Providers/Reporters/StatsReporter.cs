@@ -1,7 +1,6 @@
 ﻿namespace BeerRater.Providers.Reporters
 {
-    using Data;
-    using System.Collections.Generic;
+    using Process;
     using System.IO;
     using System.Linq;
 
@@ -10,21 +9,17 @@
     /// </summary>
     public class StatsReporter : IReporter
     {
-        /// <summary>
-        /// Generates the reports based on the specified infos.
-        /// </summary>
-        /// <param name="infos">The infos.</param>
-        /// <param name="basePath">The base path.</param>
-        /// <param name="reportName">Name of the report.</param>
-        public void Generate(IList<BeerInfo> infos, string basePath, string reportName)
+        /// <inheritdoc />
+        public void Generate(QuerySession session)
         {
-            var target = Path.Combine(basePath, "Stats", reportName + ".stats");
+            var basePath = Path.GetDirectoryName(session.Name);
+            var target = Path.Combine(basePath, "Stats", session.Name + ".stats");
             Directory.CreateDirectory(Path.GetDirectoryName(target) ?? string.Empty);
-            var rated = infos.Count(i => i.Ratings > 0.0);
-            var unrated = infos.Count - rated;
+            var rated = session.Count(i => i.Ratings > 0.0);
+            var unrated = session.Count - rated;
             using (var writer = new StreamWriter(target))
             {
-                writer.WriteLine($"Rated: {rated} - Unrated: {unrated} - Total: {infos.Count}");
+                writer.WriteLine($"Rated: {rated} - Unrated: {unrated} - Total: {session.Count}");
             }
         }
     }

@@ -59,15 +59,15 @@
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public IList<BeerInfo> GetBeerMeta(params string[] args)
+        public IReadOnlyList<BeerInfo> GetBeerMeta(params string[] args)
         {
-            "Retrieving beer lists from SuperAlko...".Output();
+            this.Output("Retrieving beer lists from SuperAlko...");
             var result = new List<BeerInfo>();
             var url = "http://m.viinarannasta.ee/range-of-products/1";
             var referrer = "http://m.viinarannasta.ee/";
             var countryIndex = url.GetDocument(referrer).DocumentNode;
             var nodes = countryIndex.SelectNodes("//section/div/h4//a");
-            this.Queue.Start((n, i) => this.GetBeerForCountry(n, result, url), nodes);
+            this.Queue.Start((n, i) => this.GetBeerForCountry(n, result, url), new List<HtmlNode>(nodes));
             return result;
         }
 

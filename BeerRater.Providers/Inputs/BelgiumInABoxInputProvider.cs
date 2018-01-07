@@ -65,9 +65,9 @@
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public IList<BeerInfo> GetBeerMeta(params string[] args)
+        public IReadOnlyList<BeerInfo> GetBeerMeta(params string[] args)
         {
-            $"Retrieving beer lists from {this.Name}...".Output();
+            this.Output($"Retrieving beer lists from {this.Name}...");
             var date = DateTime.Now;
             var url = "https://belgiuminabox.com/shop/470-beer";
             var referrer = "";

@@ -27,7 +27,7 @@
         /// Gets the specified arguments.
         /// </summary>
         /// <param name="args">The arguments.</param>
-        /// <returns></returns>
-        IList<BeerInfo> GetBeerMeta(params string[] args);
+        /// <returns>The beer infos.</returns>
+        IReadOnlyList<BeerInfo> GetBeerMeta(params string[] args);
     }
 }

@@ -1,11 +1,14 @@
-﻿namespace BeerRater.Console.Processors
+﻿namespace BeerRater.Providers.Process
 {
-    using Data;
-    using Providers;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Utils;
+
+    using BeerRater.Utils;
+
+    using Data;
+
+    using Ratings;
 
     /// <summary>
     /// The query of beer rate.
@@ -13,13 +16,27 @@
     internal sealed class RateQuery : Multitask
     {
         /// <summary>
+        /// Gets the raters.
+        /// </summary>
+        public RatingsResolver Resolver { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RateQuery"/> class.
+        /// </summary>
+        /// <param name="raters">The raters.</param>
+        public RateQuery(IReadOnlyList<IRatingProvider> raters)
+        {
+            this.Resolver = new RatingsResolver(raters);
+        }
+
+        /// <summary>
         /// Queries the specified metas.
         /// </summary>
         /// <param name="metas">The metas.</param>
         /// <returns>The beer infos.</returns>
-        public void Query(IList<BeerInfo> metas)
+        public void Query(IReadOnlyList<BeerInfo> metas)
         {
-            this.Queue.Start((m, i) => ResolveRating(m, metas), metas);
+            this.Queue.Start((m, i) => this.ResolveRating(m, metas), metas);
         }
 
         /// <summary>
@@ -27,10 +44,12 @@
         /// </summary>
         /// <param name="info">The beer information.</param>
         /// <param name="references">The references.</param>
-        private static void ResolveRating(BeerInfo info, IList<BeerInfo> references)
+        private void ResolveRating(BeerInfo info, IReadOnlyList<BeerInfo> references)
         {
             var match = references.FirstOrDefault(i =>
-                string.Equals(i.Name, info.Name, StringComparison.OrdinalIgnoreCase) || string.Equals(i.NameOnStore, info.NameOnStore, StringComparison.OrdinalIgnoreCase));
+                i != info &&
+                (string.Equals(i.Name, info.Name, StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(i.NameOnStore, info.NameOnStore, StringComparison.OrdinalIgnoreCase)));
 
             if (!string.IsNullOrEmpty(match?.ReviewUrl))
             {
@@ -42,8 +61,9 @@
             }
             else
             {
-                RatingsResolver.Instance.Query(info);
+                this.Resolver.Query(info);
             }
         }
     }
 }
+

@@ -1,24 +1,24 @@
-﻿namespace BeerRater.Console.Processors
+﻿namespace BeerRater.Providers.Process
 {
     using System.Collections.Generic;
 
     using Data;
 
-    internal sealed class QuerySession : List<BeerInfo>
+    public sealed class QuerySession : List<BeerInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="QuerySession" /> class.
         /// </summary>
-        /// <param name="filePath">The file path.</param>
+        /// <param name="name">The name.</param>
         /// <param name="data">The data.</param>
-        public QuerySession(string filePath, IEnumerable<BeerInfo> data) : base(data)
+        public QuerySession(string name, IEnumerable<BeerInfo> data) : base(data)
         {
-            this.FilePath = filePath;
+            this.Name = name;
         }
 
         /// <summary>
         /// Gets the file path.
         /// </summary>
-        public string FilePath { get; private set; }
+        public string Name { get; private set; }
     }
 }

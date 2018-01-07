@@ -1,8 +1,6 @@
 namespace BeerRater.Providers.Reporters
 {
-    using System.Collections.Generic;
-
-    using Data;
+    using Process;
 
     /// <summary>
     /// The <see cref="IReporter"/> interfaces the reporter.
@@ -12,9 +10,7 @@ namespace BeerRater.Providers.Reporters
         /// <summary>
         /// Generates the reports based on the specified infos.
         /// </summary>
-        /// <param name="infos">The infos.</param>
-        /// <param name="basePath">The base path.</param>
-        /// <param name="reportName">Name of the report.</param>
-        void Generate(IList<BeerInfo> infos, string basePath, string reportName);
+        /// <param name="session">The session.</param>
+        void Generate(QuerySession session);
     }
 }

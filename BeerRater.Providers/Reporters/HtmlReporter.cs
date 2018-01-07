@@ -3,26 +3,27 @@
     using System;
 
     using BeerRater.Utils;
+
     using Data;
+
     using Properties;
+
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
     using System.Text;
+
+    using Process;
 
     /// <summary>
     /// The <see cref="HtmlReporter"/> generates the HTML report.
     /// </summary>
     public class HtmlReporter : IReporter
     {
-        /// <summary>
-        /// Generates the reports based on the specified infos.
-        /// </summary>
-        /// <param name="infos">The infos.</param>
-        /// <param name="basePath">The base path.</param>
-        /// <param name="reportName">Name of the report.</param>
-        public void Generate(IList<BeerInfo> infos, string basePath, string reportName)
+        /// <inheritdoc />
+        public void Generate(QuerySession session)
         {
+            var basePath = Path.GetDirectoryName(session.Name);
             var jsFileName = "sorttable.js";
             var jsFile = Path.Combine(basePath, jsFileName);
             if (!string.IsNullOrEmpty(basePath))
@@ -42,7 +43,7 @@
                 // ignored
             }
 
-            var target = Path.Combine(basePath, reportName) + ".html";
+            var target = Path.Combine(basePath, session.Name) + ".html";
             using (var htmlStream = new StreamWriter(target, false, Encoding.Default))
             {
                 var css = @"<style>a{text-decoration:none} img{max-height:60} td{vertical-align:middle} .r{color:red} .g{color:green}</style>";
@@ -64,7 +65,7 @@
 <th>STYLE</th></tr></thead><tbody>");
 
                 var index = 1;
-                foreach (var res in infos)
+                foreach (var res in session)
                 {
                     var productUrl = string.IsNullOrEmpty(res.ProductUrl) ? res.ReviewUrl : res.ProductUrl;
                     var priceDiffHtml = string.Empty;

@@ -32,7 +32,7 @@
         /// <returns>The beer metas.</returns>
         public QuerySession Get(params string[] args)
         {
-            "Retrieving beer lists from MyDrink.ee...".Output();
+            this.Output("Retrieving beer lists from MyDrink.ee...");
             var date = DateTime.Now;
             var result = new List<BeerMeta>();
             var entries = new[]

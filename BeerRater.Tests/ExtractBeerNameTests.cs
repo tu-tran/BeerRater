@@ -1,8 +1,8 @@
 ﻿namespace BeerRater.Tests
 {
-    using NUnit.Framework;
+    using BeerRater.Providers.Inputs;
 
-    using Providers.Inputs;
+    using NUnit.Framework;
 
     [TestFixture]
     public class ExtractBeerNameTests

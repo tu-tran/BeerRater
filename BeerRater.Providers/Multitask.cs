@@ -1,11 +1,13 @@
-﻿namespace BeerRater.Utils
+﻿namespace BeerRater.Providers
 {
     using System;
+
+    using BeerRater.Utils;
 
     /// <summary>
     /// Multitasking.
     /// </summary>
-    public class Multitask
+    public class Multitask : BaseObject
     {
         /// <summary>
         /// The pool size

@@ -3,6 +3,12 @@
     using System;
     using System.Configuration;
 
+    using BeerRater.Providers;
+    using BeerRater.Providers.Pricings;
+    using BeerRater.Providers.Process;
+    using BeerRater.Providers.Ratings;
+    using BeerRater.Providers.Reporters;
+
     using CommandLine;
 
     using Providers;
@@ -12,8 +18,13 @@
     /// <summary>
     /// The beer rater.
     /// </summary>
-    internal class Program
+    public class Program
     {
+        /// <summary>
+        /// The logger.
+        /// </summary>
+        private static readonly ILogger Logger = LogUtil.GetLogger();
+
         /// <summary>
         /// Main app.
         /// </summary>
@@ -22,31 +33,43 @@
         {
             try
             {
-                System.AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
-                var parserResult = CommandLine.Parser.Default.ParseArguments<AppParameters>(args);
-                var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>)parserResult).Value : new AppParameters();
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+                var parserResult = Parser.Default.ParseArguments<AppParameters>(args);
+                var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>) parserResult).Value : new AppParameters();
                 appParams.Initialize(ConfigurationManager.AppSettings);
 
                 if (appParams.ThreadsCount.HasValue && appParams.ThreadsCount.Value > 0)
                 {
                     Multitask.PoolSize = appParams.ThreadsCount.Value;
                 }
-
-                var providers = InputProviderResolver.Get(args);
-                if (providers == null || providers.Count < 1)
-                {
-                    "Invalid command line arguments".OutputError();
-                    return;
-                }
-
-                new AppProcessor(providers, appParams, args).Execute();
+                
+                GetApp(appParams, args).Execute();
             }
             catch (Exception ex)
             {
-                "======================================================================".Output();
-                ex.OutputError();
+                Logger.Error("======================================================================");
+                Logger.Error("Error: ", ex);
                 Console.ReadKey();
             }
+        }
+
+        /// <summary>
+        /// Gets application.
+        /// </summary>
+        /// <param name="appParams">The application parameters.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>
+        /// The application processor.
+        /// </returns>
+        public static AppProcessor GetApp(IAppParameters appParams, params string[] args)
+        {
+            return new AppProcessor(appParams, args)
+            {
+                InputerResolver = new ConsoleInputProviderResolver(),
+                ReporterResolver = new ResolverList<IReporter>(new AggregateReporter<IFileReporter>()),
+                PricerResolver = new ReflectionResolver<IPriceProvider>(),
+                RaterResolver = new ReflectionResolver<IRatingProvider>()
+            };
         }
 
         /// <summary>
@@ -60,11 +83,11 @@
             var exception = eventArgs.ExceptionObject as Exception;
             if (exception == null)
             {
-                "FATAL ERROR: Application crashing".OutputError();
+                Logger.Error("FATAL ERROR: Application crashing");
             }
             else
             {
-                exception.OutputError(message);
+                Logger.Error("Error: " + message);
             }
         }
     }
