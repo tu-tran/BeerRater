@@ -47,16 +47,15 @@
                 var parameter = parameters[i];
                 var index = i;
 
-                if (this.tasks.Count == this.maxThreads)
+                lock (this.tasks)
                 {
-                    Task.WaitAny(this.tasks.ToArray());
-                }
+                    if (this.tasks.Count == this.maxThreads)
+                    {
+                        Task.WaitAny(this.tasks.ToArray());
+                    }
 
-                this.tasks.RemoveAll(t => t.IsCompleted);
-                Task newTask = null;
-                while (newTask == null)
-                {
-                    newTask = Task.Run(() =>
+                    this.tasks.RemoveAll(t => t.IsCompleted);
+                    var newTask = Task.Run(() =>
                     {
                         try
                         {
@@ -66,15 +65,19 @@
                         catch (Exception e)
                         {
                             this.OutputError(e);
-    }
+                        }
                     });
-                }
 
-                this.tasks.Add(newTask);
+                    this.tasks.Add(newTask);
+                    Debug.Assert(this.tasks.Count <= this.maxThreads, "Thread spawn violation");
+                }
             }
 
-            Task.WaitAll(this.tasks.ToArray());
-            this.tasks.RemoveAll(t => t.IsCompleted);
+            lock (this.tasks)
+            {
+                Task.WaitAll(this.tasks.ToArray());
+                this.tasks.RemoveAll(t => t.IsCompleted);
+            }
         }
     }
 }
