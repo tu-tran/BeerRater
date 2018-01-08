@@ -25,9 +25,17 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateReporter{TReporter}" /> class.
         /// </summary>
-        public AggregateReporter()
+        private AggregateReporter()
         {
             this.reporters = TypeExtensions.GetLoadedTypes<TReporter>();
+        }
+
+        /// <summary>
+        /// Gets the reporters.
+        /// </summary>
+        public IReadOnlyList<TReporter> Reporters
+        {
+            get { return this.reporters; }
         }
 
         /// <summary>

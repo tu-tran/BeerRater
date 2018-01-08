@@ -66,7 +66,7 @@
             return new AppProcessor(appParams, args)
             {
                 InputerResolver = new ConsoleInputProviderResolver(),
-                ReporterResolver = new ResolverList<IReporter>(new AggregateReporter<IFileReporter>()),
+                ReporterResolver = new ResolverList<IReporter>(AggregateReporter<IReporter>.Instance),
                 PricerResolver = new ReflectionResolver<IPriceProvider>(),
                 RaterResolver = new ReflectionResolver<IRatingProvider>()
             };

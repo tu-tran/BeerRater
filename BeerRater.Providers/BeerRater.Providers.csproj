@@ -58,7 +58,7 @@
     <Compile Include="Pricings\ViinikarttaPriceProvider.cs" />
     <Compile Include="Process\BeerRatingQuery.cs" />
     <Compile Include="Process\IAppParameters.cs" />
-    <Compile Include="ReflectionResolver - Copy.cs" />
+    <Compile Include="ResolverList.cs" />
     <Compile Include="ReflectionResolver.cs" />
     <Compile Include="IResolver.cs" />
     <Compile Include="Process\QuerySession.cs" />
@@ -74,7 +74,6 @@
     <Compile Include="Ratings\IRatingProvider.cs" />
     <Compile Include="Ratings\RateBeerProvider.cs" />
     <Compile Include="Reporters\AggregateReporter.cs" />
-    <Compile Include="Reporters\IFileReporter.cs" />
     <Compile Include="Reporters\StatsReporter.cs" />
     <Compile Include="Reporters\JsonReporter.cs" />
     <Compile Include="Reporters\IReporter.cs" />

@@ -43,15 +43,15 @@
             this.reporter = new TestReporter();
             this.target = Program.GetApp(new AppParameters { IsPriceCompared = false, IsRated = true, ThreadsCount = 1 });
             this.target.InputerResolver = new ResolverList<IInputProvider>(this.inputProvider);
-            this.target.ReporterResolver = new ResolverList<IReporter>(this.reporter);
         }
 
         /// <summary>
         /// Executes test.
         /// </summary>
         [Test]
-        public void ExecuteTest()
+        public void ExecuteWithoutReporterTest()
         {
+            this.target.ReporterResolver = new ResolverList<IReporter>(this.reporter);
             this.target.Execute();
             Check.That(this.reporter.LastSession.Count).IsEqualTo(1);
             var actual = this.reporter.LastSession[0];
@@ -64,6 +64,21 @@
             Check.That(actual.Style).IsEqualTo("Dubbel");
             Check.That(actual.ImageUrl).IsNotNull();
             Check.That(actual.ReviewUrl).IsNotNull();
+        }
+
+        /// <summary>
+        /// Executes test.
+        /// </summary>
+        [Test]
+        public void ExecuteTest()
+        {
+            var reporters = this.target.ReporterResolver.Resolve();
+            Check.That(reporters).HasSize(1);
+            var reporter = reporters[0] as AggregateReporter<IReporter>;
+            Check.That(reporter).IsNotNull();
+            Check.That(reporter.Reporters.Count).IsStrictlyGreaterThan(0);
+            this.target.Execute();
+
         }
     }
 }
