@@ -42,7 +42,7 @@
         {
             this.reporter = new TestReporter();
             this.target = Program.GetApp(new AppParameters { IsPriceCompared = false, IsRated = true, ThreadsCount = 1 });
-            this.target.InputerResolver = new ResolverList<IInputProvider>(this.inputProvider);
+            this.target.InputResolver = new ResolverList<IInputProvider>(this.inputProvider);
         }
 
         /// <summary>

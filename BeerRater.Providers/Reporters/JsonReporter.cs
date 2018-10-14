@@ -1,11 +1,10 @@
 ﻿namespace BeerRater.Providers.Reporters
 {
-    using Data;
     using Newtonsoft.Json;
-    using System.Collections.Generic;
-    using System.IO;
 
     using Process;
+
+    using System.IO;
 
     /// <summary>
     /// The <see cref="JsonReporter"/> generates the JSON report.

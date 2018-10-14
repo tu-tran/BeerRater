@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -12,8 +11,6 @@
     using Data;
 
     using Inputs;
-
-    using Newtonsoft.Json.Serialization;
 
     using Pricings;
 
@@ -30,7 +27,8 @@
         /// The beer name comparer.
         /// </summary>
         private static readonly CustomEqualityComparer<BeerInfo> BeerNameComparer =
-            new CustomEqualityComparer<BeerInfo>((a, b) => string.Compare(a.NameOnStore, b.NameOnStore, StringComparison.OrdinalIgnoreCase) == 0);
+            new CustomEqualityComparer<BeerInfo>((a, b) =>
+                string.Compare(a.NameOnStore, b.NameOnStore, StringComparison.OrdinalIgnoreCase) == 0);
 
         /// <summary>
         /// The application parameters.
@@ -45,7 +43,7 @@
         /// <summary>
         /// Gets or sets the input providers resolver.
         /// </summary>
-        public IResolver<IInputProvider> InputerResolver { get; set; }
+        public IResolver<IInputProvider> InputResolver { get; set; }
 
         /// <summary>
         /// Gets or sets the inputs resolver.
@@ -69,7 +67,7 @@
 
         /// <inheritdoc />
         public AppProcessor(IAppParameters appParams, string[] args)
-        {            
+        {
             this.appParams = appParams;
             this.args = args;
         }
@@ -79,15 +77,16 @@
         /// </summary>
         public void Execute()
         {
-            Debug.Assert(this.InputerResolver != null, $"Invalid {nameof(this.InputerResolver)}");
-            Debug.Assert(this.ReporterResolver != null, $"Invalid {nameof(this.ReporterResolver)}");
-            Debug.Assert(this.RaterResolver != null, $"Invalid {nameof(this.RaterResolver)}");
-            Debug.Assert(this.PricerResolver != null, $"Invalid {nameof(this.PricerResolver)}");
+            Debug.Assert(InputResolver != null, $"Invalid {nameof(InputResolver)}");
+            Debug.Assert(ReporterResolver != null, $"Invalid {nameof(ReporterResolver)}");
+            Debug.Assert(RaterResolver != null, $"Invalid {nameof(RaterResolver)}");
+            Debug.Assert(PricerResolver != null, $"Invalid {nameof(PricerResolver)}");
 
-            this.StartDate = DateTime.UtcNow;
-            var rateQuery = new RateQuery(this.RaterResolver.Resolve(this.args));
-            var priceQuery = new ReferencePriceQuery(this.PricerResolver.Resolve(this.args));
-            this.Queue.Start((p, i) => this.GetBeerFromProvider(p, rateQuery, priceQuery), this.InputerResolver.Resolve(this.args));
+            StartDate = DateTime.UtcNow;
+            var rateQuery = new RateQuery(RaterResolver.Resolve(args));
+            var priceQuery = new ReferencePriceQuery(PricerResolver.Resolve(args));
+            Queue.Start((p, i) => GetBeerFromProvider(p, rateQuery, priceQuery),
+                InputResolver.Resolve(args));
         }
 
         /// <summary>
@@ -98,32 +97,46 @@
         /// <param name="priceQuery">The price query.</param>
         private void GetBeerFromProvider(IInputProvider provider, RateQuery rateQuery, ReferencePriceQuery priceQuery)
         {
-            var beerInfos = provider.GetBeerMeta(this.args);
-            var session = new QuerySession($"{provider.Name}_{this.StartDate:yyyyMMdd_hhmmss}", beerInfos.Distinct(BeerNameComparer));
-            this.Output($"{provider.Name} contains {session.Count} beer name(s)");
+            var beerInfos = provider.GetBeerMeta(args);
+            var sessionName = $"{provider.Name}_{StartDate:yyyyMMdd_hhmmss}";
+            var session = new QuerySession(sessionName, beerInfos.Distinct(BeerNameComparer));
+            Output($"{provider.Name} contains {session.Count} beer name(s)");
 
+            session.Name = sessionName + ".Original";
+            GenerateReports(session);
             var tasks = new List<Task>(2);
-            if (this.appParams.IsRated ?? false)
+            var finalReport = false;
+            if (appParams.IsRated ?? false)
             {
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
-                    this.Output($"[{provider.Name}] Querying the beer ratings...");
+                    Output($"[{provider.Name}] Querying the beer ratings...");
                     rateQuery.Query(session);
                 }));
+                finalReport = true;
             }
 
-            if (this.appParams.IsPriceCompared ?? false)
+            if (appParams.IsPriceCompared ?? false)
             {
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
-                    this.Output($"[{provider.Name}] Querying the reference prices...");
+                    Output($"[{provider.Name}] Querying the reference prices...");
                     priceQuery.UpdateReferencePrices(beerInfos);
                 }));
+                finalReport = true;
             }
 
             Task.WaitAll(tasks.ToArray());
+            if (finalReport)
+            {
+                session.Name = sessionName;
+                GenerateReports(session);
+            }
+        }
 
-            foreach (var reporter in this.ReporterResolver.Resolve(this.args))
+        private void GenerateReports(QuerySession session)
+        {
+            foreach (var reporter in ReporterResolver.Resolve(args))
             {
                 reporter.Generate(session);
             }

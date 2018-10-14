@@ -30,7 +30,7 @@
         /// <summary>
         /// Gets or sets the thread counts.
         /// </summary>
-        [Option('t', Default = null, HelpText = "Threads count for multithreading processing", Required = false)]
+        [Option('t', Default = null, HelpText = "Threads count for multi-threading processing", Required = false)]
         public int? ThreadsCount { get; set; }
 
         /// <summary>

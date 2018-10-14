@@ -1,19 +1,16 @@
 ﻿namespace BeerRater.Providers.Reporters
 {
-    using System;
-
     using BeerRater.Utils;
 
     using Data;
 
+    using Process;
+
     using Properties;
 
-    using System.Collections.Generic;
     using System.IO;
     using System.Net;
     using System.Text;
-
-    using Process;
 
     /// <summary>
     /// The <see cref="HtmlReporter"/> generates the HTML report.
@@ -23,7 +20,7 @@
         /// <inheritdoc />
         public void Generate(QuerySession session)
         {
-            var basePath = Path.GetDirectoryName(session.Name);
+            var basePath = Path.Combine(Path.GetDirectoryName(session.Name), "Html");
             var jsFileName = "sorttable.js";
             var jsFile = Path.Combine(basePath, jsFileName);
             if (!string.IsNullOrEmpty(basePath))
@@ -46,7 +43,8 @@
             var target = Path.Combine(basePath, session.Name) + ".html";
             using (var htmlStream = new StreamWriter(target, false, Encoding.Default))
             {
-                var css = @"<style>a{text-decoration:none} img{max-height:60} td{vertical-align:middle} .r{color:red} .g{color:green}</style>";
+                var css =
+                    @"<style>a{text-decoration:none} img{max-height:60} td{vertical-align:middle} .r{color:red} .g{color:green}</style>";
                 var encoding = @"<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>";
                 htmlStream.WriteLine(
                     $@"<html><head>{encoding}<script type='text/javascript' src='{jsFileName}'></script>
@@ -75,7 +73,8 @@
                     {
                         foreach (var price in res.ReferencePrices)
                         {
-                            priceDiffHtml += (++diffCount > 1 ? "&nbsp;" : "&nbsp;(") + GetPriceDiffHtml(res.Price, price);
+                            priceDiffHtml += (++diffCount > 1 ? "&nbsp;" : "&nbsp;(") +
+                                             GetPriceDiffHtml(res.Price, price);
                         }
                     }
 
@@ -120,11 +119,13 @@
                 var priceDiff = referencePrice.Price - price;
                 if (priceDiff > 0.0)
                 {
-                    priceDiffHtml = $"<a class='g' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>+{priceDiff.ToInvariantString()}</a>";
+                    priceDiffHtml =
+                        $"<a class='g' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>+{priceDiff.ToInvariantString()}</a>";
                 }
                 else if (priceDiff < 0.0)
                 {
-                    priceDiffHtml = $"<a class='r' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>{priceDiff.ToInvariantString()}</a>";
+                    priceDiffHtml =
+                        $"<a class='r' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>{priceDiff.ToInvariantString()}</a>";
                 }
             }
 

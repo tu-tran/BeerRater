@@ -19,6 +19,6 @@
         /// <summary>
         /// Gets the file path.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; set; }
     }
 }

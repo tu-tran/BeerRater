@@ -14,6 +14,15 @@
     public static class WebExtensions
     {
         /// <summary>
+        /// Initializes the <see cref="WebExtensions"/> class.
+        /// </summary>
+        static WebExtensions()
+        {
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+        }
+
+        /// <summary>
         /// Gets the web document.
         /// </summary>
         /// <param name="url">The URL.</param>
@@ -61,10 +70,11 @@
         /// <returns>
         /// The response.
         /// </returns>
-        public static string GetRestResponse(this string url, string referrerUrl = "", Method method = Method.GET, DataFormat format = DataFormat.Json, bool isMobile = true, object body = null)
+        public static string GetRestResponse(this string url, string referrerUrl = "", Method method = Method.GET,
+            DataFormat format = DataFormat.Json, bool isMobile = true, object body = null)
         {
-            var client = new RestClient(url) { Encoding = Encoding.Default };
-            var request = new RestRequest(".", method) { RequestFormat = format };
+            var client = new RestClient(url) {Encoding = Encoding.Default};
+            var request = new RestRequest(".", method) {RequestFormat = format};
             request.AddHeader("Referer", referrerUrl);
             request.AddHeader("User-Agent", WebExtensions.GetUserAgent(isMobile));
             if (body != null)
@@ -113,7 +123,7 @@
         /// <returns>The web request.</returns>
         public static HttpWebRequest GetRequest(this string url, string referrer = "", bool isMobile = true)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
+            var request = (HttpWebRequest) WebRequest.Create(url);
             request.UserAgent = GetUserAgent(isMobile);
             request.Referer = referrer;
             request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
@@ -147,7 +157,9 @@
         /// <returns>The string.</returns>
         public static string UrlParamEncode(this string value)
         {
-            return value.Any(c => !Uri.IsHexDigit(c)) ? WebUtility.UrlEncode(value) : string.Join(string.Empty, value.Select(c => Uri.HexEscape(c)).ToArray());
+            return value.Any(c => !Uri.IsHexDigit(c))
+                ? WebUtility.UrlEncode(value)
+                : string.Join(string.Empty, value.Select(c => Uri.HexEscape(c)).ToArray());
         }
 
         /// <summary>
@@ -158,8 +170,8 @@
         public static string GetUserAgent(bool isMobile = true)
         {
             return isMobile
-                       ? "Mozilla/5.0 (Linux; U; Android 4.2; en-us; SonyC6903 Build/14.1.G.1.518) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
-                       : "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko";
+                ? "Mozilla/5.0 (Linux; U; Android 4.2; en-us; SonyC6903 Build/14.1.G.1.518) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
+                : "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko";
         }
     }
 }

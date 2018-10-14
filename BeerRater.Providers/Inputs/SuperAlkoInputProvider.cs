@@ -1,16 +1,11 @@
 ﻿namespace BeerRater.Providers.Inputs
 {
+    using Data;
+    using HtmlAgilityPack;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text.RegularExpressions;
-
-    using BeerRater.Utils;
-
-    using Data;
-
-    using HtmlAgilityPack;
-
     using Utils;
 
     /// <summary>
@@ -31,7 +26,8 @@
         public static string ExtractBeerName(string input)
         {
             input = input ?? string.Empty;
-            var regex = Regex.Match(input, @"(?<Name>.+?)( ?\(\w.+\))? \(?(?<Abv>\d+[,\.]?\d? ?%)\)? ?(?<Volume>(\d+x)?\d[,\.]?\d+? ?cl)?");
+            var regex = Regex.Match(input,
+                @"(?<Name>.+?)( ?\(\w.+\))? \(?(?<Abv>\d+[,\.]?\d? ?%)\)? ?(?<Volume>(\d+x)?\d[,\.]?\d+? ?cl)?");
             var result = regex.Success ? regex.Groups["Name"].Value : input;
             result = result.Replace("A.Le Coq", "A. Le Coq");
             if (result.EndsWith(" beer", StringComparison.OrdinalIgnoreCase))
@@ -63,8 +59,8 @@
         {
             this.Output("Retrieving beer lists from SuperAlko...");
             var result = new List<BeerInfo>();
-            var url = "http://m.viinarannasta.ee/range-of-products/1";
-            var referrer = "http://m.viinarannasta.ee/";
+            var url = "https://m.viinarannasta.ee/range-of-products/1";
+            var referrer = "https://m.viinarannasta.ee/";
             var countryIndex = url.GetDocument(referrer).DocumentNode;
             var nodes = countryIndex.SelectNodes("//section/div/h4//a");
             this.Queue.Start((n, i) => this.GetBeerForCountry(n, result, url), new List<HtmlNode>(nodes));
@@ -79,7 +75,7 @@
         /// <param name="baseUrl">The URL.</param>
         private void GetBeerForCountry(HtmlNode node, List<BeerInfo> result, string baseUrl)
         {
-            var countryUrl = "http://m.viinarannasta.ee/" + node.GetAttributeValue("href", "");
+            var countryUrl = "https://m.viinarannasta.ee/" + node.GetAttributeValue("href", "");
             lock (result)
             {
                 result.AddRange(this.GetBeers(countryUrl, baseUrl));

@@ -19,7 +19,7 @@
         {
             var result = new List<T>();
             var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(T).IsAssignableFrom(t)));
+                .SelectMany(a => a.GetTypes().Where(t => t.IsClass && !t.IsAbstract && t.GetGenericArguments().Length == 0 && typeof(T).IsAssignableFrom(t)));
             foreach (var type in types)
             {
                 try
