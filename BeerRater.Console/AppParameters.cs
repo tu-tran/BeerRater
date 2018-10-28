@@ -54,6 +54,11 @@
                     Trace.TraceError($"Failed to load app config for {propertyInfo.Name} [{appValue}] of type {dataType}: {e.Message}");
                 }
             }
+
+            if (!this.ThreadsCount.HasValue || this.ThreadsCount.Value < 1)
+            {
+                this.ThreadsCount = 1;
+            }
         }
     }
 }

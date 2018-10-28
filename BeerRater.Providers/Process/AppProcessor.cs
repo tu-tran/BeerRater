@@ -83,6 +83,12 @@
             Debug.Assert(PricerResolver != null, $"Invalid {nameof(PricerResolver)}");
 
             StartDate = DateTime.UtcNow;
+
+            if (appParams.ThreadsCount.HasValue)
+            {
+                Multitask.PoolSize = appParams.ThreadsCount.Value;
+            }
+
             var rateQuery = new RateQuery(RaterResolver.Resolve(args));
             var priceQuery = new ReferencePriceQuery(PricerResolver.Resolve(args));
             Queue.Start((p, i) => GetBeerFromProvider(p, rateQuery, priceQuery),
@@ -102,7 +108,6 @@
             var session = new QuerySession(sessionName, beerInfos.Distinct(BeerNameComparer));
             Output($"{provider.Name} contains {session.Count} beer name(s)");
 
-            session.Name = sessionName + ".Original";
             GenerateReports(session);
             var tasks = new List<Task>(2);
             var finalReport = false;

@@ -35,14 +35,9 @@
             {
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
                 var parserResult = Parser.Default.ParseArguments<AppParameters>(args);
-                var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>) parserResult).Value : new AppParameters();
+                var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>)parserResult).Value : new AppParameters();
                 appParams.Initialize(ConfigurationManager.AppSettings);
 
-                if (appParams.ThreadsCount.HasValue && appParams.ThreadsCount.Value > 0)
-                {
-                    Multitask.PoolSize = appParams.ThreadsCount.Value;
-                }
-                
                 GetApp(appParams, args).Execute();
             }
             catch (Exception ex)
