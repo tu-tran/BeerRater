@@ -77,22 +77,19 @@
         /// </summary>
         public void Execute()
         {
-            Debug.Assert(InputResolver != null, $"Invalid {nameof(InputResolver)}");
-            Debug.Assert(ReporterResolver != null, $"Invalid {nameof(ReporterResolver)}");
-            Debug.Assert(RaterResolver != null, $"Invalid {nameof(RaterResolver)}");
-            Debug.Assert(PricerResolver != null, $"Invalid {nameof(PricerResolver)}");
+            Debug.Assert(this.InputResolver != null, $"Invalid {nameof(this.InputResolver)}");
+            Debug.Assert(this.ReporterResolver != null, $"Invalid {nameof(this.ReporterResolver)}");
+            Debug.Assert(this.RaterResolver != null, $"Invalid {nameof(this.RaterResolver)}");
+            Debug.Assert(this.PricerResolver != null, $"Invalid {nameof(this.PricerResolver)}");
 
-            StartDate = DateTime.UtcNow;
+            this.StartDate = DateTime.UtcNow;
 
-            if (appParams.ThreadsCount.HasValue)
-            {
-                Multitask.PoolSize = appParams.ThreadsCount.Value;
-            }
+            Multitask.PoolSize = this.appParams.ThreadsCount;
 
-            var rateQuery = new RateQuery(RaterResolver.Resolve(args));
-            var priceQuery = new ReferencePriceQuery(PricerResolver.Resolve(args));
-            Queue.Start((p, i) => GetBeerFromProvider(p, rateQuery, priceQuery),
-                InputResolver.Resolve(args));
+            var rateQuery = new RateQuery(this.RaterResolver.Resolve(this.appParams, this.args));
+            var priceQuery = new ReferencePriceQuery(this.PricerResolver.Resolve(this.appParams, this.args));
+            this.Queue.Start((p, i) => this.GetBeerFromProvider(p, rateQuery, priceQuery),
+                this.InputResolver.Resolve(this.appParams, this.args));
         }
 
         /// <summary>
@@ -103,29 +100,29 @@
         /// <param name="priceQuery">The price query.</param>
         private void GetBeerFromProvider(IInputProvider provider, RateQuery rateQuery, ReferencePriceQuery priceQuery)
         {
-            var beerInfos = provider.GetBeerMeta(args);
-            var sessionName = $"{provider.Name}_{StartDate:yyyyMMdd_hhmmss}";
+            var beerInfos = provider.GetBeerMeta(this.args);
+            var sessionName = $"{provider.Name}_{this.StartDate:yyyyMMdd_hhmmss}";
             var session = new QuerySession(sessionName, beerInfos.Distinct(BeerNameComparer));
-            Output($"{provider.Name} contains {session.Count} beer name(s)");
+            this.Output($"{provider.Name} contains {session.Count} beer name(s)");
 
-            GenerateReports(session);
+            this.GenerateReports(session);
             var tasks = new List<Task>(2);
             var finalReport = false;
-            if (appParams.IsRated ?? false)
+            if (this.appParams.IsRated)
             {
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
-                    Output($"[{provider.Name}] Querying the beer ratings...");
+                    this.Output($"[{provider.Name}] Querying the beer ratings...");
                     rateQuery.Query(session);
                 }));
                 finalReport = true;
             }
 
-            if (appParams.IsPriceCompared ?? false)
+            if (this.appParams.IsPriceCompared)
             {
                 tasks.Add(Task.Factory.StartNew(() =>
                 {
-                    Output($"[{provider.Name}] Querying the reference prices...");
+                    this.Output($"[{provider.Name}] Querying the reference prices...");
                     priceQuery.UpdateReferencePrices(beerInfos);
                 }));
                 finalReport = true;
@@ -135,13 +132,17 @@
             if (finalReport)
             {
                 session.Name = sessionName;
-                GenerateReports(session);
+                this.GenerateReports(session);
             }
         }
 
+        /// <summary>
+        /// Generates the reports.
+        /// </summary>
+        /// <param name="session">The session.</param>
         private void GenerateReports(QuerySession session)
         {
-            foreach (var reporter in ReporterResolver.Resolve(args))
+            foreach (var reporter in this.ReporterResolver.Resolve(this.appParams, this.args))
             {
                 reporter.Generate(session);
             }

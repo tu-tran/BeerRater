@@ -1,4 +1,6 @@
-﻿namespace BeerRater.Providers
+﻿using BeerRater.Providers.Process;
+
+namespace BeerRater.Providers
 {
     using System.Collections.Generic;
 
@@ -20,12 +22,8 @@
             }
         }
 
-        /// <summary>
-        /// Gets the input provider.
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        /// <returns>The instances of <typeparamref name="TType"/>.</returns>
-        public IReadOnlyList<TType> Resolve(params string[] args)
+        /// <inheritdoc />
+        public IReadOnlyList<TType> Resolve(IAppParameters parameters, params string[] args)
         {
             return this;
         }

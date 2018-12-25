@@ -72,7 +72,7 @@
         [Test]
         public void ExecuteTest()
         {
-            var reporters = this.target.ReporterResolver.Resolve();
+            var reporters = this.target.ReporterResolver.Resolve(null);
             Check.That(reporters).HasSize(1);
             var reporter = reporters[0] as AggregateReporter<IReporter>;
             Check.That(reporter).IsNotNull();

@@ -36,7 +36,7 @@
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
                 var parserResult = Parser.Default.ParseArguments<AppParameters>(args);
                 var appParams = parserResult.Tag == ParserResultType.Parsed ? ((Parsed<AppParameters>)parserResult).Value : new AppParameters();
-                appParams.Initialize(ConfigurationManager.AppSettings);
+                appParams.Initialize();
 
                 GetApp(appParams, args).Execute();
             }

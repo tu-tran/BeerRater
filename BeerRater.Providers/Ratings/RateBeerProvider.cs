@@ -1,4 +1,8 @@
-﻿namespace BeerRater.Providers.Ratings
+﻿using System.Linq;
+using Newtonsoft.Json.Linq;
+using RestSharp;
+
+namespace BeerRater.Providers.Ratings
 {
     using System.Text.RegularExpressions;
 
@@ -19,74 +23,51 @@
         /// <param name="beerInfo">The beer information.</param>
         public void Query(BeerInfo beerInfo)
         {
-            var encodedTitle = beerInfo.Name.UrlParamEncode();
-            var queryUrl = $"https://www.ratebeer.com/findbeer.asp?beername={encodedTitle}";
+            var documentObject = GetBeerResult(beerInfo.Name);
+        }
+
+        /// <summary>
+        /// Gets the beer result.
+        /// </summary>
+        /// <param name="beerName">Name of the beer.</param>
+        /// <returns>The response string.</returns>
+        public static string GetBeerResult(string beerName)
+        {
+            var queryUrl = $"https://beta.ratebeer.com/v1/api/graphql";
             var referrer = "https://www.ratebeer.com";
-            var searchBeerDoc = queryUrl.GetDocument(referrer);
-            var searchRow = searchBeerDoc.DocumentNode.SelectSingleNode(@"//table[@class='table table-hover table-striped']//a");
-            if (searchRow == null)
-            {
-                beerInfo.ReviewUrl = queryUrl;
-                return;
-            }
-
-            beerInfo.Name = searchRow.InnerText.TrimDecoded();
-            var url = "https://www.ratebeer.com/" + searchRow.GetAttributeValue("href", "");
-            beerInfo.ReviewUrl = url;
-
-            var resultDoc = url.GetDocument(queryUrl);
-            var proceedNode = resultDoc.DocumentNode.SelectSingleNode("//a[@class='medium orange awesome']");
-            if (proceedNode != null)
-            {
-                var proceedReferrer = url;
-                url = "https://www.ratebeer.com/" + proceedNode.GetAttributeValue("href", "");
-                resultDoc = url.GetDocument(proceedReferrer);
-            }
-
-            var overallNode = resultDoc.DocumentNode.SelectSingleNode(@"//span[@*='ratingValue']");
-            beerInfo.Overall = (overallNode == null ? "" : overallNode.InnerText.TrimDecoded()).ToDouble();
-
-            var rateNode = resultDoc.DocumentNode.SelectSingleNode("//div/small/abbr");
-            if (rateNode != null)
-            {
-                // RATINGS: 1069   WEIGHTED AVG: 3.3/5   EST. CALORIES: 135   ABV: 4.5%
-                var rates = rateNode.ParentNode.InnerText.TrimDecoded();
-                var regex = Regex.Match(rates, @"RATINGS: (?<Ratings>\d*).*?WEIGHTED AVG: (?<Avg>.+?)\/5.*?EST\. CALORIES: (?<Calories>\d+?).*?ABV: (?<Abv>.+?)%");
-                beerInfo.Ratings = regex.Groups["Ratings"].Value.Trim().ToDouble();
-                beerInfo.ABV = regex.Groups["Abv"].Value.Trim().ToDouble();
-                beerInfo.Calories = regex.Groups["Calories"].Value.Trim().ToDouble();
-                beerInfo.WeightedAverage = regex.Groups["Avg"].Value.Trim().ToDouble();
-            }
-
-            if (string.IsNullOrEmpty(beerInfo.ImageUrl))
-            {
-                var imageNode = resultDoc.DocumentNode.SelectSingleNode(@"//img[@id='beerImg']");
-                if (imageNode != null)
+            var responseString = queryUrl.GetRestResponse(referrer, Method.POST, DataFormat.Json, true,
+                new object[]
                 {
-                    beerInfo.ImageUrl = imageNode.GetAttributeValue("src", "");
-                }
-            }
+                    new
+                    {
+                        operationName = "beerSearch",
+                        query = @"query beerSearch($query: String, $order: SearchOrder, $first: Int, $after: ID) {
+                        results: beerSearch(query: $query, order: $order, first: $first, after: $after) {
+                        totalCount
+                        last
+                        items {
+                        beer {
+                        id
+                        name
+                        overallScore
+                        ratingCount
+                        __typename
+                    }
+                    review {
+                    id
+                    score
+                    __typename
+                    }
+                    __typename
+                    }
+                    __typename
+                    }
+                    }",
+                        variables = new {first = 1, order = "MATCH", query = beerName}
+                    }
+                });
 
-            var infoNode = resultDoc.DocumentNode.SelectSingleNode("//*[@id='_aggregateRating6' or contains(@class, 'aggregate-rating-container') or contains(@class, 'description-container')]");
-            if (infoNode != null)
-            {
-                infoNode = infoNode.ParentNode;
-            }
-
-            infoNode = infoNode ?? resultDoc.DocumentNode;
-            var styleNode = infoNode.SelectSingleNode(".//a[contains(@href, '/beerstyles/') and string-length(@href) > 12]");
-            if (styleNode != null)
-            {
-                beerInfo.Style = styleNode.InnerText.TrimDecoded();
-            }
-            else
-            {
-                var infoText = infoNode.InnerText.TrimDecoded();
-                var regex = Regex.Match(infoText, "Style: (?<Style>.+?)(  )|$", RegexOptions.Compiled);
-                beerInfo.Style = (regex.Success
-                    ? regex.Groups["Style"].Value
-                    : Regex.Replace(infoText, "  +", @". ")).Trim();
-            }
+            return responseString;
         }
     }
 }

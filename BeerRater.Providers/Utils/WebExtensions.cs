@@ -127,6 +127,7 @@
             request.UserAgent = GetUserAgent(isMobile);
             request.Referer = referrer;
             request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+            request.Timeout = 30000;
             return request;
         }
 

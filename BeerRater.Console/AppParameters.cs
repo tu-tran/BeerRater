@@ -1,7 +1,9 @@
-﻿namespace BeerRater.Console
+﻿using System.Collections.Generic;
+using System.Configuration;
+
+namespace BeerRater.Console
 {
     using System;
-    using System.Collections.Specialized;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
@@ -16,49 +18,92 @@
     public class AppParameters : IAppParameters
     {
         /// <summary>
-        /// Gets or sets a value indicating whether to gets the price comparison.
+        /// The property flags.
         /// </summary>
-        [Option('p', Default = false, HelpText = "Whether to gets the price comparison", Required = false)]
-        public bool? IsPriceCompared { get; set; }
+        private static readonly BindingFlags PropertyFlags = BindingFlags.Instance | BindingFlags.Public;
 
         /// <summary>
-        /// Gets or sets a value indicating whether to gets the beer review.
+        /// The threads count.
         /// </summary>
-        [Option('r', Default = true, HelpText = "Whether to gets the beer review", Required = false)]
-        public bool? IsRated { get; set; }
+        private int threadsCount = 0;
 
         /// <summary>
-        /// Gets or sets the thread counts.
+        /// Gets the application settings
         /// </summary>
-        [Option('t', Default = null, HelpText = "Threads count for multi-threading processing", Required = false)]
-        public int? ThreadsCount { get; set; }
-
-        /// <summary>
-        /// Initializes based on the specified application settings.
-        /// </summary>
-        /// <param name="appSettings">The application settings.</param>
-        public void Initialize(NameValueCollection appSettings)
+        private KeyValueConfigurationCollection appSettings
         {
-            var properties = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.CanWrite && p.GetCustomAttribute<OptionAttribute>() != null);
-            foreach (var propertyInfo in properties)
+            get { return this.configFile.AppSettings.Settings; }
+        }
+
+        /// <summary>
+        /// The configuration file.
+        /// </summary>
+        private Configuration configFile;
+
+        /// <inheritdoc />
+        [Option('p', Default = false, HelpText = "Whether to gets the price comparison", Required = false)]
+        public bool IsPriceCompared { get; set; }
+
+        /// <inheritdoc />
+        [Option('r', Default = true, HelpText = "Whether to gets the beer review", Required = false)]
+        public bool IsRated { get; set; }
+
+        /// <inheritdoc />
+        [Option('t', Default = 0, HelpText = "Threads count for multi-threading processing", Required = false, Hidden = true)]
+        public int ThreadsCount
+        {
+            get => this.threadsCount > 0 ? this.threadsCount : Environment.ProcessorCount;
+            set => this.threadsCount = value;
+        }
+
+        /// <summary>
+        /// Gets the parameters.
+        /// </summary>
+        public IEnumerable<PropertyInfo> Parameters
+        {
+            get
             {
-                var appValue = appSettings.Get(propertyInfo.Name);
-                var dataType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+                return this.GetType().GetProperties(PropertyFlags).Where(p => p.CanWrite && p.GetCustomAttribute<OptionAttribute>() != null);
+            }
+        }
+
+        /// <inheritdoc />
+        public void Initialize()
+        {
+            this.configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            foreach (var propertyInfo in this.Parameters)
+            {
                 try
                 {
+                    var appValue = this.appSettings[propertyInfo.Name].Value;
+                    var dataType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
                     var convertedValue = Convert.ChangeType(appValue, dataType);
                     propertyInfo.SetValue(this, convertedValue);
                 }
                 catch (Exception e)
                 {
-                    Trace.TraceError($"Failed to load app config for {propertyInfo.Name} [{appValue}] of type {dataType}: {e.Message}");
+                    Trace.TraceError($"Failed to load app config for {propertyInfo.Name}: {e.Message}");
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public void Save()
+        {
+            foreach (var propertyInfo in this.Parameters.Where(p => p.GetCustomAttribute<OptionAttribute>() != null && !p.GetCustomAttribute<OptionAttribute>().Hidden))
+            {
+                try
+                {
+                    var currentValue = propertyInfo.GetValue(this);
+                    this.appSettings[propertyInfo.Name].Value = currentValue?.ToString();
+                }
+                catch (Exception e)
+                {
+                    Trace.TraceError($"Failed to save app config for {propertyInfo.Name}: {e.Message}");
                 }
             }
 
-            if (!this.ThreadsCount.HasValue || this.ThreadsCount.Value < 1)
-            {
-                this.ThreadsCount = 1;
-            }
+            this.configFile.Save(ConfigurationSaveMode.Modified);
         }
     }
 }

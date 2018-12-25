@@ -1,4 +1,6 @@
-﻿namespace BeerRater.Tests
+﻿using Newtonsoft.Json;
+
+namespace BeerRater.Tests
 {
     using Data;
     using NUnit.Framework;
@@ -54,6 +56,9 @@
         [Test]
         public void RateBeerResolveTest()
         {
+            var typedef = new { };
+            var result = RateBeerProvider.GetBeerResult("Young's Double Chocolate Stout");
+            var data = JsonConvert.DeserializeObject<dynamic>(result);
             var target = new BeerInfo("Chimay Première (Red)");
             new RateBeerProvider().Query(target);
             Assert.NotNull(target);
