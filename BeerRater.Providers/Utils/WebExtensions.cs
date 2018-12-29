@@ -1,12 +1,14 @@
 ﻿namespace BeerRater.Providers.Utils
 {
-    using HtmlAgilityPack;
-    using RestSharp;
     using System;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Text;
+
+    using HtmlAgilityPack;
+
+    using RestSharp;
 
     /// <summary>
     /// The web extensions.
@@ -70,11 +72,11 @@
         /// <returns>
         /// The response.
         /// </returns>
-        public static string GetRestResponse(this string url, string referrerUrl = "", Method method = Method.GET,
+        public static IRestResponse GetRestResponse(this string url, string referrerUrl = "", Method method = Method.GET,
             DataFormat format = DataFormat.Json, bool isMobile = true, object body = null)
         {
-            var client = new RestClient(url) {Encoding = Encoding.Default};
-            var request = new RestRequest(".", method) {RequestFormat = format};
+            var client = new RestClient(url);
+            var request = new RestRequest(".", method) { RequestFormat = format };
             request.AddHeader("Referer", referrerUrl);
             request.AddHeader("User-Agent", WebExtensions.GetUserAgent(isMobile));
             if (body != null)
@@ -85,10 +87,28 @@
             var response = client.Execute(request);
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                return response.Content;
+                return response;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the rest response content.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="referrerUrl">The referrer URL.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="isMobile">if set to <c>true</c> [is mobile].</param>
+        /// <param name="body">The body.</param>
+        /// <returns>
+        /// The response.
+        /// </returns>
+        public static string GetRestResponseContent(this string url, string referrerUrl = "", Method method = Method.GET,
+            DataFormat format = DataFormat.Json, bool isMobile = true, object body = null)
+        {
+            return url.GetRestResponse(referrerUrl, method, format, isMobile, body)?.Content;
         }
 
         /// <summary>
@@ -123,7 +143,7 @@
         /// <returns>The web request.</returns>
         public static HttpWebRequest GetRequest(this string url, string referrer = "", bool isMobile = true)
         {
-            var request = (HttpWebRequest) WebRequest.Create(url);
+            var request = (HttpWebRequest)WebRequest.Create(url);
             request.UserAgent = GetUserAgent(isMobile);
             request.Referer = referrer;
             request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";

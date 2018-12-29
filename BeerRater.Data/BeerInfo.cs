@@ -8,7 +8,7 @@
     /// <summary>
     /// The beer info.
     /// </summary>
-    [DebuggerDisplay("{Name} - {Price}")]
+    [DebuggerDisplay("{Name} - Price: {Price} - Rating: {Overall}")]
     public class BeerInfo
     {
         /// <summary>
@@ -17,69 +17,123 @@
         private List<ReferencePrice> prices;
 
         /// <summary>
-        /// The abv.
+        /// The weighted average.
         /// </summary>
-        public double? ABV;
-
-        /// <summary>
-        /// The calories.
-        /// </summary>
-        public double? Calories;
-
-        /// <summary>
-        /// The image URL.
-        /// </summary>
-        public string ImageUrl;
-
-        /// <summary>
-        /// The name.
-        /// </summary>
-        public string Name;
-
-        /// <summary>
-        /// The name from the query.
-        /// </summary>
-        public string NameOnStore;
-
-        /// <summary>
-        /// The overall rating.
-        /// </summary>
-        public double? Overall;
-
-        /// <summary>
-        /// The referencePrice.
-        /// </summary>
-        public double? Price;
-
-        /// <summary>
-        /// The product URL.
-        /// </summary>
-        public string ProductUrl;
+        private double? weightedAverage;
 
         /// <summary>
         /// The ratings.
         /// </summary>
-        public double? Ratings;
+        private double? ratings;
 
         /// <summary>
-        /// The URL.
+        /// The price.
         /// </summary>
-        public string ReviewUrl;
+        private double? price;
 
         /// <summary>
-        /// The style.
+        /// The overall.
         /// </summary>
-        public string Style;
+        private double? overall;
+
+        /// <summary>
+        /// The calories.
+        /// </summary>
+        private double? calories;
+
+        /// <summary>
+        /// The abv.
+        /// </summary>
+        private double? abv;
+
+        /// <summary>
+        /// The abv.
+        /// </summary>
+        public double? ABV
+        {
+            get => this.abv;
+            set => SetValue(ref this.abv, value);
+        }
+
+        /// <summary>
+        /// The calories.
+        /// </summary>
+        public double? Calories
+        {
+            get => this.calories;
+            set => SetValue(ref this.calories, value);
+        }
+
+        /// <summary>
+        /// The overall rating.
+        /// </summary>
+        public double? Overall
+        {
+            get => this.overall;
+            set => SetValue(ref this.overall, value);
+        }
+
+        /// <summary>
+        /// The referencePrice.
+        /// </summary>
+        public double? Price
+        {
+            get => this.price;
+            set => SetValue(ref this.price, value);
+        }
+
+        /// <summary>
+        /// The ratings.
+        /// </summary>
+        public double? Ratings
+        {
+            get => this.ratings;
+            set => SetValue(ref this.ratings, value);
+        }
 
         /// <summary>
         /// The weighted average.
         /// </summary>
-        public double? WeightedAverage;
+        public double? WeightedAverage
+        {
+            get => this.weightedAverage;
+            set => SetValue(ref this.weightedAverage, value);
+        }
+
+        /// <summary>
+        /// The image URL.
+        /// </summary>
+        public string ImageUrl { get; set; }
+
+        /// <summary>
+        /// The name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The name from the query.
+        /// </summary>
+        public string NameOnStore { get; }
+
+        /// <summary>
+        /// The product URL.
+        /// </summary>
+        public string ProductUrl { get; set; }
+
+        /// <summary>
+        /// The URL.
+        /// </summary>
+        public string ReviewUrl { get; set; }
+
+        /// <summary>
+        /// The style.
+        /// </summary>
+        public string Style { get; set; }
 
         /// <summary>
         /// The data source.
         /// </summary>
-        public string DataSource;
+        public string DataSource { get; set; }
 
         /// <summary>
         /// The reference prices.
@@ -113,7 +167,7 @@
         /// <returns>The cloned instance.</returns>
         public BeerInfo Clone()
         {
-            return (BeerInfo) this.MemberwiseClone();
+            return (BeerInfo)this.MemberwiseClone();
         }
 
         /// <summary>
@@ -146,6 +200,23 @@
             else
             {
                 matching.Price = referencePrice.Price;
+            }
+        }
+
+        /// <summary>
+        /// Sets the value.
+        /// </summary>
+        /// <param name="field">The field.</param>
+        /// <param name="value">The value.</param>
+        private void SetValue(ref double? field, double? value)
+        {
+            if (value.HasValue)
+            {
+                field = Math.Round(value.Value, 2, MidpointRounding.AwayFromZero);
+            }
+            else
+            {
+                field = null;
             }
         }
     }

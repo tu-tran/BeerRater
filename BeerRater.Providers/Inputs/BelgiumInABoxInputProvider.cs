@@ -97,7 +97,7 @@
             var url = "https://belgiuminabox.com/shop/modules/blocklayered/blocklayered-ajax.php?id_category_layered=470&layered_weight_slider=0.29_29&layered_price_slider=0_330&orderby=name&orderway=asc" +
                 $"&n={QuerySize}true&selected_filters=/page-{pageIndex}&_={epochTime}";
             var referrer = "https://belgiuminabox.com/shop/470-beer";
-            var documentText = url.GetRestResponse(referrer);
+            var documentText = url.GetRestResponseContent(referrer);
 
             var documentObject = JObject.Parse(documentText);
             var productList = documentObject.Children().FirstOrDefault(j => j.Path == "productList");

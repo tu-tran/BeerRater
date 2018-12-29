@@ -56,18 +56,23 @@ namespace BeerRater.Tests
         [Test]
         public void RateBeerResolveTest()
         {
-            var typedef = new { };
-            var result = RateBeerProvider.GetBeerResult("Young's Double Chocolate Stout");
-            var data = JsonConvert.DeserializeObject<dynamic>(result);
-            var target = new BeerInfo("Chimay Première (Red)");
+            var target = new BeerInfo("Young's Double Chocolate Stout");
             new RateBeerProvider().Query(target);
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
+            Assert.IsTrue(target.WeightedAverage > 0.0);
+
+            target = new BeerInfo("Chimay Première (Red)");
+            new RateBeerProvider().Query(target);
+            Assert.NotNull(target);
+            Assert.IsTrue(target.Overall > 0.0);
+            Assert.IsTrue(target.WeightedAverage > 0.0);
 
             target = new BeerInfo("Gruut Blond");
             new RatingsResolver(new ReflectionResolver<IRatingProvider>().Resolve(null)).Query(target);
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
+            Assert.IsTrue(target.WeightedAverage > 0.0);
         }
     }
 }
