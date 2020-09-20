@@ -1,31 +1,30 @@
-﻿namespace BeerRater.Utils
-{
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Linq;
 
+namespace BeerRater.Utils
+{
     public static class StringExtensions
     {
         /// <summary>
-        /// To the double.
+        ///     To the double.
         /// </summary>
         /// <param name="target">The target.</param>
         /// <returns>The value.</returns>
-        public static double ToDouble(this string target)
+        public static double? ToDouble(this string target)
         {
-            double result;
-            double.TryParse(target.Replace(',', '.'), out result);
-            return result;
+            if (double.TryParse(target.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture,
+                out var result)
+            ) return result;
+
+            return null;
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
+        ///     Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
+        ///     A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public static string ToInvariantString(this double? value)
         {
@@ -33,11 +32,11 @@
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
+        ///     Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
+        ///     A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public static string ToInvariantString(this double value)
         {
@@ -45,7 +44,7 @@
         }
 
         /// <summary>
-        /// Gets the valid name for a thread by filtering out invalid characters from <paramref name="input"/>.
+        ///     Gets the valid name for a thread by filtering out invalid characters from <paramref name="input" />.
         /// </summary>
         /// <param name="input">The target.</param>
         /// <returns>The valid thread name.</returns>

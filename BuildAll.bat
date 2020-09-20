@@ -28,3 +28,4 @@
 @pause
 
 :End
+@echo Succeeded!

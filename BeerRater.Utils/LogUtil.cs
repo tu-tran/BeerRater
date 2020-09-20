@@ -1,12 +1,10 @@
+using log4net;
 using log4net.Config;
 
 [assembly: XmlConfigurator]
 
 namespace BeerRater.Utils
 {
-    using log4net;
-    using log4net.Config;
-
     /// <summary>The log util.</summary>
     public static class LogUtil
     {
@@ -24,13 +22,13 @@ namespace BeerRater.Utils
         }
 
         /// <summary>
-        /// The get logger.
+        ///     The get logger.
         /// </summary>
         /// <param name="name">
-        /// The name.
+        ///     The name.
         /// </param>
         /// <returns>
-        /// The <see cref="ILog"/>.
+        ///     The <see cref="ILog" />.
         /// </returns>
         public static ILogger GetLogger(string name)
         {

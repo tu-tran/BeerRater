@@ -1,19 +1,17 @@
-﻿namespace BeerRater.Providers.Ratings
+﻿using System.Linq;
+using BeerRater.Data;
+using BeerRater.Providers.Utils;
+using BeerRater.Utils;
+
+namespace BeerRater.Providers.Ratings
 {
-    using BeerRater.Utils;
-    using Data;
-
-    using System.Linq;
-
-    using Utils;
-
     /// <summary>
-    /// The web crawler.
+    ///     The web crawler.
     /// </summary>
     public class BeerAdvocateProvider : IRatingProvider
     {
         /// <summary>
-        /// Queries the specified beer release name.
+        ///     Queries the specified beer release name.
         /// </summary>
         /// <param name="beerInfo">The beer information.</param>
         public void Query(BeerInfo beerInfo)
@@ -49,7 +47,8 @@
                     beerInfo.Overall = avgNode.InnerText.TrimDecoded().ToDouble();
             }
 
-            var infoNode = resultDoc.DocumentNode.SelectNodes("//div[@class='break']").FirstOrDefault(n => n.InnerText.Contains("BEER INFO"));
+            var infoNode = resultDoc.DocumentNode.SelectNodes("//div[@class='break']")
+                .FirstOrDefault(n => n.InnerText.Contains("BEER INFO"));
             if (infoNode != null)
             {
                 var styleNode = infoNode.SelectSingleNode(".//a[contains(@href, '/beer/style/')]");
@@ -72,10 +71,7 @@
                 if (string.IsNullOrEmpty(beerInfo.ImageUrl))
                 {
                     var imageNode = infoNode.SelectSingleNode(".//img");
-                    if (imageNode != null)
-                    {
-                        beerInfo.ImageUrl = imageNode.GetAttributeValue("src", "");
-                    }
+                    if (imageNode != null) beerInfo.ImageUrl = imageNode.GetAttributeValue("src", "");
                 }
             }
         }

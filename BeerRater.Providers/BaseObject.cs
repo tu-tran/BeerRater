@@ -1,62 +1,61 @@
-﻿namespace BeerRater.Providers
+﻿using System;
+using BeerRater.Utils;
+
+namespace BeerRater.Providers
 {
-    using BeerRater.Utils;
-
-    using System;
-
     /// <summary>
-    /// The base object.
+    ///     The base object.
     /// </summary>
     public abstract class BaseObject
     {
         /// <summary>
-        /// The this.logger.
+        ///     The this.logger.
         /// </summary>
         protected readonly ILogger logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseObject"/> class.
+        ///     Initializes a new instance of the <see cref="BaseObject" /> class.
         /// </summary>
         protected BaseObject()
         {
-            this.logger = LogUtil.GetLogger(this.GetType().Name);
+            logger = LogUtil.GetLogger(GetType().Name);
         }
 
         /// <summary>
-        /// Writes the specified input to output.
+        ///     Writes the specified input to output.
         /// </summary>
         /// <param name="input">The input.</param>
         protected void Output(string input)
         {
-            this.logger.Info(input);
+            logger.Info(input);
         }
 
         /// <summary>
-        /// Writes the specified input to error output.
+        ///     Writes the specified input to error output.
         /// </summary>
         /// <param name="input">The input.</param>
         protected void OutputError(string input)
         {
-            this.logger.Error(input);
+            logger.Error(input);
         }
 
         /// <summary>
-        /// Writes the specified input to error output.
+        ///     Writes the specified input to error output.
         /// </summary>
         /// <param name="exception">The input.</param>
         protected void OutputError(Exception exception)
         {
-            this.logger.Error("Error: ", exception);
+            logger.Error("Error: ", exception);
         }
 
         /// <summary>
-        /// Writes the specified input to error output.
+        ///     Writes the specified input to error output.
         /// </summary>
         /// <param name="exception">The input.</param>
         /// <param name="message">The message.</param>
         protected void OutputError(Exception exception, string message)
         {
-            this.logger.Error(message, exception);
+            logger.Error(message, exception);
         }
     }
 }

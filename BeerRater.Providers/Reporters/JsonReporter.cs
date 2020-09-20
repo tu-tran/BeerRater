@@ -1,13 +1,11 @@
-﻿namespace BeerRater.Providers.Reporters
+﻿using System.IO;
+using BeerRater.Providers.Process;
+using Newtonsoft.Json;
+
+namespace BeerRater.Providers.Reporters
 {
-    using Newtonsoft.Json;
-
-    using Process;
-
-    using System.IO;
-
     /// <summary>
-    /// The <see cref="JsonReporter"/> generates the JSON report.
+    ///     The <see cref="JsonReporter" /> generates the JSON report.
     /// </summary>
     public class JsonReporter : IReporter
     {

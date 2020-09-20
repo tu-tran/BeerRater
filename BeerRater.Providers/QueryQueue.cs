@@ -1,29 +1,29 @@
-﻿namespace BeerRater.Providers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
+namespace BeerRater.Providers
+{
     public sealed class QueryQueue : BaseObject
     {
         /// <summary>
-        /// The maximum threads.
+        ///     The maximum threads.
         /// </summary>
         private readonly int maxThreads;
 
         /// <summary>
-        /// The name.
+        ///     The name.
         /// </summary>
         private readonly string name;
 
         /// <summary>
-        /// The tasks.
+        ///     The tasks.
         /// </summary>
         private readonly List<Task> tasks;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryQueue" /> class.
+        ///     Initializes a new instance of the <see cref="QueryQueue" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="maxThreads">The maximum threads.</param>
@@ -31,11 +31,11 @@
         {
             this.name = name;
             this.maxThreads = maxThreads < 1 ? 1 : maxThreads;
-            this.tasks = new List<Task>();
+            tasks = new List<Task>();
         }
 
         /// <summary>
-        /// Starts the specified action.
+        ///     Starts the specified action.
         /// </summary>
         /// <typeparam name="TParam">The type of the parameter.</typeparam>
         /// <param name="action">The action.</param>
@@ -47,36 +47,33 @@
                 var parameter = parameters[i];
                 var index = i;
 
-                lock (this.tasks)
+                lock (tasks)
                 {
-                    if (this.tasks.Count == this.maxThreads)
-                    {
-                        Task.WaitAny(this.tasks.ToArray());
-                    }
+                    if (tasks.Count == maxThreads) Task.WaitAny(tasks.ToArray());
 
-                    this.tasks.RemoveAll(t => t.IsCompleted);
+                    tasks.RemoveAll(t => t.IsCompleted);
                     var newTask = Task.Run(() =>
                     {
                         try
                         {
-                            Trace.WriteLine($"Spawning thread {this.name}_{this.tasks.Count}/{this.maxThreads}");
+                            Trace.WriteLine($"Spawning thread {name}_{tasks.Count}/{maxThreads}");
                             action(parameter, index);
                         }
                         catch (Exception e)
                         {
-                            this.OutputError(e);
+                            OutputError(e);
                         }
                     });
 
-                    this.tasks.Add(newTask);
-                    Debug.Assert(this.tasks.Count <= this.maxThreads, "Thread spawn violation");
+                    tasks.Add(newTask);
+                    Debug.Assert(tasks.Count <= maxThreads, "Thread spawn violation");
                 }
             }
 
-            lock (this.tasks)
+            lock (tasks)
             {
-                Task.WaitAll(this.tasks.ToArray());
-                this.tasks.RemoveAll(t => t.IsCompleted);
+                Task.WaitAll(tasks.ToArray());
+                tasks.RemoveAll(t => t.IsCompleted);
             }
         }
     }

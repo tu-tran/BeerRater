@@ -1,26 +1,68 @@
-﻿namespace BeerRater.Console.Providers
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using BeerRater.Providers;
+using BeerRater.Providers.Inputs;
+using BeerRater.Providers.Process;
+using BeerRater.Utils;
+
+namespace BeerRater.Console.Providers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using BeerRater.Providers;
-    using BeerRater.Providers.Inputs;
-    using BeerRater.Providers.Process;
-
-    using Utils;
-
     /// <summary>
-    /// The input provider.
+    ///     The input provider.
     /// </summary>
     internal class ConsoleInputProviderResolver : BaseObject, IResolver<IInputProvider>
     {
+        /// <inheritdoc />
+        public IReadOnlyList<IInputProvider> Resolve(IAppParameters parameters, params string[] args)
+        {
+            var providers = TypeExtensions.GetLoadedTypes<IInputProvider>().Where(p => p.IsCompatible(args)).ToList();
+            var options = GetOptions(parameters).ToArray();
+            Print(providers, options);
+
+            var selection = -1;
+            while (selection < 0 || selection > providers.Count)
+            {
+                var input = System.Console.ReadKey(true).KeyChar.ToString();
+                if (int.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out selection))
+                {
+                    var optionSelection = selection - providers.Count;
+                    if (optionSelection > 0)
+                    {
+                        if (optionSelection <= options.Length)
+                        {
+                            options[optionSelection - 1].Item2();
+                            options = GetOptions(parameters).ToArray();
+                            Print(providers, options);
+                            parameters.Save();
+                        }
+                        else
+                        {
+                            Print(providers, options);
+                            PrintError($"Invalid selection: {selection}");
+                            selection = -1;
+                        }
+                    }
+                }
+                else
+                {
+                    Print(providers, options);
+                    PrintError($"Invalid selection: {selection}");
+                    selection = -1;
+                }
+            }
+
+            Output($"User selection: {selection}");
+            return selection == 0 ? providers : new List<IInputProvider> {providers[selection - 1]};
+        }
+
         /// <summary>
-        /// Gets the options settings.
+        ///     Gets the options settings.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <returns>
-        /// The options settings.
+        ///     The options settings.
         /// </returns>
         private IEnumerable<Tuple<string, Action>> GetOptions(IAppParameters parameters)
         {
@@ -33,18 +75,18 @@
         }
 
         /// <summary>
-        /// Prints the specified parameters.
+        ///     Prints the specified parameters.
         /// </summary>
         /// <param name="providers">The providers.</param>
         /// <param name="options">The options.</param>
         private void Print(IEnumerable<IInputProvider> providers, IEnumerable<Tuple<string, Action>> options)
         {
-            Console.Clear();
+            System.Console.Clear();
             var index = 1;
-            var oldColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(
-$@"/*=====================================================*\
+            var oldColor = System.Console.ForegroundColor;
+            System.Console.ForegroundColor = ConsoleColor.Yellow;
+            System.Console.WriteLine(
+                @"/*=====================================================*\
 /*   ____                   _____       _              *\
 /*  |  _ \                 |  __ \     | |             *\
 /*  | |_) | ___  ___ _ __  | |__) |__ _| |_ ___ _ __   *\
@@ -55,71 +97,28 @@ $@"/*=====================================================*\
 /*=====================================================*\
 ");
 
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($@"
+            System.Console.ForegroundColor = ConsoleColor.Cyan;
+            System.Console.WriteLine($@"
 Select the input:
 
   0. All
-{ string.Join(Environment.NewLine, providers.Select(s => $"  {index++}. {s.Name}"))}
+{string.Join(Environment.NewLine, providers.Select(s => $"  {index++}. {s.Name}"))}
 ---------- OPTIONS ----------
-{ string.Join(Environment.NewLine, options.Select(s => $"  {index++}. {s.Item1}"))}
+{string.Join(Environment.NewLine, options.Select(s => $"  {index++}. {s.Item1}"))}
 ");
-            Console.ForegroundColor = oldColor;
+            System.Console.ForegroundColor = oldColor;
         }
 
         /// <summary>
-        /// Prints the specified error <see cref="message"/>.
+        ///     Prints the specified error <see cref="message" />.
         /// </summary>
         /// <param name="message">The message.</param>
         private void PrintError(string message)
         {
-            var oldColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
-            Console.ForegroundColor = oldColor;
-        }
-
-        /// <inheritdoc />
-        public IReadOnlyList<IInputProvider> Resolve(IAppParameters parameters, params string[] args)
-        {
-            var providers = TypeExtensions.GetLoadedTypes<IInputProvider>().Where(p => p.IsCompatible(args)).ToList();
-            var options = this.GetOptions(parameters).ToArray();
-            this.Print(providers, options);
-
-            var selection = -1;
-            while (selection < 0 || selection > providers.Count)
-            {
-                var input = Console.ReadKey(true).KeyChar.ToString();
-                if (int.TryParse(input, out selection))
-                {
-                    var optionSelection = selection - providers.Count;
-                    if (optionSelection > 0)
-                    {
-                        if (optionSelection <= options.Length)
-                        {
-                            options[optionSelection - 1].Item2();
-                            options = this.GetOptions(parameters).ToArray();
-                            this.Print(providers, options);
-                            parameters.Save();
-                        }
-                        else
-                        {
-                            this.Print(providers, options);
-                            this.PrintError($"Invalid selection: {selection}");
-                            selection = -1;
-                        }
-                    }
-                }
-                else
-                {
-                    this.Print(providers, options);
-                    this.PrintError($"Invalid selection: {selection}");
-                    selection = -1;
-                }
-            }
-
-            this.Output($"User selection: {selection}");
-            return selection == 0 ? providers : new List<IInputProvider> { providers[selection - 1] };
+            var oldColor = System.Console.ForegroundColor;
+            System.Console.ForegroundColor = ConsoleColor.Red;
+            System.Console.WriteLine(message);
+            System.Console.ForegroundColor = oldColor;
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿namespace BeerRater.Utils
-{
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using System.Threading;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Threading;
 
+namespace BeerRater.Utils
+{
     /// <summary>The app util.</summary>
     public static class AppUtil
     {
@@ -46,7 +46,7 @@
         {
             var executeAsm = Assembly.GetExecutingAssembly();
 
-            object[] customAttributes = executeAsm.GetCustomAttributes(false);
+            var customAttributes = executeAsm.GetCustomAttributes(false);
             foreach (var attrib in customAttributes)
             {
                 var attribute = attrib as AssemblyCompanyAttribute;
@@ -64,11 +64,7 @@
                 }
 
                 var copyrightAttribute = attrib as AssemblyCopyrightAttribute;
-                if (copyrightAttribute != null)
-                {
-                    ProductCopyright = copyrightAttribute.Copyright;
-                    continue;
-                }
+                if (copyrightAttribute != null) ProductCopyright = copyrightAttribute.Copyright;
             }
 
             ProductVersion = executeAsm.GetName().Version.ToString();
@@ -86,20 +82,20 @@
 #endif
 
             LocalProductDataPath = string.Format(
-                @"{0}\{1}\{2}", 
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
-                CompanyName, 
+                @"{0}\{1}\{2}",
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                CompanyName,
                 ProductName);
         }
 
         /// <summary>
-        /// The get local data path.
+        ///     The get local data path.
         /// </summary>
         /// <param name="subPath">
-        /// The sub path.
+        ///     The sub path.
         /// </param>
         /// <returns>
-        /// The <see cref="string"/>.
+        ///     The <see cref="string" />.
         /// </returns>
         public static string GetLocalDataPath(string subPath)
         {
@@ -107,19 +103,16 @@
         }
 
         /// <summary>
-        /// The name current thread.
+        ///     The name current thread.
         /// </summary>
         /// <param name="name">
-        /// The name.
+        ///     The name.
         /// </param>
         public static void NameCurrentThread(string name)
         {
             if (string.IsNullOrEmpty(Thread.CurrentThread.Name))
             {
-                if (name.Length > 100)
-                {
-                    name = name.Substring(0, 100);
-                }
+                if (name.Length > 100) name = name.Substring(0, 100);
 
                 Thread.CurrentThread.Name = name;
             }

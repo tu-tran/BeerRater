@@ -1,46 +1,42 @@
-﻿namespace BeerRater.Providers.Process
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BeerRater.Data;
+using BeerRater.Providers.Ratings;
+
+namespace BeerRater.Providers.Process
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using BeerRater.Utils;
-
-    using Data;
-
-    using Ratings;
-
     /// <summary>
-    /// The query of beer rate.
+    ///     The query of beer rate.
     /// </summary>
     internal sealed class RateQuery : Multitask
     {
         /// <summary>
-        /// Gets the raters.
-        /// </summary>
-        public RatingsResolver Resolver { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RateQuery"/> class.
+        ///     Initializes a new instance of the <see cref="RateQuery" /> class.
         /// </summary>
         /// <param name="raters">The raters.</param>
         public RateQuery(IReadOnlyList<IRatingProvider> raters)
         {
-            this.Resolver = new RatingsResolver(raters);
+            Resolver = new RatingsResolver(raters);
         }
 
         /// <summary>
-        /// Queries the specified metas.
+        ///     Gets the raters.
+        /// </summary>
+        public RatingsResolver Resolver { get; }
+
+        /// <summary>
+        ///     Queries the specified metas.
         /// </summary>
         /// <param name="metas">The metas.</param>
         /// <returns>The beer infos.</returns>
         public void Query(IReadOnlyList<BeerInfo> metas)
         {
-            this.Queue.Start((m, i) => this.ResolveRating(m, metas), metas);
+            Queue.Start((m, i) => ResolveRating(m, metas), metas);
         }
 
         /// <summary>
-        /// Resolves rating.
+        ///     Resolves rating.
         /// </summary>
         /// <param name="info">The beer information.</param>
         /// <param name="references">The references.</param>
@@ -61,9 +57,8 @@
             }
             else
             {
-                this.Resolver.Query(info);
+                Resolver.Query(info);
             }
         }
     }
 }
-

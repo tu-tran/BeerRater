@@ -1,22 +1,19 @@
-﻿namespace BeerRater.Providers.Utils
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using HtmlAgilityPack;
+using RestSharp;
+
+namespace BeerRater.Providers.Utils
 {
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-
-    using HtmlAgilityPack;
-
-    using RestSharp;
-
     /// <summary>
-    /// The web extensions.
+    ///     The web extensions.
     /// </summary>
     public static class WebExtensions
     {
         /// <summary>
-        /// Initializes the <see cref="WebExtensions"/> class.
+        ///     Initializes the <see cref="WebExtensions" /> class.
         /// </summary>
         static WebExtensions()
         {
@@ -25,7 +22,7 @@
         }
 
         /// <summary>
-        /// Gets the web document.
+        ///     Gets the web document.
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="referrer">The referrer.</param>
@@ -38,7 +35,6 @@
             var attempts = 0;
 
             while (attempts++ < 5 && respStream == null)
-            {
                 try
                 {
                     var request = GetRequest(url, referrer, isMobile);
@@ -55,13 +51,12 @@
                 {
                     // ignored
                 }
-            }
 
             return htmlDoc;
         }
 
         /// <summary>
-        /// Gets the rest response.
+        ///     Gets the rest response.
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="referrerUrl">The referrer URL.</param>
@@ -70,31 +65,26 @@
         /// <param name="isMobile">if set to <c>true</c> [is mobile].</param>
         /// <param name="body">The body.</param>
         /// <returns>
-        /// The response.
+        ///     The response.
         /// </returns>
-        public static IRestResponse GetRestResponse(this string url, string referrerUrl = "", Method method = Method.GET,
+        public static IRestResponse GetRestResponse(this string url, string referrerUrl = "",
+            Method method = Method.GET,
             DataFormat format = DataFormat.Json, bool isMobile = true, object body = null)
         {
             var client = new RestClient(url);
-            var request = new RestRequest(".", method) { RequestFormat = format };
+            var request = new RestRequest(".", method) {RequestFormat = format};
             request.AddHeader("Referer", referrerUrl);
-            request.AddHeader("User-Agent", WebExtensions.GetUserAgent(isMobile));
-            if (body != null)
-            {
-                request.AddBody(body);
-            }
+            request.AddHeader("User-Agent", GetUserAgent(isMobile));
+            if (body != null) request.AddBody(body);
 
             var response = client.Execute(request);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                return response;
-            }
+            if (response.StatusCode == HttpStatusCode.OK) return response;
 
             return null;
         }
 
         /// <summary>
-        /// Gets the rest response content.
+        ///     Gets the rest response content.
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="referrerUrl">The referrer URL.</param>
@@ -103,23 +93,24 @@
         /// <param name="isMobile">if set to <c>true</c> [is mobile].</param>
         /// <param name="body">The body.</param>
         /// <returns>
-        /// The response.
+        ///     The response.
         /// </returns>
-        public static string GetRestResponseContent(this string url, string referrerUrl = "", Method method = Method.GET,
+        public static string GetRestResponseContent(this string url, string referrerUrl = "",
+            Method method = Method.GET,
             DataFormat format = DataFormat.Json, bool isMobile = true, object body = null)
         {
             return url.GetRestResponse(referrerUrl, method, format, isMobile, body)?.Content;
         }
 
         /// <summary>
-        /// Does URL exist.
+        ///     Does URL exist.
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="referrer">The referrer.</param>
         /// <returns>True if exists.</returns>
         public static bool UrlExists(this string url, string referrer = "")
         {
-            var request = GetRequest(url, referrer, true);
+            var request = GetRequest(url, referrer);
             request.Method = "HEAD";
             try
             {
@@ -135,7 +126,7 @@
         }
 
         /// <summary>
-        /// Gets the web request.
+        ///     Gets the web request.
         /// </summary>
         /// <param name="url">The URL.</param>
         /// <param name="referrer">The referrer.</param>
@@ -143,7 +134,7 @@
         /// <returns>The web request.</returns>
         public static HttpWebRequest GetRequest(this string url, string referrer = "", bool isMobile = true)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
+            var request = (HttpWebRequest) WebRequest.Create(url);
             request.UserAgent = GetUserAgent(isMobile);
             request.Referer = referrer;
             request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
@@ -152,7 +143,7 @@
         }
 
         /// <summary>
-        /// Decodes the specified text.
+        ///     Decodes the specified text.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns>The decoded text.</returns>
@@ -162,7 +153,7 @@
         }
 
         /// <summary>
-        /// Decodes and trims the specified text.
+        ///     Decodes and trims the specified text.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns>The decoded and trimmed text.</returns>
@@ -172,7 +163,7 @@
         }
 
         /// <summary>
-        /// URLs parameter encode.
+        ///     URLs parameter encode.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The string.</returns>
@@ -184,7 +175,7 @@
         }
 
         /// <summary>
-        /// Gets the user agent.
+        ///     Gets the user agent.
         /// </summary>
         /// <param name="isMobile">A value indicating whether is for mobile.</param>
         /// <returns>The user agent string.</returns>

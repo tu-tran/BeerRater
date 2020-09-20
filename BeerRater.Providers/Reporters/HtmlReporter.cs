@@ -1,19 +1,15 @@
-﻿namespace BeerRater.Providers.Reporters
+﻿using System.IO;
+using System.Net;
+using System.Text;
+using BeerRater.Data;
+using BeerRater.Providers.Process;
+using BeerRater.Providers.Properties;
+using BeerRater.Utils;
+
+namespace BeerRater.Providers.Reporters
 {
-    using BeerRater.Utils;
-
-    using Data;
-
-    using Process;
-
-    using Properties;
-
-    using System.IO;
-    using System.Net;
-    using System.Text;
-
     /// <summary>
-    /// The <see cref="HtmlReporter"/> generates the HTML report.
+    ///     The <see cref="HtmlReporter" /> generates the HTML report.
     /// </summary>
     public class HtmlReporter : IReporter
     {
@@ -23,17 +19,12 @@
             var basePath = Path.Combine(Path.GetDirectoryName(session.Name), "Html");
             var jsFileName = "sorttable.js";
             var jsFile = Path.Combine(basePath, jsFileName);
-            if (!string.IsNullOrEmpty(basePath))
-            {
-                Directory.CreateDirectory(basePath);
-            }
+            if (!string.IsNullOrEmpty(basePath)) Directory.CreateDirectory(basePath);
 
             try
             {
                 if (!File.Exists(jsFile) || File.ReadAllText(jsFile) != Resources.JS_Sorttable)
-                {
                     File.WriteAllText(jsFile, Resources.JS_Sorttable);
-                }
             }
             catch
             {
@@ -70,18 +61,11 @@
                     var diffCount = 0;
 
                     if (res.ReferencePrices != null)
-                    {
                         foreach (var price in res.ReferencePrices)
-                        {
                             priceDiffHtml += (++diffCount > 1 ? "&nbsp;" : "&nbsp;(") +
                                              GetPriceDiffHtml(res.Price, price);
-                        }
-                    }
 
-                    if (diffCount > 0)
-                    {
-                        priceDiffHtml += ")";
-                    }
+                    if (diffCount > 0) priceDiffHtml += ")";
 
                     htmlStream.WriteLine($@"<tr>
 <td>{index++}</td>
@@ -101,32 +85,25 @@
         }
 
         /// <summary>
-        /// Gets price difference HTML.
+        ///     Gets price difference HTML.
         /// </summary>
         /// <param name="price">The price.</param>
         /// <param name="referencePrice">The reference price.</param>
         /// <returns>The HTML for price difference.</returns>
         private static string GetPriceDiffHtml(double? price, ReferencePrice referencePrice)
         {
-            if (!price.HasValue)
-            {
-                return string.Empty;
-            }
+            if (!price.HasValue) return string.Empty;
 
             var priceDiffHtml = string.Empty;
             if (referencePrice.Price > 0.001)
             {
                 var priceDiff = referencePrice.Price - price;
                 if (priceDiff > 0.0)
-                {
                     priceDiffHtml =
                         $"<a class='g' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>+{priceDiff.ToInvariantString()}</a>";
-                }
                 else if (priceDiff < 0.0)
-                {
                     priceDiffHtml =
                         $"<a class='r' href='{WebUtility.HtmlEncode(referencePrice.Url)}'>{priceDiff.ToInvariantString()}</a>";
-                }
             }
 
             return priceDiffHtml;

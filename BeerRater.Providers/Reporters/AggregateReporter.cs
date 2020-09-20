@@ -1,56 +1,49 @@
-﻿namespace BeerRater.Providers.Reporters
+﻿using System.Collections.Generic;
+using System.Linq;
+using BeerRater.Providers.Process;
+using BeerRater.Utils;
+
+namespace BeerRater.Providers.Reporters
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using BeerRater.Utils;
-
-    using Process;
-
     /// <summary>
-    /// AggregateReporter.
+    ///     AggregateReporter.
     /// </summary>
     public class AggregateReporter<TReporter> : IReporter where TReporter : IReporter
     {
         /// <summary>
-        /// The instance
+        ///     The instance
         /// </summary>
         public static readonly AggregateReporter<TReporter> Instance = new AggregateReporter<TReporter>();
 
         /// <summary>
-        /// The reporters
+        ///     The reporters
         /// </summary>
         private readonly IReadOnlyList<TReporter> reporters;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AggregateReporter{TReporter}" /> class.
+        ///     Initializes a new instance of the <see cref="AggregateReporter{TReporter}" /> class.
         /// </summary>
         private AggregateReporter()
         {
-            this.reporters = TypeExtensions.GetLoadedTypes<TReporter>();
+            reporters = TypeExtensions.GetLoadedTypes<TReporter>();
         }
 
         /// <summary>
-        /// Gets the reporters.
+        ///     Gets the reporters.
         /// </summary>
-        public IReadOnlyList<TReporter> Reporters
-        {
-            get { return this.reporters; }
-        }
+        public IReadOnlyList<TReporter> Reporters => reporters;
 
         /// <summary>
-        /// Generates the reports based on the specified infos.
+        ///     Generates the reports based on the specified infos.
         /// </summary>
         /// <param name="session"></param>
         public void Generate(QuerySession session)
         {
             var orderedSession = new QuerySession(session.Name,
-                session.OrderByDescending(r => r.Overall).ThenByDescending(r => r.WeightedAverage).ThenBy(r => r.Price).ThenBy(r => r.Name));
+                session.OrderByDescending(r => r.Overall).ThenByDescending(r => r.WeightedAverage).ThenBy(r => r.Price)
+                    .ThenBy(r => r.Name));
 
-            foreach (var reporter in this.reporters)
-            {
-                reporter.Generate(orderedSession);
-            }
+            foreach (var reporter in reporters) reporter.Generate(orderedSession);
         }
     }
 }

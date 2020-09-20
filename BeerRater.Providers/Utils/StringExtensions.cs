@@ -4,12 +4,12 @@ using System.Text;
 namespace BeerRater.Providers.Utils
 {
     /// <summary>
-    /// The string extensions.
+    ///     The string extensions.
     /// </summary>
     public static class StringExtensions
     {
         /// <summary>
-        /// Creates a URL And SEO friendly slug
+        ///     Creates a URL And SEO friendly slug
         /// </summary>
         /// <param name="text">Text to slugify</param>
         /// <param name="maxLength">Max length of slug</param>
@@ -17,10 +17,7 @@ namespace BeerRater.Providers.Utils
         public static string URLFriendly(this string text, int maxLength = 0)
         {
             // Return empty value if text is null
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return string.Empty;
-            }
+            if (string.IsNullOrWhiteSpace(text)) return string.Empty;
 
             var normalizedString = text
                 .ToLowerInvariant()
@@ -33,7 +30,7 @@ namespace BeerRater.Providers.Utils
 
             char c;
 
-            for (int i = 0; i < stringLength; i++)
+            for (var i = 0; i < stringLength; i++)
             {
                 c = normalizedString[i];
 
@@ -45,13 +42,9 @@ namespace BeerRater.Providers.Utils
                     case UnicodeCategory.UppercaseLetter:
                     case UnicodeCategory.DecimalDigitNumber:
                         if (c < 128)
-                        {
                             stringBuilder.Append(c);
-                        }
                         else
-                        {
                             stringBuilder.Append(RemapInternationalCharToAscii(c));
-                        }
 
                         prevdash = false;
                         trueLength = stringBuilder.Length;
@@ -69,14 +62,12 @@ namespace BeerRater.Providers.Utils
                             prevdash = true;
                             trueLength = stringBuilder.Length;
                         }
+
                         break;
                 }
 
                 // If we are at max length, stop parsing
-                if (maxLength > 0 && trueLength >= maxLength)
-                {
-                    break;
-                }
+                if (maxLength > 0 && trueLength >= maxLength) break;
             }
 
             // Trim excess hyphens
@@ -87,103 +78,50 @@ namespace BeerRater.Providers.Utils
         }
 
         /// <summary>
-        /// Remaps international characters to ascii compatible ones
-        /// based of: https://meta.stackexchange.com/questions/7435/non-us-ascii-characters-dropped-from-full-profile-url/7696#7696
+        ///     Remaps international characters to ascii compatible ones
+        ///     based of:
+        ///     https://meta.stackexchange.com/questions/7435/non-us-ascii-characters-dropped-from-full-profile-url/7696#7696
         /// </summary>
         /// <param name="c">Character to remap</param>
         /// <returns>Remapped character</returns>
         public static string RemapInternationalCharToAscii(char c)
         {
-            string s = c.ToString().ToLowerInvariant();
-            if ("àåáâäãåą".Contains(s))
-            {
-                return "a";
-            }
+            var s = c.ToString().ToLowerInvariant();
+            if ("àåáâäãåą".Contains(s)) return "a";
 
-            if ("èéêëę".Contains(s))
-            {
-                return "e";
-            }
+            if ("èéêëę".Contains(s)) return "e";
 
-            if ("ìíîïı".Contains(s))
-            {
-                return "i";
-            }
+            if ("ìíîïı".Contains(s)) return "i";
 
-            if ("òóôõöøőð".Contains(s))
-            {
-                return "o";
-            }
+            if ("òóôõöøőð".Contains(s)) return "o";
 
-            if ("ùúûüŭů".Contains(s))
-            {
-                return "u";
-            }
+            if ("ùúûüŭů".Contains(s)) return "u";
 
-            if ("çćčĉ".Contains(s))
-            {
-                return "c";
-            }
+            if ("çćčĉ".Contains(s)) return "c";
 
-            if ("żźž".Contains(s))
-            {
-                return "z";
-            }
+            if ("żźž".Contains(s)) return "z";
 
-            if ("śşšŝ".Contains(s))
-            {
-                return "s";
-            }
+            if ("śşšŝ".Contains(s)) return "s";
 
-            if ("ñń".Contains(s))
-            {
-                return "n";
-            }
+            if ("ñń".Contains(s)) return "n";
 
-            if ("ýÿ".Contains(s))
-            {
-                return "y";
-            }
+            if ("ýÿ".Contains(s)) return "y";
 
-            if ("ğĝ".Contains(s))
-            {
-                return "g";
-            }
+            if ("ğĝ".Contains(s)) return "g";
 
-            if (c == 'ř')
-            {
-                return "r";
-            }
+            if (c == 'ř') return "r";
 
-            if (c == 'ł')
-            {
-                return "l";
-            }
+            if (c == 'ł') return "l";
 
-            if (c == 'đ')
-            {
-                return "d";
-            }
+            if (c == 'đ') return "d";
 
-            if (c == 'ß')
-            {
-                return "ss";
-            }
+            if (c == 'ß') return "ss";
 
-            if (c == 'þ')
-            {
-                return "th";
-            }
+            if (c == 'þ') return "th";
 
-            if (c == 'ĥ')
-            {
-                return "h";
-            }
+            if (c == 'ĥ') return "h";
 
-            if (c == 'ĵ')
-            {
-                return "j";
-            }
+            if (c == 'ĵ') return "j";
 
             return "";
         }

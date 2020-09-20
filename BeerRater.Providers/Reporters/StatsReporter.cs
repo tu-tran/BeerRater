@@ -1,11 +1,11 @@
-﻿namespace BeerRater.Providers.Reporters
-{
-    using Process;
-    using System.IO;
-    using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using BeerRater.Providers.Process;
 
+namespace BeerRater.Providers.Reporters
+{
     /// <summary>
-    /// The <see cref="StatsReporter"/> generates the statistics report.
+    ///     The <see cref="StatsReporter" /> generates the statistics report.
     /// </summary>
     public class StatsReporter : IReporter
     {

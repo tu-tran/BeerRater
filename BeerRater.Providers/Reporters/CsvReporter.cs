@@ -1,12 +1,9 @@
-﻿namespace BeerRater.Providers.Reporters
+﻿using System.IO;
+using BeerRater.Providers.Process;
+using BeerRater.Utils;
+
+namespace BeerRater.Providers.Reporters
 {
-    using BeerRater.Utils;
-    using Data;
-    using System.Collections.Generic;
-    using System.IO;
-
-    using Process;
-
     public class CsvReporter : IReporter
     {
         /// <inheritdoc />
@@ -19,12 +16,14 @@
             {
                 csvStream.WriteLine("NAME\tOVERALL\tWEIGHTED AVG\tCALORIES\tABV\tRATINGS\tPRICE\tSTYLE\tURL\tIMAGE");
                 foreach (var res in session)
-                {
                     csvStream.WriteLine(
-                        res.NameOnStore + '\t' + res.Overall.ToInvariantString() + '\t' + res.WeightedAverage.ToInvariantString() + '\t' +
-                        res.Calories.ToInvariantString() + '\t' + res.ABV.ToInvariantString() + '\t' + res.Ratings.ToInvariantString() + '\t'
-                        + res.Price.ToInvariantString() + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' + res.ImageUrl);
-                }
+                        res.NameOnStore + '\t' + res.Overall.ToInvariantString() + '\t' +
+                        res.WeightedAverage.ToInvariantString() +
+                        '\t' +
+                        res.Calories.ToInvariantString() + '\t' + res.ABV.ToInvariantString() + '\t' +
+                        res.Ratings.ToInvariantString() + '\t'
+                        + res.Price.ToInvariantString() + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' +
+                        res.ImageUrl);
             }
         }
     }

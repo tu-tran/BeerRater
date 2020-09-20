@@ -1,73 +1,13 @@
-﻿namespace BeerRater.Tests
+﻿using BeerRater.Providers.Inputs;
+using NUnit.Framework;
+
+namespace BeerRater.Tests
 {
-    using BeerRater.Providers.Inputs;
-
-    using NUnit.Framework;
-
     [TestFixture]
     public class ExtractBeerNameTests
     {
         /// <summary>
-        /// Extracts the beer name test.
-        /// </summary>
-        [Test]
-        public void SuperAlkoExtractBeerNameTest()
-        {
-            var input = "Saku 1820 Eripruul 4,8% 24x33cl";
-            var result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku 1820 Eripruul", result);
-
-            input = "Saku 1820 Eripruul 4.8% 24x33cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku 1820 Eripruul", result);
-
-            input = "Saku 1820 Eripruul 4,8% 33cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku 1820 Eripruul", result);
-
-            input = "Saku 1820 Eripruul 4.8% 33cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku 1820 Eripruul", result);
-
-            input = "Saku 1820 Eripruul 4% 33cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku 1820 Eripruul", result);
-
-            input = "Saku 1820 Eripruul 4% 23x33 cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku 1820 Eripruul", result);
-
-            input = "Saku 1820 Eripruul 4,5% 33 cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku 1820 Eripruul", result);
-
-            input = "Saku 1820 Eripruul 4,5% 33,5 cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku 1820 Eripruul", result);
-
-            input = "Saku 1820 Eripruul 4,5% 33.5 cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku 1820 Eripruul", result);
-
-            input = "Saku Antvärk Dark Lager 5.7% 24x33cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Saku Antvärk Dark Lager", result);
-
-            input = "Liefmans Goudenband 8% 75cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Liefmans Goudenband", result);
-
-            input = "Lindemans Kriek 3,5% 37,5cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Lindemans Kriek", result);
-
-            input = "Kyoto Alt Beer 5% 33cl";
-            result = SuperAlkoInputProvider.ExtractBeerName(input);
-            Assert.AreEqual("Kyoto Alt", result);
-        }
-
-        /// <summary>
-        /// Extracts the beer name test.
+        ///     Extracts the beer name test.
         /// </summary>
         [Test]
         public void BelgiumInABoxInputExtractBeerNameTest()
@@ -155,7 +95,7 @@
             input = "Royal Straight (Het Nest) 5 x 33 cl";
             result = BelgiumInABoxInputProvider.ExtractBeerName(input);
             Assert.AreEqual("Royal Straight", result);
-            
+
             input = "Westvleteren Trappist Gift Box of 2 x Westvleteren";
             result = BelgiumInABoxInputProvider.ExtractBeerName(input);
             Assert.AreEqual("Westvleteren Trappist", result);
@@ -167,6 +107,65 @@
             input = "";
             result = BelgiumInABoxInputProvider.ExtractBeerName(input);
             Assert.AreEqual("", result);
+        }
+
+        /// <summary>
+        ///     Extracts the beer name test.
+        /// </summary>
+        [Test]
+        public void SuperAlkoExtractBeerNameTest()
+        {
+            var input = "Saku 1820 Eripruul 4,8% 24x33cl";
+            var result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku 1820 Eripruul", result);
+
+            input = "Saku 1820 Eripruul 4.8% 24x33cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku 1820 Eripruul", result);
+
+            input = "Saku 1820 Eripruul 4,8% 33cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku 1820 Eripruul", result);
+
+            input = "Saku 1820 Eripruul 4.8% 33cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku 1820 Eripruul", result);
+
+            input = "Saku 1820 Eripruul 4% 33cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku 1820 Eripruul", result);
+
+            input = "Saku 1820 Eripruul 4% 23x33 cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku 1820 Eripruul", result);
+
+            input = "Saku 1820 Eripruul 4,5% 33 cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku 1820 Eripruul", result);
+
+            input = "Saku 1820 Eripruul 4,5% 33,5 cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku 1820 Eripruul", result);
+
+            input = "Saku 1820 Eripruul 4,5% 33.5 cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku 1820 Eripruul", result);
+
+            input = "Saku Antvärk Dark Lager 5.7% 24x33cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Saku Antvärk Dark Lager", result);
+
+            input = "Liefmans Goudenband 8% 75cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Liefmans Goudenband", result);
+
+            input = "Lindemans Kriek 3,5% 37,5cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Lindemans Kriek", result);
+
+            input = "Kyoto Alt Beer 5% 33cl";
+            result = SuperAlkoInputProvider.ExtractBeerName(input);
+            Assert.AreEqual("Kyoto Alt", result);
         }
     }
 }

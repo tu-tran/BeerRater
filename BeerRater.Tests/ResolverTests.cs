@@ -1,40 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using BeerRater.Data;
+using BeerRater.Providers;
+using BeerRater.Providers.Pricings;
+using BeerRater.Providers.Process;
+using BeerRater.Providers.Ratings;
+using NUnit.Framework;
 
 namespace BeerRater.Tests
 {
-    using Data;
-    using NUnit.Framework;
-    using System.Linq;
-
-    using BeerRater.Providers;
-    using BeerRater.Providers.Pricings;
-    using BeerRater.Providers.Process;
-    using BeerRater.Providers.Ratings;
-
     /// <summary>
-    /// Tests the <see cref="ReferencePriceResolver"/>.
+    ///     Tests the <see cref="ReferencePriceResolver" />.
     /// </summary>
     [TestFixture]
     public class ResolverTests
     {
         /// <summary>
-        /// References price resolve test.
-        /// </summary>
-        [Test]
-        public void ReferencePriceResolveTest()
-        {
-            var target = new BeerInfo("Chimay Blue");
-            var priceProviders = new ReflectionResolver<IPriceProvider>().Resolve(null);
-            foreach (var pricer in priceProviders)
-            {
-                pricer.Update(target);
-            }
-
-            Assert.IsTrue(target.ReferencePrices.Any());
-        }
-
-        /// <summary>
-        /// Beers advocate rating resolve test.
+        ///     Beers advocate rating resolve test.
         /// </summary>
         [Test]
         public void BeerAdvocateRatingResolveTest()
@@ -51,7 +32,7 @@ namespace BeerRater.Tests
         }
 
         /// <summary>
-        /// RateBeer rating resolve test.
+        ///     RateBeer rating resolve test.
         /// </summary>
         [Test]
         public void RateBeerResolveTest()
@@ -73,6 +54,19 @@ namespace BeerRater.Tests
             Assert.NotNull(target);
             Assert.IsTrue(target.Overall > 0.0);
             Assert.IsTrue(target.WeightedAverage > 0.0);
+        }
+
+        /// <summary>
+        ///     References price resolve test.
+        /// </summary>
+        [Test]
+        public void ReferencePriceResolveTest()
+        {
+            var target = new BeerInfo("Chimay Blue");
+            var priceProviders = new ReflectionResolver<IPriceProvider>().Resolve(null);
+            foreach (var pricer in priceProviders) pricer.Update(target);
+
+            Assert.IsTrue(target.ReferencePrices.Any());
         }
     }
 }

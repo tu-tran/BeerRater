@@ -81,9 +81,9 @@
                     continue;
                 }
 
-                double price;
                 var priceStr = new string(priceNode.InnerText.TrimDecoded().Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray()).Replace(',' ,'.');
-                if (!double.TryParse(priceStr, out price))
+                var price = priceStr.ToDouble();
+                if (!price.HasValue)
                 {
                     continue;
                 }
