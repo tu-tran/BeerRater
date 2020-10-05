@@ -47,7 +47,7 @@ namespace BeerRater.Providers.Ratings
                     beerInfo.Overall = avgNode.InnerText.TrimDecoded().ToDouble();
             }
 
-            var infoNode = resultDoc.DocumentNode.SelectNodes("//div[@class='break']")
+            var infoNode = resultDoc.DocumentNode.SelectNodes("//div[@class='break']")?
                 .FirstOrDefault(n => n.InnerText.Contains("BEER INFO"));
             if (infoNode != null)
             {
