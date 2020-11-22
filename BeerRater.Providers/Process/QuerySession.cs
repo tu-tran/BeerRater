@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BeerRater.Data;
 
 namespace BeerRater.Providers.Process
@@ -13,11 +14,14 @@ namespace BeerRater.Providers.Process
         public QuerySession(string name, IEnumerable<BeerInfo> data) : base(data)
         {
             Name = name;
+            this.QueryDate = DateTime.Now;
         }
 
         /// <summary>
         ///     Gets the file path.
         /// </summary>
         public string Name { get; set; }
+
+        public DateTime QueryDate { get; }
     }
 }

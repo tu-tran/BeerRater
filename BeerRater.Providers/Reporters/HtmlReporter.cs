@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using BeerRater.Data;
@@ -80,6 +81,7 @@ namespace BeerRater.Providers.Reporters
 <td>{WebUtility.HtmlEncode(res.Style)}</td></tr>");
                 }
 
+                htmlStream.WriteLine($"<tr><td colspan=50>Generated on {session.QueryDate:R}</td></tr>");
                 htmlStream.WriteLine(@"</tbody></table></body></html>");
             }
         }
