@@ -63,7 +63,7 @@ namespace BeerRater.Providers.Reporters
                     if (res.ReferencePrices != null)
                         foreach (var price in res.ReferencePrices)
                             priceDiffHtml += (++diffCount > 1 ? "&nbsp;" : "&nbsp;(") +
-                                             GetPriceDiffHtml(res.Price, price);
+                                             GetPriceDiffHtml(res.TotalPrice, price);
 
                     if (diffCount > 0) priceDiffHtml += ")";
 
@@ -76,7 +76,7 @@ namespace BeerRater.Providers.Reporters
 <td>{WebUtility.HtmlEncode(res.Calories.ToInvariantString())}</td>
 <td>{WebUtility.HtmlEncode(res.ABV.ToInvariantString())}</td>
 <td>{WebUtility.HtmlEncode(res.Ratings.ToInvariantString())}</td>
-<td><b><i>{WebUtility.HtmlEncode(res.Price.ToInvariantString())}{priceDiffHtml}</b></i></td>
+<td><b><i>{WebUtility.HtmlEncode(res.TotalPrice.ToInvariantString())}{priceDiffHtml}</b></i></td>
 <td>{WebUtility.HtmlEncode(res.Style)}</td></tr>");
                 }
 

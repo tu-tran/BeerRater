@@ -40,7 +40,7 @@ namespace BeerRater.Providers.Reporters
         public void Generate(QuerySession session)
         {
             var orderedSession = new QuerySession(session.Name,
-                session.OrderByDescending(r => r.Overall).ThenByDescending(r => r.WeightedAverage).ThenBy(r => r.Price)
+                session.OrderByDescending(r => r.Overall).ThenByDescending(r => r.WeightedAverage).ThenBy(r => r.TotalPrice)
                     .ThenBy(r => r.Name));
 
             foreach (var reporter in reporters) reporter.Generate(orderedSession);

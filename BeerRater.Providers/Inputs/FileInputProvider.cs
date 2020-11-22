@@ -57,7 +57,7 @@ namespace BeerRater.Providers.Inputs
                 }
             }
 
-            return result.OrderBy(m => m.Name).ThenBy(m => m.Price).ToList();
+            return result.OrderBy(m => m.Name).ThenBy(m => m.TotalPrice).ToList();
         }
     }
 }

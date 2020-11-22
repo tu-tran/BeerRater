@@ -22,7 +22,7 @@ namespace BeerRater.Providers.Reporters
                         '\t' +
                         res.Calories.ToInvariantString() + '\t' + res.ABV.ToInvariantString() + '\t' +
                         res.Ratings.ToInvariantString() + '\t'
-                        + res.Price.ToInvariantString() + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' +
+                        + res.TotalPrice.ToInvariantString() + '\t' + res.Style + '\t' + res.ReviewUrl + '\t' +
                         res.ImageUrl);
             }
         }

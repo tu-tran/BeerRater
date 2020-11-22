@@ -8,7 +8,7 @@ namespace BeerRater.Data
     /// <summary>
     ///     The beer info.
     /// </summary>
-    [DebuggerDisplay("{Name} - Price: {Price} - Rating: {Overall}")]
+    [DebuggerDisplay("{Name} - Total Price: {TotalPrice} - Rating: {Overall}")]
     public class BeerInfo
     {
         /// <summary>
@@ -30,6 +30,11 @@ namespace BeerRater.Data
         ///     The price.
         /// </summary>
         private double? price;
+
+        /// <summary>
+        ///     The deposit.
+        /// </summary>
+        private double? deposit;
 
         /// <summary>
         ///     The reference prices.
@@ -100,6 +105,20 @@ namespace BeerRater.Data
             get => price;
             set => SetValue(ref price, value);
         }
+
+        /// <summary>
+        ///     The Deposit cost.
+        /// </summary>
+        public double? Deposit
+        {
+            get => deposit;
+            set => SetValue(ref deposit, value);
+        }
+
+        /// <summary>
+        ///     The total price, including deposit.
+        /// </summary>
+        public double? TotalPrice => this.Price.HasValue ? (double?)(this.Price.Value + (this.Deposit ?? 0.0)) : null;
 
         /// <summary>
         ///     The ratings.
@@ -176,7 +195,7 @@ namespace BeerRater.Data
         /// </returns>
         public override string ToString()
         {
-            return string.Format($"{Name}\t{Overall}\t{Ratings}\t{WeightedAverage}\t{Calories}\t{ABV}\t{Price}");
+            return string.Format($"{Name}\t{Overall}\t{Ratings}\t{WeightedAverage}\t{Calories}\t{ABV}\t{TotalPrice}");
         }
 
         /// <summary>

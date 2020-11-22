@@ -81,7 +81,6 @@
     <Compile Include="Reporters\CsvReporter.cs" />
     <Compile Include="Utils\StringExtensions.cs" />
     <Compile Include="Utils\WebExtensions.cs" />
-    <None Include="Inputs\MyDrinkInputProvider.cs" />
     <Compile Include="Inputs\SuperAlkoInputProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />
